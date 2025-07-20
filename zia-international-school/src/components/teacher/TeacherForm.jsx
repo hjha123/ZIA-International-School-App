@@ -8,9 +8,12 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import teacherService from "../../services/teacherService";
 
 const TeacherForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -22,7 +25,6 @@ const TeacherForm = () => {
     address: "",
     joiningDate: "",
     experienceYears: 0,
-    empId: "",
     maritalStatus: "",
     emergencyContactInfo: "",
     bloodGroup: "",
@@ -41,6 +43,8 @@ const TeacherForm = () => {
     success: "",
     error: "",
   });
+
+  const [generatedStaffId, setGeneratedStaffId] = useState("");
 
   useEffect(() => {
     // Later fetch subjects from backend
@@ -83,22 +87,21 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    setStatus({ loading: true, success: "", error: "" });
 
+    setStatus({ loading: true, success: "", error: "" });
     try {
-      await teacherService.createTeacher(formData);
+      const response = await teacherService.createTeacher(formData);
+      const staffId = response?.staffId || response?.empId || "N/A";
+
+      setGeneratedStaffId(staffId);
       setStatus({
         loading: false,
-        success: "Teacher created successfully",
+        success: `Teacher created successfully. Staff ID: ${staffId}`,
         error: "",
       });
-      setFormData({
-        ...formData,
-        fullName: "",
-        email: "",
-        phone: "",
-        subjectIds: [],
-      }); // Reset basic
+
+      // Redirect to Teacher List page after 2 seconds
+      setTimeout(() => navigate("/admin/dashboard/teachers"), 2000);
     } catch (err) {
       setStatus({
         loading: false,
@@ -116,6 +119,7 @@ const TeacherForm = () => {
       {status.success && <Alert variant="success">{status.success}</Alert>}
 
       <Form onSubmit={handleSubmit}>
+        {/* --- FORM FIELDS --- */}
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group controlId="fullName">
@@ -299,20 +303,9 @@ const TeacherForm = () => {
           </Col>
         </Row>
 
-        {/* Optional fields row */}
+        {/* Optional fields */}
         <Row className="mb-3">
-          <Col md={4}>
-            <Form.Group controlId="empId">
-              <Form.Label>Employee ID</Form.Label>
-              <Form.Control
-                type="text"
-                name="empId"
-                value={formData.empId}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
+          <Col md={6}>
             <Form.Group controlId="gradeName">
               <Form.Label>Grade</Form.Label>
               <Form.Control
@@ -323,7 +316,7 @@ const TeacherForm = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={4}>
+          <Col md={6}>
             <Form.Group controlId="sectionName">
               <Form.Label>Section</Form.Label>
               <Form.Control

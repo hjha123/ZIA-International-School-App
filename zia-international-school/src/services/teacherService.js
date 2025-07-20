@@ -6,7 +6,7 @@ const getAllTeachers = async () => {
 };
 
 const createTeacher = async (data) => {
-  const response = await axiosInstance.post("/teachers", data);
+  const response = await axios.post("/teachers", data);
   return response.data;
 };
 

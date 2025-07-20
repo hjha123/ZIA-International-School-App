@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import teacherService from "../../../services/teacherService";
 import "./TeacherList.css";
-
 import {
   Table,
   Spinner,
@@ -12,6 +11,7 @@ import {
   Pagination,
   Form,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
@@ -20,6 +20,8 @@ const TeacherList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [teachersPerPage] = useState(8);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTeachers();
@@ -77,15 +79,27 @@ const TeacherList = () => {
 
   return (
     <Container fluid className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Teacher Directory</h3>
-        <Form.Control
-          type="text"
-          placeholder="Search by name or employee ID..."
-          style={{ maxWidth: "300px" }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Header row with title, search, and add button */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+        <h3 className="fw-bold text-secondary mb-0 text-nowrap">
+          Teachers Directory
+        </h3>
+
+        <div className="d-flex flex-column flex-md-row align-items-md-center gap-2 w-100 justify-content-md-end">
+          <Form.Control
+            type="text"
+            placeholder="Search by name or employee ID..."
+            style={{ maxWidth: "300px" }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button
+            variant="success"
+            onClick={() => navigate("/admin/dashboard/teachers/create")}
+          >
+            + Add Teacher
+          </Button>
+        </div>
       </div>
 
       {loading ? (
@@ -97,7 +111,7 @@ const TeacherList = () => {
       ) : (
         <>
           <div className="table-responsive w-100">
-            <Table bordered hover striped className="teacher-table w-100">
+            <Table bordered hover className="teacher-table w-100">
               <thead className="table-dark text-nowrap">
                 <tr>
                   <th>Employee ID</th>
