@@ -1,0 +1,30 @@
+/* Prevent wrapping on date columns */
+.teacher-table td.dob,
+.teacher-table td.joining-date,
+.teacher-table th.dob,
+.teacher-table th.joining-date {
+  white-space: nowrap;
+}
+
+/* Hover effect */
+.teacher-table tbody tr:hover {
+  background-color: #dff0ff !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Minimum width to prevent squishing */
+.teacher-table th,
+.teacher-table td {
+  min-width: 120px;
+  vertical-align: middle;
+}
+
+/* Improve button layout */
+.teacher-table .btn {
+  width: 70px;
+}
+
+/* Responsive text wrapping */
+.teacher-table td {
+  word-break: break-word;
+}
