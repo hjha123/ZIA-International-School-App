@@ -28,3 +28,8 @@
 .teacher-table td {
   word-break: break-word;
 }
+.emp-type-col {
+  width: 110px;
+  max-width: 120px;
+  white-space: nowrap;
+}

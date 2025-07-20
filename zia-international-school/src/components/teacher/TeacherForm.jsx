@@ -46,13 +46,30 @@ const TeacherForm = () => {
 
   const [generatedStaffId, setGeneratedStaffId] = useState("");
 
+  //   useEffect(() => {
+  //     setSubjects([
+  //       { id: 1, name: "Math" },
+  //       { id: 2, name: "Biology" },
+  //       { id: 3, name: "English" },
+  //       { id: 4, name: "Physics" },
+  //       { id: 5, name: "Social Science" },
+  //       { id: 6, name: "Hindi" },
+  //       { id: 7, name: "Kannada" },
+  //       { id: 8, name: "Computer Science" },
+  //       { id: 9, name: "Chemistry" },
+  //     ]);
+  //   }, []);
   useEffect(() => {
-    // Later fetch subjects from backend
-    setSubjects([
-      { id: 1, name: "Math" },
-      { id: 2, name: "Science" },
-      { id: 3, name: "English" },
-    ]);
+    const fetchSubjects = async () => {
+      try {
+        const subjectList = await teacherService.getAllSubjects();
+        setSubjects(subjectList);
+      } catch (err) {
+        console.error("Failed to fetch subjects", err);
+      }
+    };
+
+    fetchSubjects();
   }, []);
 
   const validate = () => {
@@ -101,7 +118,7 @@ const TeacherForm = () => {
       });
 
       // Redirect to Teacher List page after 2 seconds
-      setTimeout(() => navigate("/admin/dashboard/teachers"), 2000);
+      setTimeout(() => navigate("/admin/dashboard/teachers"), 5000);
     } catch (err) {
       setStatus({
         loading: false,

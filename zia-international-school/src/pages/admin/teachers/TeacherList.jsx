@@ -64,6 +64,21 @@ const TeacherList = () => {
     }
   };
 
+  const getTeacherTypeVariant = (type) => {
+    switch (type) {
+      case "FULL_TIME":
+        return "success";
+      case "PART_TIME":
+        return "info";
+      case "GUEST":
+        return "warning";
+      case "VISITING":
+        return "secondary";
+      default:
+        return "dark";
+    }
+  };
+
   const filteredTeachers = teachers.filter((teacher) => {
     const search = searchTerm.toLowerCase();
     return (
@@ -125,6 +140,7 @@ const TeacherList = () => {
                   <th className="joining-date">Joining Date</th>
                   <th>Experience</th>
                   <th>Grade / Section</th>
+                  <th className="text-nowrap emp-type-col">Employment</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -158,6 +174,12 @@ const TeacherList = () => {
                     <td>
                       {teacher.gradeName || "-"} / {teacher.sectionName || "-"}
                     </td>
+                    <td>
+                      <Badge bg={getTeacherTypeVariant(teacher.teacherType)}>
+                        {teacher.teacherType?.replace("_", " ")}
+                      </Badge>
+                    </td>
+
                     <td>
                       <Badge bg={getStatusBadgeVariant(teacher.status)}>
                         {teacher.status}

@@ -10,7 +10,13 @@ const createTeacher = async (data) => {
   return response.data;
 };
 
+const getAllSubjects = async () => {
+  const response = await axios.get("/subjects");
+  return response.data;
+};
+
 export default {
   getAllTeachers,
   createTeacher,
+  getAllSubjects,
 };
