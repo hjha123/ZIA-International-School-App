@@ -5,8 +5,9 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminDashboardLayout from "../layouts/AdminDashboardLayout";
+import AdminHome from "../pages/admin/AdminHome";
 import TeacherList from "../pages/admin/teachers/TeacherList";
-import AdminHome from "../pages/admin/AdminHome"; // ✅ import
+import TeacherCreate from "../pages/admin/teachers/TeacherCreate"; // ✅ Import new component
 
 export default function AppRoutes() {
   return (
@@ -26,13 +27,14 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        {/* ✅ Index route shows on /admin/dashboard */}
+        {/* ✅ Default dashboard home */}
         <Route index element={<AdminHome />} />
 
-        {/* Existing nested routes */}
+        {/* ✅ Teacher routes */}
         <Route path="teachers" element={<TeacherList />} />
+        <Route path="teachers/create" element={<TeacherCreate />} />
 
-        {/* Uncomment and add these when available */}
+        {/* Future routes */}
         {/* <Route path="students" element={<StudentList />} /> */}
         {/* <Route path="classes" element={<ClassList />} /> */}
       </Route>

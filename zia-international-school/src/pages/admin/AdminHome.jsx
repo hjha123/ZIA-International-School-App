@@ -5,10 +5,6 @@ import { BsPersonBadge, BsPeople, BsBuilding } from "react-icons/bs";
 const AdminHome = () => {
   return (
     <div>
-      <h2 className="mb-4 fw-bold text-primary">
-        Welcome to ZIS Admin Dashboard
-      </h2>
-
       <Row className="mb-4">
         <Col md={4}>
           <Card className="text-white bg-primary shadow-sm">

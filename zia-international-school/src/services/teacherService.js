@@ -5,6 +5,12 @@ const getAllTeachers = async () => {
   return response.data;
 };
 
+const createTeacher = async (data) => {
+  const response = await axiosInstance.post("/teachers", data);
+  return response.data;
+};
+
 export default {
   getAllTeachers,
+  createTeacher,
 };

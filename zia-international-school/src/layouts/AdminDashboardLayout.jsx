@@ -1,6 +1,14 @@
 import React from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
-import { Navbar, Nav, Container, Row, Col, NavDropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Row,
+  Col,
+  NavDropdown,
+  Card,
+} from "react-bootstrap";
 import {
   BsPersonBadge,
   BsPeople,
@@ -12,9 +20,13 @@ const AdminDashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const username = localStorage.getItem("username") || "Admin";
+  const role = localStorage.getItem("role") || "ADMIN";
+
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("role");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -25,6 +37,17 @@ const AdminDashboardLayout = () => {
   };
 
   const currentPage = location.pathname.split("/").pop();
+
+  const isDashboardHome =
+    location.pathname === "/admin/dashboard" ||
+    location.pathname === "/admin/dashboard/";
+
+  const currentDate = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -38,22 +61,28 @@ const AdminDashboardLayout = () => {
           background: "linear-gradient(90deg, #007bff 0%, #0056b3 100%)",
         }}
       >
-        <Navbar.Brand className="fw-bold">ZIA Admin Dashboard</Navbar.Brand>
+        <Navbar.Brand className="fw-bold">ZIS Admin Dashboard</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>
-            {/* Optional future profile dropdown */}
-            {/* 
-            <NavDropdown title="Admin" id="admin-dropdown" align="end">
+            <NavDropdown
+              title={
+                <span>
+                  {username}{" "}
+                  <small style={{ color: "#e0e0e0", fontSize: "0.8rem" }}>
+                    ({role})
+                  </small>
+                </span>
+              }
+              id="admin-dropdown"
+              align="end"
+              className="fw-semibold text-white"
+            >
               <NavDropdown.Item onClick={handleLogout}>
-                <BsBoxArrowRight className="me-2" /> Logout
+                <BsBoxArrowRight className="me-2" />
+                Logout
               </NavDropdown.Item>
-            </NavDropdown> 
-            */}
-            <Nav.Link onClick={handleLogout} className="text-white fw-semibold">
-              <BsBoxArrowRight className="me-1" />
-              Logout
-            </Nav.Link>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -123,12 +152,19 @@ const AdminDashboardLayout = () => {
               minHeight: "calc(100vh - 56px)",
             }}
           >
-            <div className="mb-4">
-              <h4 className="fw-bold text-secondary">
-                {pageTitles[currentPage] || "Dashboard"}
-              </h4>
-              <hr />
-            </div>
+            {/* Welcome Card on Dashboard Home */}
+            {isDashboardHome && (
+              <Card
+                className="mb-4 shadow-sm border-0"
+                style={{ backgroundColor: "#e9f2ff" }}
+              >
+                <Card.Body>
+                  <h5 className="mb-1 fw-bold">Welcome back, {username}!</h5>
+                  <p className="mb-0 text-muted">Today is {currentDate}</p>
+                </Card.Body>
+              </Card>
+            )}
+
             <Outlet />
           </Col>
         </Row>
