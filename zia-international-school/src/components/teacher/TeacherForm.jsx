@@ -7,6 +7,7 @@ import {
   Container,
   Alert,
   Spinner,
+  Modal,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import teacherService from "../../services/teacherService";
@@ -45,6 +46,7 @@ const TeacherForm = () => {
   });
   const [grades, setGrades] = useState([]);
   const [sections, setSections] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [generatedStaffId, setGeneratedStaffId] = useState("");
 
@@ -139,8 +141,8 @@ const TeacherForm = () => {
         success: `Teacher created successfully. Employee ID: ${staffId}`,
         error: "",
       });
+      setShowSuccessModal(true);
 
-      // Redirect to Teacher List page after 2 seconds
       setTimeout(() => navigate("/admin/dashboard/teachers"), 5000);
     } catch (err) {
       setStatus({
@@ -156,7 +158,23 @@ const TeacherForm = () => {
       <h4 className="mb-4 text-primary">Teacher Onboarding Form</h4>
 
       {status.error && <Alert variant="danger">{status.error}</Alert>}
-      {status.success && <Alert variant="success">{status.success}</Alert>}
+
+      <Modal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className="text-success">Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-0">
+            Teacher created successfully.
+            <br />
+            <strong>Employee ID: {generatedStaffId}</strong>
+          </p>
+        </Modal.Body>
+      </Modal>
 
       <Form onSubmit={handleSubmit}>
         {/* --- FORM FIELDS --- */}
