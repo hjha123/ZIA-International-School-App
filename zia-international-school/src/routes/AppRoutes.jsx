@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
+import Login from "../auth/Login";
+import Signup from "../auth/Signup";
+import ForgotPassword from "../auth/ForgotPassword";
+import ResetPassword from "../auth/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminDashboardLayout from "../layouts/AdminDashboardLayout";
 import AdminHome from "../pages/admin/AdminHome";
