@@ -9,6 +9,7 @@ import {
   Alert,
   Tab,
   Tabs,
+  Card,
 } from "react-bootstrap";
 import teacherService from "../../../services/teacherService";
 
@@ -150,264 +151,290 @@ const TeacherUpdate = () => {
 
   return (
     <div className="container mt-4">
-      <h3>Update Teacher: {form.fullName}</h3>
+      <h2 className="text-primary fw-bold mb-4">
+        <i className="bi bi-pencil-square me-2"></i>Update Teacher:{" "}
+        <span className="text-dark">{form.fullName}</span>
+      </h2>
+
       <Form onSubmit={handleSubmit}>
-        <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+        <Tabs
+          activeKey={key}
+          onSelect={(k) => setKey(k)}
+          className="mb-3 bg-light rounded"
+          justify
+        >
           <Tab eventKey="system" title="System Info">
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="empId" className="mb-3">
-                  <Form.Label>Employee ID</Form.Label>
-                  <Form.Control type="text" value={form.empId} disabled />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="username" className="mb-3">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control type="text" value={form.username} disabled />
-                </Form.Group>
-              </Col>
-            </Row>
+            <Card className="p-4 bg-light border-info">
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="empId" className="mb-3">
+                    <Form.Label>Employee ID</Form.Label>
+                    <Form.Control type="text" value={form.empId} disabled />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group controlId="username" className="mb-3">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control type="text" value={form.username} disabled />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Card>
           </Tab>
 
           <Tab eventKey="personal" title="Personal Information">
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="fullName" className="mb-3">
-                  <Form.Label>Full Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="fullName"
-                    value={form.fullName}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group controlId="email" className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    disabled
-                  />
-                </Form.Group>
-                <Form.Group controlId="phone" className="mb-3">
-                  <Form.Label>Phone</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group controlId="gender" className="mb-3">
-                  <Form.Label>Gender</Form.Label>
-                  <Form.Select
-                    name="gender"
-                    value={form.gender}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group controlId="dateOfBirth" className="mb-3">
-                  <Form.Label>Date of Birth</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="dateOfBirth"
-                    value={form.dateOfBirth}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
+            <Card className="p-4 bg-light border-secondary">
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="fullName" className="mb-3">
+                    <Form.Label>Full Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="fullName"
+                      value={form.fullName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="email" className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      disabled
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="phone" className="mb-3">
+                    <Form.Label>Phone</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="gender" className="mb-3">
+                    <Form.Label>Gender</Form.Label>
+                    <Form.Select
+                      name="gender"
+                      value={form.gender}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group controlId="dateOfBirth" className="mb-3">
+                    <Form.Label>Date of Birth</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="dateOfBirth"
+                      value={form.dateOfBirth}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
 
-              <Col md={6}>
-                <Form.Group controlId="qualification" className="mb-3">
-                  <Form.Label>Qualification</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="qualification"
-                    value={form.qualification}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="address" className="mb-3">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    name="address"
-                    value={form.address}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                <Col md={6}>
+                  <Form.Group controlId="qualification" className="mb-3">
+                    <Form.Label>Qualification</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="qualification"
+                      value={form.qualification}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="address" className="mb-3">
+                    <Form.Label>Address</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      name="address"
+                      value={form.address}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Card>
           </Tab>
 
           <Tab eventKey="professional" title="Professional Details">
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="joiningDate" className="mb-3">
-                  <Form.Label>Joining Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="joiningDate"
-                    value={form.joiningDate}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="experienceYears" className="mb-3">
-                  <Form.Label>Experience (Years)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="experienceYears"
-                    value={form.experienceYears}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="gradeName" className="mb-3">
-                  <Form.Label>Grade</Form.Label>
-                  <Form.Select
-                    name="gradeName"
-                    value={form.gradeName}
-                    onChange={handleGradeChange}
-                  >
-                    <option value="">Select Grade</option>
-                    {grades.map((g) => (
-                      <option key={g.id} value={g.name}>
-                        {g.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group controlId="sectionName" className="mb-3">
-                  <Form.Label>Section</Form.Label>
-                  <Form.Select
-                    name="sectionName"
-                    value={form.sectionName}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Section</option>
-                    {sections.map((s) => (
-                      <option key={s.id} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </Col>
+            <Card className="p-4 bg-light border-warning">
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="joiningDate" className="mb-3">
+                    <Form.Label>Joining Date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="joiningDate"
+                      value={form.joiningDate}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="experienceYears" className="mb-3">
+                    <Form.Label>Experience (Years)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="experienceYears"
+                      value={form.experienceYears}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="gradeName" className="mb-3">
+                    <Form.Label>Grade</Form.Label>
+                    <Form.Select
+                      name="gradeName"
+                      value={form.gradeName}
+                      onChange={handleGradeChange}
+                    >
+                      <option value="">Select Grade</option>
+                      {grades.map((g) => (
+                        <option key={g.id} value={g.name}>
+                          {g.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group controlId="sectionName" className="mb-3">
+                    <Form.Label>Section</Form.Label>
+                    <Form.Select
+                      name="sectionName"
+                      value={form.sectionName}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Section</option>
+                      {sections.map((s) => (
+                        <option key={s.id} value={s.name}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
 
-              <Col md={6}>
-                <Form.Group controlId="subjectIds" className="mb-3">
-                  <Form.Label>Subjects</Form.Label>
-                  <Form.Select
-                    multiple
-                    name="subjectIds"
-                    value={form.subjectIds}
-                    onChange={handleSubjectsChange}
-                  >
-                    {subjects.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group controlId="teacherType" className="mb-3">
-                  <Form.Label>Teacher Type</Form.Label>
-                  <Form.Select
-                    name="teacherType"
-                    value={form.teacherType}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    <option value="FULL_TIME">FULL_TIME</option>
-                    <option value="PART_TIME">PART_TIME</option>
-                    <option value="GUEST">GUEST</option>
-                    <option value="VISITING">VISITING</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
+                <Col md={6}>
+                  <Form.Group controlId="subjectIds" className="mb-3">
+                    <Form.Label>Subjects</Form.Label>
+                    <Form.Select
+                      multiple
+                      name="subjectIds"
+                      value={form.subjectIds}
+                      onChange={handleSubjectsChange}
+                    >
+                      {subjects.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group controlId="teacherType" className="mb-3">
+                    <Form.Label>Teacher Type</Form.Label>
+                    <Form.Select
+                      name="teacherType"
+                      value={form.teacherType}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select</option>
+                      <option value="FULL_TIME">FULL_TIME</option>
+                      <option value="PART_TIME">PART_TIME</option>
+                      <option value="GUEST">GUEST</option>
+                      <option value="VISITING">VISITING</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Card>
           </Tab>
 
           <Tab eventKey="optional" title="Optional Details">
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="maritalStatus" className="mb-3">
-                  <Form.Label>Marital Status</Form.Label>
-                  <Form.Select
-                    name="maritalStatus"
-                    value={form.maritalStatus}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Divorced">Divorced</option>
-                    <option value="Widowed">Widowed</option>
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group controlId="emergencyContactInfo" className="mb-3">
-                  <Form.Label>Emergency Contact Info</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="emergencyContactInfo"
-                    value={form.emergencyContactInfo}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="bloodGroup" className="mb-3">
-                  <Form.Label>Blood Group</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="bloodGroup"
-                    value={form.bloodGroup}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
+            <Card className="p-4 bg-light border-success">
+              <Row>
+                <Col md={6}>
+                  <Form.Group controlId="maritalStatus" className="mb-3">
+                    <Form.Label>Marital Status</Form.Label>
+                    <Form.Select
+                      name="maritalStatus"
+                      value={form.maritalStatus}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select</option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                      <option value="Divorced">Divorced</option>
+                      <option value="Widowed">Widowed</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group controlId="emergencyContactInfo" className="mb-3">
+                    <Form.Label>Emergency Contact Info</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="emergencyContactInfo"
+                      value={form.emergencyContactInfo}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bloodGroup" className="mb-3">
+                    <Form.Label>Blood Group</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="bloodGroup"
+                      value={form.bloodGroup}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
 
-              <Col md={6}>
-                <Form.Group controlId="nationality" className="mb-3">
-                  <Form.Label>Nationality</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="nationality"
-                    value={form.nationality}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="aadharNumber" className="mb-3">
-                  <Form.Label>Aadhar Number</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="aadharNumber"
-                    value={form.aadharNumber}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="profileImageUrl" className="mb-3">
-                  <Form.Label>Profile Image URL</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="profileImageUrl"
-                    value={form.profileImageUrl}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                <Col md={6}>
+                  <Form.Group controlId="nationality" className="mb-3">
+                    <Form.Label>Nationality</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="nationality"
+                      value={form.nationality}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="aadharNumber" className="mb-3">
+                    <Form.Label>Aadhar Number</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="aadharNumber"
+                      value={form.aadharNumber}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="profileImageUrl" className="mb-3">
+                    <Form.Label>Profile Image URL</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="profileImageUrl"
+                      value={form.profileImageUrl}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Card>
           </Tab>
         </Tabs>
 
-        <Button variant="primary" type="submit">
-          Update Teacher
-        </Button>
+        <div className="d-flex justify-content-end mt-4 gap-2">
+          <Button
+            variant="secondary"
+            className="px-4"
+            onClick={() => navigate("/admin/dashboard/teachers")}
+          >
+            Cancel
+          </Button>
+          <Button variant="success" type="submit" className="px-4">
+            Update Teacher
+          </Button>
+        </div>
       </Form>
     </div>
   );
