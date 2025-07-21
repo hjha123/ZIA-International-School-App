@@ -94,7 +94,7 @@ export default function TeacherProfile() {
           ) : (
             renderGenderIcon(teacher.gender)
           )}
-          <h4 className="mb-0">Teacher Profile: {teacher.fullName}</h4>
+          <h4 className="mb-0"> {teacher.fullName}</h4>
         </Card.Header>
 
         <Card.Body>

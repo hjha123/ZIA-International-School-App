@@ -221,6 +221,17 @@ const TeacherList = () => {
                         >
                           View
                         </Button>
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          onClick={() =>
+                            navigate(
+                              `/admin/dashboard/teachers/update/${teacher.empId}`
+                            )
+                          }
+                        >
+                          Update
+                        </Button>
 
                         <Button
                           variant="danger"

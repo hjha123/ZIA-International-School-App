@@ -9,6 +9,7 @@ import AdminHome from "../pages/admin/AdminHome";
 import TeacherList from "../pages/admin/teachers/TeacherList";
 import TeacherCreate from "../pages/admin/teachers/TeacherCreate";
 import TeacherProfile from "../pages/admin/teachers/TeacherProfile";
+import TeacherUpdate from "../pages/admin/teachers/TeacherUpdate";
 
 export default function AppRoutes() {
   return (
@@ -34,6 +35,7 @@ export default function AppRoutes() {
         <Route path="teachers" element={<TeacherList />} />
         <Route path="teachers/create" element={<TeacherCreate />} />
         <Route path="teachers/:empId" element={<TeacherProfile />} />{" "}
+        <Route path="teachers/update/:empId" element={<TeacherUpdate />} />
       </Route>
     </Routes>
   );

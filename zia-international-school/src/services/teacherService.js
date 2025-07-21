@@ -35,6 +35,9 @@ const getTeacherByEmpId = async (empId) => {
   return response.data;
 };
 
+const updateTeacherByEmpId = (empId, updateRequest) =>
+  axios.put(`teachers/emp/${empId}`, updateRequest).then((res) => res.data);
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -43,4 +46,5 @@ export default {
   getSectionsByGrade,
   deleteTeacherByEmpId,
   getTeacherByEmpId,
+  updateTeacherByEmpId,
 };
