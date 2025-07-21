@@ -96,10 +96,12 @@ const TeacherUpdate = () => {
             (g) => g.name === teacherData.gradeName
           );
           if (selectedGrade) {
-            const sectionList = await teacherService.getSectionsByGrade(
+            const fetchedSections = await teacherService.getSectionsByGrade(
               selectedGrade.id
             );
-            setSections(sectionList || []);
+            setSections(fetchedSections || []);
+          } else {
+            setSections([]);
           }
         }
       } catch (err) {

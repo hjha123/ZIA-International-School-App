@@ -389,6 +389,13 @@ const TeacherForm = () => {
             "Create Teacher"
           )}
         </Button>
+        <Button
+          variant="secondary"
+          className="ms-2"
+          onClick={() => navigate("/admin/dashboard/teachers")}
+        >
+          Cancel
+        </Button>
       </Form>
     </Container>
   );
