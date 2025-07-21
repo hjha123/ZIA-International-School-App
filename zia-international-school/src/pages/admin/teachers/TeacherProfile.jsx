@@ -69,32 +69,15 @@ export default function TeacherProfile() {
 
       <Card className="shadow-lg rounded-4 border-0">
         <Card.Header
-          className="text-white d-flex align-items-center"
+          className="text-white d-flex align-items-center gap-2"
           style={{
             background: "linear-gradient(to right, #6a11cb, #2575fc)",
             borderTopLeftRadius: "1rem",
             borderTopRightRadius: "1rem",
           }}
         >
-          {teacher.profileImageUrl ? (
-            <img
-              src={
-                teacher.profileImageUrl ||
-                (teacher.gender?.toLowerCase() === "male"
-                  ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
-                  : teacher.gender?.toLowerCase() === "female"
-                  ? "https://cdn-icons-png.flaticon.com/512/2922/2922561.png"
-                  : "https://via.placeholder.com/120?text=Profile")
-              }
-              alt="Profile"
-              className="rounded-circle mb-2"
-              width={120}
-              height={120}
-            />
-          ) : (
-            renderGenderIcon(teacher.gender)
-          )}
-          <h4 className="mb-0"> {teacher.fullName}</h4>
+          {renderGenderIcon(teacher.gender)}
+          <h4 className="mb-0">{teacher.fullName}</h4>
         </Card.Header>
 
         <Card.Body>

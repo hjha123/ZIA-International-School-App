@@ -110,6 +110,7 @@ const TeacherForm = () => {
     if (!formData.qualification)
       errs.qualification = "Qualification is required";
     if (!formData.joiningDate) errs.joiningDate = "Joining date is required";
+    if (!formData.teacherType) errs.teacherType = "Teacher type is required";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -164,11 +165,21 @@ const TeacherForm = () => {
         onHide={() => setShowSuccessModal(false)}
         centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title className="text-success">Success</Modal.Title>
+        <Modal.Header
+          closeButton
+          style={{ backgroundColor: "#d4edda", color: "#155724" }}
+        >
+          <Modal.Title>
+            <i className="bi bi-check-circle-fill me-2 text-success"></i>
+            Success
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p className="mb-0">
+        <Modal.Body className="text-center">
+          <i
+            className="bi bi-check-circle-fill text-success"
+            style={{ fontSize: "3rem" }}
+          ></i>
+          <p className="mt-3 mb-0">
             Teacher created successfully.
             <br />
             <strong>Employee ID: {generatedStaffId}</strong>
@@ -345,11 +356,12 @@ const TeacherForm = () => {
           </Col>
           <Col md={6}>
             <Form.Group controlId="teacherType">
-              <Form.Label>Teacher Type</Form.Label>
+              <Form.Label>Teacher Type *</Form.Label>
               <Form.Select
                 name="teacherType"
                 value={formData.teacherType}
                 onChange={handleChange}
+                isInvalid={!!errors.teacherType}
               >
                 <option value="">Select</option>
                 <option value="FULL_TIME">FULL_TIME</option>
@@ -357,6 +369,9 @@ const TeacherForm = () => {
                 <option value="GUEST">GUEST</option>
                 <option value="VISITING">VISITING</option>
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.teacherType}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Row>
