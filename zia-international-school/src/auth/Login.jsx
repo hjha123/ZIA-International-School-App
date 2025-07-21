@@ -19,7 +19,10 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { role } = await authService.login(formData); // ✅ Destructure properly
+      const { role } = await authService.login(formData);
+
+      // ✅ Set the activity timestamp immediately after successful login
+      localStorage.setItem("lastActivityTime", Date.now().toString());
 
       // ✅ Navigate based on role
       if (role === "ADMIN") navigate("/admin/dashboard");

@@ -1,4 +1,5 @@
 import React from "react";
+import useAutoLogout from "../hooks/useAutoLogout";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Navbar,
@@ -17,6 +18,7 @@ import {
 } from "react-icons/bs";
 
 const AdminDashboardLayout = () => {
+  useAutoLogout();
   const navigate = useNavigate();
   const location = useLocation();
 

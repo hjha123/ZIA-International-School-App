@@ -172,8 +172,8 @@ const TeacherUpdate = () => {
   return (
     <div className="container mt-4">
       <h2 className="text-primary fw-bold mb-4">
-        <i className="bi bi-pencil-square me-2"></i>Update Teacher:{" "}
-        <span className="text-dark">{form.fullName}</span>
+        <i className="bi bi-pencil-square me-2"></i>
+        Update Teacher: <span className="text-success">{form.fullName}</span>
       </h2>
 
       <Form onSubmit={handleSubmit}>
