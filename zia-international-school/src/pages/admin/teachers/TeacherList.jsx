@@ -86,6 +86,23 @@ const TeacherList = () => {
       teacher.empId?.toLowerCase().includes(search)
     );
   });
+  const handleDeleteTeacher = async (empId, fullName) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete Teacher "${fullName}" (Emp ID: ${empId})? This action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await teacherService.deleteTeacherByEmpId(empId);
+      alert(`Teacher "${fullName}" has been deleted successfully.`);
+      // Refetch teachers
+      fetchTeachers();
+    } catch (err) {
+      alert(`Failed to delete teacher "${fullName}". Please try again.`);
+      console.error(err);
+    }
+  };
 
   const indexOfLast = currentPage * teachersPerPage;
   const indexOfFirst = indexOfLast - teachersPerPage;
@@ -190,7 +207,13 @@ const TeacherList = () => {
                         <Button variant="primary" size="sm">
                           View
                         </Button>
-                        <Button variant="danger" size="sm">
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteTeacher(teacher.empId, teacher.fullName)
+                          }
+                        >
                           Delete
                         </Button>
                       </div>

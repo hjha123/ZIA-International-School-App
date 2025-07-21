@@ -43,22 +43,11 @@ const TeacherForm = () => {
     success: "",
     error: "",
   });
+  const [grades, setGrades] = useState([]);
+  const [sections, setSections] = useState([]);
 
   const [generatedStaffId, setGeneratedStaffId] = useState("");
 
-  //   useEffect(() => {
-  //     setSubjects([
-  //       { id: 1, name: "Math" },
-  //       { id: 2, name: "Biology" },
-  //       { id: 3, name: "English" },
-  //       { id: 4, name: "Physics" },
-  //       { id: 5, name: "Social Science" },
-  //       { id: 6, name: "Hindi" },
-  //       { id: 7, name: "Kannada" },
-  //       { id: 8, name: "Computer Science" },
-  //       { id: 9, name: "Chemistry" },
-  //     ]);
-  //   }, []);
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
@@ -71,6 +60,40 @@ const TeacherForm = () => {
 
     fetchSubjects();
   }, []);
+
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const gradeList = await teacherService.getAllGrades();
+        setGrades(gradeList);
+      } catch (err) {
+        console.error("Failed to fetch grades", err);
+      }
+    };
+
+    fetchGrades();
+  }, []);
+
+  useEffect(() => {
+    const fetchSections = async () => {
+      if (!formData.gradeName || grades.length === 0) {
+        setSections([]);
+        return;
+      }
+
+      const selectedGrade = grades.find((g) => g.name === formData.gradeName);
+      if (!selectedGrade) return;
+
+      try {
+        const data = await teacherService.getSectionsByGrade(selectedGrade.id);
+        setSections(data);
+      } catch (err) {
+        console.error("Failed to fetch sections", err);
+      }
+    };
+
+    fetchSections();
+  }, [formData.gradeName, grades]);
 
   const validate = () => {
     const errs = {};
@@ -113,7 +136,7 @@ const TeacherForm = () => {
       setGeneratedStaffId(staffId);
       setStatus({
         loading: false,
-        success: `Teacher created successfully. Staff ID: ${staffId}`,
+        success: `Teacher created successfully. Employee ID: ${staffId}`,
         error: "",
       });
 
@@ -325,23 +348,36 @@ const TeacherForm = () => {
           <Col md={6}>
             <Form.Group controlId="gradeName">
               <Form.Label>Grade</Form.Label>
-              <Form.Control
-                type="text"
+              <Form.Select
                 name="gradeName"
                 value={formData.gradeName}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Select Grade</option>
+                {grades.map((grade) => (
+                  <option key={grade.id} value={grade.name}>
+                    {grade.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group controlId="sectionName">
               <Form.Label>Section</Form.Label>
-              <Form.Control
-                type="text"
+              <Form.Select
                 name="sectionName"
                 value={formData.sectionName}
                 onChange={handleChange}
-              />
+                disabled={!formData.gradeName}
+              >
+                <option value="">Select Section</option>
+                {sections.map((section) => (
+                  <option key={section.id} value={section.name}>
+                    {section.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
           </Col>
         </Row>
