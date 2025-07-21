@@ -1,48 +1,51 @@
 import { useEffect } from "react";
-import authService from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
-const useAutoLogout = (timeoutInMinutes = 2) => {
+function useAutoLogout(timeoutMinutes = 2) {
+  const navigate = useNavigate();
+  const timeoutMillis = timeoutMinutes * 60 * 1000;
+
   useEffect(() => {
-    const updateActivity = () => {
+    const logout = () => {
+      alert(
+        "⚠️ Your session has expired due to inactivity. You will be logged out."
+      );
+      localStorage.clear();
+      navigate("/login");
+    };
+
+    const updateActivityTime = () => {
       localStorage.setItem("lastActivityTime", Date.now().toString());
     };
 
     const checkInactivity = () => {
-      const lastActivity = localStorage.getItem("lastActivityTime");
+      const lastActivity = parseInt(
+        localStorage.getItem("lastActivityTime"),
+        10
+      );
       const now = Date.now();
 
-      if (
-        lastActivity &&
-        now - parseInt(lastActivity, 10) > timeoutInMinutes * 60 * 1000
-      ) {
-        // Clear storage
-        localStorage.removeItem("lastActivityTime");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("role");
-        localStorage.removeItem("username");
-
-        // Logout service call
-        authService.logout();
-
-        // Redirect to login
-        window.location.href = "/login";
+      if (!isNaN(lastActivity) && now - lastActivity >= timeoutMillis) {
+        logout();
       }
     };
 
-    const activityEvents = ["click", "mousemove", "keydown", "scroll"];
-    activityEvents.forEach((event) =>
-      window.addEventListener(event, updateActivity)
+    // ✅ Reset activity timestamp on user interaction
+    const events = ["mousemove", "keydown", "scroll", "click"];
+    events.forEach((event) =>
+      window.addEventListener(event, updateActivityTime)
     );
 
-    const intervalId = setInterval(checkInactivity, 60000); // every 1 minute
+    // ✅ Check inactivity every 1 min
+    const interval = setInterval(checkInactivity, 60 * 1000);
 
     return () => {
-      clearInterval(intervalId);
-      activityEvents.forEach((event) =>
-        window.removeEventListener(event, updateActivity)
+      events.forEach((event) =>
+        window.removeEventListener(event, updateActivityTime)
       );
+      clearInterval(interval);
     };
-  }, [timeoutInMinutes]);
-};
+  }, [navigate, timeoutMillis]);
+}
 
 export default useAutoLogout;
