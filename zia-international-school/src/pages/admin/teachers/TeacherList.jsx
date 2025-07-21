@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import teacherService from "../../../services/teacherService";
 import "./TeacherList.css";
 import {
+  Modal,
   Table,
   Spinner,
   Alert,
@@ -20,6 +21,8 @@ const TeacherList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [teachersPerPage] = useState(8);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   const navigate = useNavigate();
 
@@ -86,21 +89,25 @@ const TeacherList = () => {
       teacher.empId?.toLowerCase().includes(search)
     );
   });
-  const handleDeleteTeacher = async (empId, fullName) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete Teacher "${fullName}" (Emp ID: ${empId})? This action cannot be undone.`
-    );
 
-    if (!confirmDelete) return;
+  const handleDeleteClick = (teacher) => {
+    setSelectedTeacher(teacher);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedTeacher) return;
 
     try {
-      await teacherService.deleteTeacherByEmpId(empId);
-      alert(`Teacher "${fullName}" has been deleted successfully.`);
-      // Refetch teachers
-      fetchTeachers();
-    } catch (err) {
-      alert(`Failed to delete teacher "${fullName}". Please try again.`);
-      console.error(err);
+      await teacherService.deleteTeacherByEmpId(selectedTeacher.empId);
+      setTeachers((prev) =>
+        prev.filter((t) => t.empId !== selectedTeacher.empId)
+      );
+    } catch (error) {
+      alert("Failed to delete teacher.");
+    } finally {
+      setShowConfirmModal(false);
+      setSelectedTeacher(null);
     }
   };
 
@@ -111,7 +118,6 @@ const TeacherList = () => {
 
   return (
     <Container fluid className="py-4">
-      {/* Header row with title, search, and add button */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
         <h3 className="fw-bold text-secondary mb-0 text-nowrap">
           Teachers Directory
@@ -196,7 +202,6 @@ const TeacherList = () => {
                         {teacher.teacherType?.replace("_", " ")}
                       </Badge>
                     </td>
-
                     <td>
                       <Badge bg={getStatusBadgeVariant(teacher.status)}>
                         {teacher.status}
@@ -210,9 +215,7 @@ const TeacherList = () => {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() =>
-                            handleDeleteTeacher(teacher.empId, teacher.fullName)
-                          }
+                          onClick={() => handleDeleteClick(teacher)}
                         >
                           Delete
                         </Button>
@@ -240,6 +243,32 @@ const TeacherList = () => {
           )}
         </>
       )}
+
+      <Modal
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete teacher{" "}
+          <strong>{selectedTeacher?.fullName}</strong> with Employee ID{" "}
+          <strong>{selectedTeacher?.empId}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            Yes, Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
