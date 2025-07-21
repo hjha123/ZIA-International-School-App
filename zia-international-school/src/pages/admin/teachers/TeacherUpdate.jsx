@@ -65,7 +65,13 @@ const TeacherUpdate = () => {
           fullName: teacherData.fullName || "",
           email: teacherData.email || "",
           phone: teacherData.phone || "",
-          subjectIds: teacherData.subjects?.map((s) => s.id) || [],
+          subjectIds:
+            teacherData.subjects
+              ?.map((name) => {
+                const matched = subjectList.find((subj) => subj.name === name);
+                return matched ? matched.id : null;
+              })
+              .filter((id) => id !== null) || [],
           gender: teacherData.gender || "",
           dateOfBirth: teacherData.dateOfBirth || "",
           qualification: teacherData.qualification || "",
@@ -136,6 +142,12 @@ const TeacherUpdate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.subjectIds || form.subjectIds.length === 0) {
+      setError("Please select at least one subject.");
+      return;
+    }
+
     try {
       await teacherService.updateTeacherByEmpId(empId, form);
       alert("Teacher updated successfully!");
@@ -318,12 +330,16 @@ const TeacherUpdate = () => {
 
                 <Col md={6}>
                   <Form.Group controlId="subjectIds" className="mb-3">
-                    <Form.Label>Subjects</Form.Label>
+                    <Form.Label>
+                      Subjects <span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Select
                       multiple
                       name="subjectIds"
                       value={form.subjectIds}
                       onChange={handleSubjectsChange}
+                      required
+                      isInvalid={form.subjectIds.length === 0}
                     >
                       {subjects.map((s) => (
                         <option key={s.id} value={s.id}>
@@ -331,7 +347,14 @@ const TeacherUpdate = () => {
                         </option>
                       ))}
                     </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                      Please select at least one subject.
+                    </Form.Control.Feedback>
+                    <Form.Text className="text-muted">
+                      Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+                    </Form.Text>
                   </Form.Group>
+
                   <Form.Group controlId="teacherType" className="mb-3">
                     <Form.Label>Teacher Type</Form.Label>
                     <Form.Select
