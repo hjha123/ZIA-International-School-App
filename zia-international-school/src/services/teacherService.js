@@ -30,6 +30,11 @@ const deleteTeacherByEmpId = async (empId) => {
   return response.data;
 };
 
+const getTeacherByEmpId = async (empId) => {
+  const response = await axios.get(`/teachers/emp/${empId}`);
+  return response.data;
+};
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -37,4 +42,5 @@ export default {
   getAllGrades,
   getSectionsByGrade,
   deleteTeacherByEmpId,
+  getTeacherByEmpId,
 };

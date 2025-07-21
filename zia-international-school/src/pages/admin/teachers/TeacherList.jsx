@@ -209,9 +209,19 @@ const TeacherList = () => {
                     </td>
                     <td>
                       <div className="d-flex flex-wrap gap-2">
-                        <Button variant="primary" size="sm">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="me-2"
+                          onClick={() =>
+                            navigate(
+                              `/admin/dashboard/teachers/${teacher.empId}`
+                            )
+                          }
+                        >
                           View
                         </Button>
+
                         <Button
                           variant="danger"
                           size="sm"
