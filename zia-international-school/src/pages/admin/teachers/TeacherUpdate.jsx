@@ -21,7 +21,7 @@ const TeacherUpdate = () => {
   const [subjects, setSubjects] = useState([]);
   const [grades, setGrades] = useState([]);
   const [sections, setSections] = useState([]);
-  const [key, setKey] = useState("personal");
+  const [key, setKey] = useState("system");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -43,6 +43,8 @@ const TeacherUpdate = () => {
     teacherType: "",
     gradeName: "",
     sectionName: "",
+    empId: "",
+    username: "",
   });
 
   useEffect(() => {
@@ -55,14 +57,14 @@ const TeacherUpdate = () => {
         ]);
 
         setTeacher(teacherData);
-        setSubjects(subjectList);
-        setGrades(gradeList);
+        setSubjects(subjectList || []);
+        setGrades(gradeList || []);
 
         setForm({
           fullName: teacherData.fullName || "",
           email: teacherData.email || "",
           phone: teacherData.phone || "",
-          subjectIds: [],
+          subjectIds: teacherData.subjects?.map((s) => s.id) || [],
           gender: teacherData.gender || "",
           dateOfBirth: teacherData.dateOfBirth || "",
           qualification: teacherData.qualification || "",
@@ -78,6 +80,8 @@ const TeacherUpdate = () => {
           teacherType: teacherData.teacherType || "",
           gradeName: teacherData.gradeName || "",
           sectionName: teacherData.sectionName || "",
+          empId: teacherData.empId || "",
+          username: teacherData.username || "",
         });
 
         if (teacherData.gradeName) {
@@ -88,7 +92,7 @@ const TeacherUpdate = () => {
             const sectionList = await teacherService.getSectionsByGrade(
               selectedGrade.id
             );
-            setSections(sectionList);
+            setSections(sectionList || []);
           }
         }
       } catch (err) {
@@ -123,7 +127,7 @@ const TeacherUpdate = () => {
       const sectionList = await teacherService.getSectionsByGrade(
         selectedGrade.id
       );
-      setSections(sectionList);
+      setSections(sectionList || []);
     } else {
       setSections([]);
     }
@@ -149,6 +153,23 @@ const TeacherUpdate = () => {
       <h3>Update Teacher: {form.fullName}</h3>
       <Form onSubmit={handleSubmit}>
         <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+          <Tab eventKey="system" title="System Info">
+            <Row>
+              <Col md={6}>
+                <Form.Group controlId="empId" className="mb-3">
+                  <Form.Label>Employee ID</Form.Label>
+                  <Form.Control type="text" value={form.empId} disabled />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="username" className="mb-3">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control type="text" value={form.username} disabled />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Tab>
+
           <Tab eventKey="personal" title="Personal Information">
             <Row>
               <Col md={6}>
@@ -168,8 +189,7 @@ const TeacherUpdate = () => {
                     type="email"
                     name="email"
                     value={form.email}
-                    onChange={handleChange}
-                    required
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="phone" className="mb-3">
@@ -320,12 +340,17 @@ const TeacherUpdate = () => {
               <Col md={6}>
                 <Form.Group controlId="maritalStatus" className="mb-3">
                   <Form.Label>Marital Status</Form.Label>
-                  <Form.Control
-                    type="text"
+                  <Form.Select
                     name="maritalStatus"
                     value={form.maritalStatus}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Select</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </Form.Select>
                 </Form.Group>
                 <Form.Group controlId="emergencyContactInfo" className="mb-3">
                   <Form.Label>Emergency Contact Info</Form.Label>
