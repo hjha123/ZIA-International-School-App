@@ -146,9 +146,13 @@ const TeacherForm = () => {
 
       setTimeout(() => navigate("/admin/dashboard/teachers"), 5000);
     } catch (err) {
+      let errorMessage = "Failed to create teacher";
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
       setStatus({
         loading: false,
-        error: "Failed to create teacher",
+        error: errorMessage,
         success: "",
       });
     }
