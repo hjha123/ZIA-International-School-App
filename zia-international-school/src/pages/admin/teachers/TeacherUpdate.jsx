@@ -10,6 +10,7 @@ import {
   Tab,
   Tabs,
   Card,
+  Modal,
 } from "react-bootstrap";
 import teacherService from "../../../services/teacherService";
 
@@ -23,6 +24,7 @@ const TeacherUpdate = () => {
   const [grades, setGrades] = useState([]);
   const [sections, setSections] = useState([]);
   const [key, setKey] = useState("system");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -152,12 +154,16 @@ const TeacherUpdate = () => {
 
     try {
       await teacherService.updateTeacherByEmpId(empId, form);
-      alert("Teacher updated successfully!");
-      navigate("/admin/dashboard/teachers");
+      setShowSuccessModal(true); // ✅ show modal
     } catch (err) {
       console.error("Update failed:", err);
       setError("Failed to update teacher. Please check the input.");
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+    navigate("/admin/dashboard/teachers");
   };
 
   if (loading) return <Spinner animation="border" />;
@@ -461,6 +467,24 @@ const TeacherUpdate = () => {
           </Button>
         </div>
       </Form>
+      <Modal show={showSuccessModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title>
+            <i className="bi bi-check-circle-fill me-2"></i>Update Successful
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <h5 className="text-success mb-3">
+            Teacher details have been updated successfully!
+          </h5>
+          <i className="bi bi-person-badge display-4 text-success"></i>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseModal}>
+            Go to Teacher List
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
