@@ -1,5 +1,6 @@
 import React from "react";
 import useAutoLogout from "../hooks/useAutoLogout";
+import SessionExpiredModal from "../components/SessionExpiredModal";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Navbar,
@@ -18,7 +19,7 @@ import {
 } from "react-icons/bs";
 
 const AdminDashboardLayout = () => {
-  useAutoLogout();
+  const { showModal, handleModalClose } = useAutoLogout();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -53,6 +54,7 @@ const AdminDashboardLayout = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
+      <SessionExpiredModal show={showModal} onClose={handleModalClose} />
       {/* Top Navbar */}
       <Navbar
         bg="primary"

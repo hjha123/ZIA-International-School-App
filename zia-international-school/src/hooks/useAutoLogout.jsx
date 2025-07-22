@@ -1,17 +1,13 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-function useAutoLogout(timeoutMinutes = 2) {
-  const navigate = useNavigate();
-  const timeoutMillis = timeoutMinutes * 60 * 1000;
+export default function useAutoLogout(timeoutMinutes = 15) {
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    const timeoutMillis = timeoutMinutes * 60 * 1000;
+
     const logout = () => {
-      alert(
-        "⚠️ Your session has expired due to inactivity. You will be logged out."
-      );
-      localStorage.clear();
-      navigate("/login");
+      setShowModal(true);
     };
 
     const updateActivityTime = () => {
@@ -30,14 +26,15 @@ function useAutoLogout(timeoutMinutes = 2) {
       }
     };
 
-    // ✅ Reset activity timestamp on user interaction
+    // Add listeners
     const events = ["mousemove", "keydown", "scroll", "click"];
     events.forEach((event) =>
       window.addEventListener(event, updateActivityTime)
     );
-
-    // ✅ Check inactivity every 1 min
     const interval = setInterval(checkInactivity, 60 * 1000);
+
+    // Initialize
+    updateActivityTime();
 
     return () => {
       events.forEach((event) =>
@@ -45,7 +42,12 @@ function useAutoLogout(timeoutMinutes = 2) {
       );
       clearInterval(interval);
     };
-  }, [navigate, timeoutMillis]);
-}
+  }, [timeoutMinutes]);
 
-export default useAutoLogout;
+  const handleModalClose = () => {
+    localStorage.clear();
+    window.location.href = "/login"; // force reload
+  };
+
+  return { showModal, handleModalClose };
+}
