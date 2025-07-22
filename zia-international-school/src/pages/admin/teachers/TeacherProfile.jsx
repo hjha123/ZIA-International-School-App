@@ -111,7 +111,11 @@ export default function TeacherProfile() {
         <Card.Body>
           <Row className="mb-4 align-items-center">
             <Col md={3} className="text-center">
-              <div className="d-flex flex-column align-items-center">
+              <div
+                className="position-relative d-inline-block group"
+                style={{ width: 150, height: 150 }}
+              >
+                {/* Profile Image */}
                 <img
                   src={
                     selectedImage
@@ -127,36 +131,54 @@ export default function TeacherProfile() {
                     e.target.src = "/images/no-profile.png";
                   }}
                   alt="Profile"
-                  className="rounded-circle mb-2"
-                  width={120}
-                  height={120}
-                  style={{ objectFit: "cover" }}
+                  className="rounded-circle shadow"
+                  width={150}
+                  height={150}
+                  style={{ objectFit: "cover", border: "4px solid #dee2e6" }}
                 />
 
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="form-control mt-2"
-                  onChange={handleImageChange}
-                />
-
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  className="mt-2"
-                  onClick={handleImageUpload}
-                  disabled={!selectedImage || uploading}
+                {/* Overlay (only appears on hover) */}
+                <div
+                  className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center rounded-circle bg-dark bg-opacity-50"
+                  style={{
+                    cursor: "pointer",
+                    opacity: 0,
+                    transition: "opacity 0.3s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
                 >
-                  {uploading ? "Uploading..." : "Upload Image"}
-                </Button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="form-control form-control-sm mb-1"
+                    onChange={handleImageChange}
+                    style={{
+                      width: "80%",
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                  <Button
+                    variant="light"
+                    size="sm"
+                    onClick={handleImageUpload}
+                    disabled={!selectedImage || uploading}
+                    style={{
+                      fontSize: "0.75rem",
+                      padding: "0.25rem 0.5rem",
+                    }}
+                  >
+                    {uploading ? "Uploading..." : "Upload"}
+                  </Button>
+                </div>
               </div>
 
-              <div>
+              <div className="mt-3">
                 <Badge bg={getStatusVariant(teacher.status)}>
                   {teacher.status}
                 </Badge>
+                <div className="text-muted mt-1">Emp ID: {teacher.empId}</div>
               </div>
-              <div className="text-muted mt-1">Emp ID: {teacher.empId}</div>
             </Col>
 
             <Col md={9}>
