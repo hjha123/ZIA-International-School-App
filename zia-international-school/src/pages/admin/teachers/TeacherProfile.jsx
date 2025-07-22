@@ -120,12 +120,11 @@ export default function TeacherProfile() {
                       ? `${import.meta.env.VITE_IMAGE_BASE_URL}/${
                           teacher.profileImageUrl
                         }`
-                      : "https://via.placeholder.com/120?text=Profile"
+                      : "/images/no-profile.png"
                   }
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src =
-                      "https://via.placeholder.com/120?text=No+Image";
+                    e.target.src = "/images/no-profile.png";
                   }}
                   alt="Profile"
                   className="rounded-circle mb-2"
