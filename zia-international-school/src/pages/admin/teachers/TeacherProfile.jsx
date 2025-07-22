@@ -9,6 +9,8 @@ export default function TeacherProfile() {
   const navigate = useNavigate();
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchTeacher = async () => {
@@ -24,6 +26,32 @@ export default function TeacherProfile() {
 
     fetchTeacher();
   }, [empId]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setSelectedImage(file);
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage) return;
+
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      setUploading(true);
+      const updatedTeacher = await teacherService.uploadProfileImage(
+        empId,
+        formData
+      );
+      setTeacher(updatedTeacher); // Refresh with new image
+      setSelectedImage(null); // Clear after upload
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const getStatusVariant = (status) => {
     switch (status) {
@@ -83,16 +111,47 @@ export default function TeacherProfile() {
         <Card.Body>
           <Row className="mb-4 align-items-center">
             <Col md={3} className="text-center">
-              <img
-                src={
-                  teacher.profileImageUrl ||
-                  "https://via.placeholder.com/120?text=Profile"
-                }
-                alt="Profile"
-                className="rounded-circle mb-2"
-                width={120}
-                height={120}
-              />
+              <div className="d-flex flex-column align-items-center">
+                <img
+                  src={
+                    selectedImage
+                      ? URL.createObjectURL(selectedImage)
+                      : teacher.profileImageUrl
+                      ? `${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                          teacher.profileImageUrl
+                        }`
+                      : "https://via.placeholder.com/120?text=Profile"
+                  }
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://via.placeholder.com/120?text=No+Image";
+                  }}
+                  alt="Profile"
+                  className="rounded-circle mb-2"
+                  width={120}
+                  height={120}
+                  style={{ objectFit: "cover" }}
+                />
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-control mt-2"
+                  onChange={handleImageChange}
+                />
+
+                <Button
+                  variant="outline-success"
+                  size="sm"
+                  className="mt-2"
+                  onClick={handleImageUpload}
+                  disabled={!selectedImage || uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Image"}
+                </Button>
+              </div>
+
               <div>
                 <Badge bg={getStatusVariant(teacher.status)}>
                   {teacher.status}

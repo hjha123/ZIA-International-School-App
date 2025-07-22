@@ -38,6 +38,20 @@ const getTeacherByEmpId = async (empId) => {
 const updateTeacherByEmpId = (empId, updateRequest) =>
   axios.put(`teachers/emp/${empId}`, updateRequest).then((res) => res.data);
 
+const uploadProfileImage = async (empId, formData) => {
+  const response = await axios.put(
+    `/teachers/${empId}/upload-image`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true, // important for cookies/session auth
+    }
+  );
+  return response.data;
+};
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -47,4 +61,5 @@ export default {
   deleteTeacherByEmpId,
   getTeacherByEmpId,
   updateTeacherByEmpId,
+  uploadProfileImage,
 };
