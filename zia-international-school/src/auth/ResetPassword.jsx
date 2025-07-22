@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { resetPassword } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [token, setToken] = useState("");
 
-  const handleReset = (e) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const resetToken = params.get("token");
+    if (!resetToken) {
+      setMessage("Invalid or missing reset token.");
+    } else {
+      setToken(resetToken);
+    }
+  }, [location]);
+
+  const handleReset = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -14,8 +32,17 @@ const ResetPassword = () => {
       return;
     }
 
-    // TODO: Send reset request to backend (using token from URL)
-    setMessage("Password has been successfully reset!");
+    try {
+      const res = await resetPassword(token, password);
+      setMessage("✅ " + res);
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    } catch (err) {
+      setMessage("❌ " + err.response?.data || "Error resetting password");
+    }
   };
 
   return (

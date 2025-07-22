@@ -19,6 +19,21 @@ const logout = () => {
   localStorage.removeItem("username");
 };
 
+export const sendResetLink = async (email) => {
+  const response = await axios.post("/auth/forgot-password", null, {
+    params: { email },
+  });
+  return response.data;
+};
+
+export const resetPassword = async (token, newPassword) => {
+  const response = await axios.post("/auth/reset-password", {
+    token,
+    newPassword,
+  });
+  return response.data;
+};
+
 const getToken = () => localStorage.getItem("accessToken");
 const getRole = () => localStorage.getItem("role");
 const getUsername = () => localStorage.getItem("username");
@@ -29,4 +44,6 @@ export default {
   getToken,
   getRole,
   getUsername,
+  sendResetLink,
+  resetPassword,
 };
