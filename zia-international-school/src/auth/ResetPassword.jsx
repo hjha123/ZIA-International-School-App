@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { LockFill } from "react-bootstrap-icons";
+import { useLocation, useNavigate } from "react-router-dom";
 import { resetPassword } from "../services/authService";
-import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -18,7 +17,7 @@ const ResetPassword = () => {
     const params = new URLSearchParams(location.search);
     const resetToken = params.get("token");
     if (!resetToken) {
-      setMessage("Invalid or missing reset token.");
+      setMessage("❌ Invalid or missing reset token.");
     } else {
       setToken(resetToken);
     }
@@ -28,7 +27,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
+      setMessage("❌ Passwords do not match.");
       return;
     }
 
@@ -36,24 +35,54 @@ const ResetPassword = () => {
       const res = await resetPassword(token, password);
       setMessage("✅ " + res);
 
-      // Redirect to login after 3 seconds
       setTimeout(() => {
         navigate("/login");
       }, 3000);
     } catch (err) {
-      setMessage("❌ " + err.response?.data || "Error resetting password");
+      setMessage("❌ " + (err.response?.data || "Error resetting password"));
     }
   };
 
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #f8fbff, #e6f0fa)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px",
+      }}
     >
-      <Card style={{ width: "400px", padding: "20px" }}>
+      <Card
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+          borderRadius: "16px",
+          boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
+          padding: "30px",
+        }}
+      >
         <Card.Body>
-          <h3 className="text-center mb-4">Reset Password</h3>
-          {message && <div className="alert alert-info">{message}</div>}
+          <div className="text-center mb-4">
+            <LockFill size={40} className="mb-2 text-primary" />
+            <h3 className="mb-2">Reset Password</h3>
+            <p className="text-muted" style={{ fontSize: "0.9rem" }}>
+              Enter your new password and confirm it below to update your
+              account credentials.
+            </p>
+          </div>
+
+          {message && (
+            <div
+              className={`alert ${
+                message.startsWith("✅") ? "alert-success" : "alert-danger"
+              }`}
+            >
+              {message}
+            </div>
+          )}
+
           <Form onSubmit={handleReset}>
             <Form.Group className="mb-3">
               <Form.Label>New Password</Form.Label>
@@ -77,13 +106,17 @@ const ResetPassword = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100">
+            <Button
+              type="submit"
+              className="w-100"
+              style={{ fontWeight: 500, padding: "10px 0" }}
+            >
               Reset Password
             </Button>
           </Form>
         </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 };
 
