@@ -16,6 +16,10 @@ import {
   BsPeople,
   BsBuilding,
   BsBoxArrowRight,
+  BsClipboardCheck,
+  BsCalendar2Check,
+  BsMegaphone,
+  BsHouse,
 } from "react-icons/bs";
 
 const AdminDashboardLayout = () => {
@@ -65,7 +69,17 @@ const AdminDashboardLayout = () => {
           background: "linear-gradient(90deg, #007bff 0%, #0056b3 100%)",
         }}
       >
-        <Navbar.Brand className="fw-bold">ZIS Admin Dashboard</Navbar.Brand>
+        <Navbar.Brand
+          className="fw-bold mx-auto text-white"
+          style={{
+            fontSize: "1.5rem",
+            textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+            letterSpacing: "0.5px",
+          }}
+        >
+          🚀 ZIS Admin Dashboard
+        </Navbar.Brand>
+
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>
@@ -108,6 +122,19 @@ const AdminDashboardLayout = () => {
             <Nav className="flex-column">
               <Nav.Link
                 as={Link}
+                to="/admin/dashboard"
+                className={`mb-2 d-flex align-items-center ${
+                  location.pathname === "/admin/dashboard"
+                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
+                    : "text-dark"
+                }`}
+              >
+                <BsHouse className="me-2" />
+                Dashboard
+              </Nav.Link>
+
+              <Nav.Link
+                as={Link}
                 to="/admin/dashboard/teachers"
                 className={`mb-2 d-flex align-items-center ${
                   location.pathname.includes("teachers")
@@ -144,6 +171,45 @@ const AdminDashboardLayout = () => {
                 <BsBuilding className="me-2" />
                 Classes
               </Nav.Link>
+
+              <Nav.Link
+                as={Link}
+                to="/admin/dashboard/leaves"
+                className={`mb-2 d-flex align-items-center ${
+                  location.pathname.includes("leaves")
+                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
+                    : "text-dark"
+                }`}
+              >
+                <BsCalendar2Check className="me-2 text-success" />
+                Leaves
+              </Nav.Link>
+
+              <Nav.Link
+                as={Link}
+                to="/admin/dashboard/tasks"
+                className={`mb-2 d-flex align-items-center ${
+                  location.pathname.includes("tasks")
+                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
+                    : "text-dark"
+                }`}
+              >
+                <BsClipboardCheck className="me-2 text-warning" />
+                Tasks
+              </Nav.Link>
+
+              <Nav.Link
+                as={Link}
+                to="/admin/dashboard/notices"
+                className={`mb-2 d-flex align-items-center ${
+                  location.pathname.includes("notices")
+                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
+                    : "text-dark"
+                }`}
+              >
+                <BsMegaphone className="me-2 text-danger" />
+                Notices
+              </Nav.Link>
             </Nav>
           </Col>
 
@@ -160,11 +226,31 @@ const AdminDashboardLayout = () => {
             {isDashboardHome && (
               <Card
                 className="mb-4 shadow-sm border-0"
-                style={{ backgroundColor: "#e9f2ff" }}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)",
+                  borderRadius: "1rem",
+                }}
               >
-                <Card.Body>
-                  <h5 className="mb-1 fw-bold">Welcome back, {username}!</h5>
-                  <p className="mb-0 text-muted">Today is {currentDate}</p>
+                <Card.Body className="d-flex align-items-center">
+                  <div
+                    className="me-3"
+                    style={{ fontSize: "2.5rem", color: "#2563eb" }}
+                  >
+                    👋
+                  </div>
+                  <div>
+                    <h5 className="fw-bold mb-1" style={{ color: "#1e3a8a" }}>
+                      Welcome back, {username}!
+                    </h5>
+                    <p
+                      className="mb-0 text-muted"
+                      style={{ fontSize: "0.95rem" }}
+                    >
+                      Today is <strong>{currentDate}</strong>. Let’s make it
+                      productive 🚀
+                    </p>
+                  </div>
                 </Card.Body>
               </Card>
             )}
