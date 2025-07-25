@@ -14,8 +14,8 @@ import TeacherProfile from "../pages/admin/teachers/TeacherProfile";
 import TeacherUpdate from "../pages/admin/teachers/TeacherUpdate";
 import TeacherSelectList from "../pages/admin/teachers/TeacherSelectList";
 import TeacherProfileList from "../pages/admin/teachers/TeacherProfileList";
+import TeacherOffboardList from "../pages/admin/teachers/TeacherOffboardList";
 
-// 🆕 Leave management imports
 import LeaveRequestList from "../pages/admin/leaves/LeaveRequestList";
 import BulkLeaveAllocation from "../pages/admin/leaves/BulkLeaveAllocation";
 import LeaveTypesManagement from "../pages/admin/leaves/LeaveTypesManagement";
@@ -50,7 +50,11 @@ export default function AppRoutes() {
         <Route path="teachers/update/:empId" element={<TeacherUpdate />} />
         <Route path="teachers/select" element={<TeacherSelectList />} />
         <Route path="teachers/list" element={<TeacherProfileList />} />
-        {/* ✅ Optional selector view */}
+        <Route
+          path="teachers/offboard"
+          element={<TeacherOffboardList />}
+        />{" "}
+        {/* 🆕 */}
         {/* ✅ Leave management routes */}
         <Route path="leaves" element={<LeaveRequestList />} />
         <Route

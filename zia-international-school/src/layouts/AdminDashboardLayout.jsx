@@ -234,7 +234,7 @@ const AdminDashboardLayout = () => {
                       )}
                     >
                       <BsBoxArrowRight className="me-2" />
-                      Offboard
+                      Offboard Teacher
                     </Nav.Link>
                   </div>
                 )}
