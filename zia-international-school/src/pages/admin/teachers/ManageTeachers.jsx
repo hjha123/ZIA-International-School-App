@@ -7,15 +7,19 @@ import {
   Col,
   InputGroup,
   Spinner,
+  Modal,
 } from "react-bootstrap";
 import { FaSearch, FaEye, FaEdit, FaUserSlash } from "react-icons/fa";
 import teacherService from "../../../services/teacherService";
 import { useNavigate } from "react-router-dom";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const ManageTeachers = () => {
   const [teachers, setTeachers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   const navigate = useNavigate();
 
@@ -32,10 +36,19 @@ const ManageTeachers = () => {
     `${t.fullName} ${t.empId}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = async (empId) => {
-    if (window.confirm("Are you sure you want to offboard this teacher?")) {
-      await teacherService.deleteTeacherByEmpId(empId);
-      setTeachers((prev) => prev.filter((t) => t.empId !== empId));
+  const handleDelete = (teacher) => {
+    setSelectedTeacher(teacher);
+    setShowModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedTeacher) {
+      await teacherService.deleteTeacherByEmpId(selectedTeacher.empId);
+      setTeachers((prev) =>
+        prev.filter((t) => t.empId !== selectedTeacher.empId)
+      );
+      setShowModal(false);
+      setSelectedTeacher(null);
     }
   };
 
@@ -49,9 +62,10 @@ const ManageTeachers = () => {
   return (
     <div className="container-fluid">
       <h3
-        className="mb-4 text-white px-4 py-2 rounded shadow-sm"
+        className="mb-4 text-white px-4 py-2 rounded shadow-sm d-flex align-items-center"
         style={{ background: "linear-gradient(90deg, #4e54c8, #8f94fb)" }}
       >
+        <FaChalkboardTeacher className="me-2" size={24} />
         Manage Teachers
       </h3>
 
@@ -106,7 +120,6 @@ const ManageTeachers = () => {
                     <span className="text-muted">No subjects</span>
                   )}
                 </td>
-
                 <td>{teacher.status}</td>
                 <td>{teacher.joiningDate}</td>
                 <td>
@@ -135,7 +148,7 @@ const ManageTeachers = () => {
                   <Button
                     size="sm"
                     variant="danger"
-                    onClick={() => handleDelete(teacher.empId)}
+                    onClick={() => handleDelete(teacher)}
                   >
                     <FaUserSlash />
                   </Button>
@@ -145,6 +158,32 @@ const ManageTeachers = () => {
           </tbody>
         </Table>
       )}
+
+      {/* Offboard Confirmation Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>Confirm Offboarding</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedTeacher && (
+            <div className="text-danger">
+              <strong>You're about to offboard the following teacher:</strong>
+              <br />
+              Name: <strong>{selectedTeacher.fullName}</strong>
+              <br />
+              Emp ID: <strong>{selectedTeacher.empId}</strong>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            Offboard
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
