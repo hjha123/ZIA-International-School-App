@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import teacherService from "../../services/teacherService";
+import { FaUserPlus } from "react-icons/fa";
 
 const TeacherForm = () => {
   const navigate = useNavigate();
@@ -160,7 +161,17 @@ const TeacherForm = () => {
 
   return (
     <Container className="bg-white p-4 rounded shadow-sm">
-      <h4 className="mb-4 text-primary">Teacher Onboarding Form</h4>
+      <div className="mb-4">
+        <div
+          className="text-white px-4 py-2 rounded shadow-sm d-flex align-items-center gap-2"
+          style={{
+            background: "linear-gradient(90deg, #00c6ff, #0072ff)",
+          }}
+        >
+          <FaUserPlus size={22} />
+          <h4 className="mb-0">Teacher Onboarding Form</h4>
+        </div>
+      </div>
 
       {status.error && <Alert variant="danger">{status.error}</Alert>}
 

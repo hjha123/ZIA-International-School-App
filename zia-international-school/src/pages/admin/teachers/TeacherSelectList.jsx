@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import teacherService from "../../../services/teacherService";
+import { FaChalkboardTeacher, FaEdit } from "react-icons/fa";
 
 const TeacherSelectList = () => {
   const [teachers, setTeachers] = useState([]);
@@ -90,7 +91,18 @@ const TeacherSelectList = () => {
       <Container>
         <Card className="shadow-sm">
           <Card.Body>
-            <h3 className="mb-4 text-primary">Select a Teacher to Update</h3>
+            <div className="mb-4">
+              <div
+                className="text-white px-4 py-2 rounded shadow-sm d-flex align-items-center gap-2"
+                style={{
+                  background: "linear-gradient(90deg, #6dd5ed, #2193b0)",
+                }}
+              >
+                <FaChalkboardTeacher size={24} />
+                <h3 className="mb-0">Select a Teacher to Update</h3>
+                <FaEdit size={20} className="ms-auto" />
+              </div>
+            </div>
 
             {/* Search Filter */}
             <Form className="mb-4">

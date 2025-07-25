@@ -210,9 +210,10 @@ const AdminDashboardLayout = () => {
 
                     <Nav.Link
                       as={Link}
-                      to="/admin/dashboard/teachers/profile"
+                      to="/admin/dashboard/teachers/list"
                       className={getLinkClasses(
-                        location.pathname.includes("/teachers/profile")
+                        location.pathname.includes("/teachers/list") ||
+                          location.pathname.includes("/teachers/profile")
                       )}
                       style={getLinkStyle(
                         location.pathname.includes("/teachers/profile")
