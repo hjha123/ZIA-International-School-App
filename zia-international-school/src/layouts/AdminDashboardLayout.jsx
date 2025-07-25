@@ -20,12 +20,16 @@ import {
   BsCalendar2Check,
   BsMegaphone,
   BsHouse,
+  BsClockHistory,
 } from "react-icons/bs";
 
 const AdminDashboardLayout = () => {
   const { showModal, handleModalClose } = useAutoLogout();
   const navigate = useNavigate();
   const location = useLocation();
+  const [leavesExpanded, setLeavesExpanded] = React.useState(
+    location.pathname.includes("/leaves")
+  );
 
   const username = localStorage.getItem("username") || "Admin";
   const role = localStorage.getItem("role") || "ADMIN";
@@ -172,18 +176,96 @@ const AdminDashboardLayout = () => {
                 Classes
               </Nav.Link>
 
-              <Nav.Link
-                as={Link}
-                to="/admin/dashboard/leaves"
-                className={`mb-2 d-flex align-items-center ${
-                  location.pathname.includes("leaves")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
-              >
-                <BsCalendar2Check className="me-2 text-success" />
-                Leaves
-              </Nav.Link>
+              <Nav className="flex-column mb-2">
+                <Nav.Item>
+                  <Nav.Link
+                    className={`d-flex align-items-center ${
+                      location.pathname.includes("/leaves")
+                        ? "fw-bold text-primary bg-light border rounded px-2 py-1"
+                        : "text-dark"
+                    }`}
+                    onClick={() => setLeavesExpanded(!leavesExpanded)}
+                    aria-controls="leaves-submenu"
+                    aria-expanded={leavesExpanded}
+                  >
+                    <BsCalendar2Check className="me-2 text-success" />
+                    Leaves
+                  </Nav.Link>
+                </Nav.Item>
+
+                {leavesExpanded && (
+                  <div
+                    id="leaves-submenu"
+                    className="ms-3 mt-2 py-2 px-2 rounded bg-light border"
+                    style={{ fontSize: "0.92rem" }}
+                  >
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/leaves"
+                      className={`d-flex align-items-center mb-2 ${
+                        location.pathname === "/admin/dashboard/leaves"
+                          ? "fw-semibold text-primary"
+                          : "text-dark"
+                      }`}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Approve Requests
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/leaves/bulk-allocation"
+                      className={`d-flex align-items-center mb-2 ${
+                        location.pathname.includes("/leaves/bulk-allocation")
+                          ? "fw-semibold text-primary"
+                          : "text-dark"
+                      }`}
+                    >
+                      <BsPeople className="me-2" />
+                      Bulk Allocation
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/leaves/allocate"
+                      className={`d-flex align-items-center mb-2 ${
+                        location.pathname.includes("/leaves/allocate")
+                          ? "fw-semibold text-primary"
+                          : "text-dark"
+                      }`}
+                    >
+                      <BsPersonBadge className="me-2" />
+                      Allocate to Employee
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/leaves/types"
+                      className={`d-flex align-items-center mb-2 ${
+                        location.pathname.includes("/leaves/types")
+                          ? "fw-semibold text-primary"
+                          : "text-dark"
+                      }`}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Leave Types
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/leaves/history"
+                      className={`d-flex align-items-center mb-2 ${
+                        location.pathname.includes("/leaves/history")
+                          ? "fw-semibold text-primary"
+                          : "text-dark"
+                      }`}
+                    >
+                      <BsClockHistory className="me-2" />
+                      Leave History
+                    </Nav.Link>
+                  </div>
+                )}
+              </Nav>
 
               <Nav.Link
                 as={Link}
