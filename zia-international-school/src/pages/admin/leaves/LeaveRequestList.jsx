@@ -102,7 +102,7 @@ const LeaveRequestList = () => {
                 <tr key={req.id}>
                   <td>{index + 1}</td>
                   <td>{req.empId}</td>
-                  <td>{req.fullName}</td>
+                  <td>{req.empName}</td>
                   <td>{req.leaveType}</td>
                   <td>{req.startDate}</td>
                   <td>{req.endDate}</td>

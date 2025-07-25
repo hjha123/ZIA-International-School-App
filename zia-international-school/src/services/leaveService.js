@@ -6,6 +6,12 @@ const getAllLeaveRequests = async () => {
   return response.data;
 };
 
+// ✅ Get all pending leave requests
+const getAllPendingLeaveRequests = async () => {
+  const response = await axios.get("/leaves/pending");
+  return response.data;
+};
+
 // ✅ Approve or reject a leave request
 const updateLeaveStatus = async (leaveId, status) => {
   const response = await axios.patch(`/leaves/requests/${leaveId}`, {
@@ -66,4 +72,5 @@ export default {
   deleteLeaveType,
   getLeaveBalanceByEmpId,
   getLeaveHistoryByEmpId,
+  getAllPendingLeaveRequests,
 };

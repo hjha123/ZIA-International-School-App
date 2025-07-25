@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useAutoLogout(timeoutMinutes = 15) {
+export default function useAutoLogout(timeoutMinutes = 10) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
