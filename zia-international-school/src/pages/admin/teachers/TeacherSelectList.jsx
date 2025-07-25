@@ -7,6 +7,7 @@ import {
   Form,
   Row,
   Col,
+  Pagination,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import teacherService from "../../../services/teacherService";
@@ -15,6 +16,9 @@ const TeacherSelectList = () => {
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const teachersPerPage = 10;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +27,7 @@ const TeacherSelectList = () => {
         const data = await teacherService.getAllTeachers();
         const teacherList = Array.isArray(data) ? data : data.data;
         setTeachers(teacherList);
-        setFilteredTeachers(teacherList); // initialize filter list
+        setFilteredTeachers(teacherList);
       } catch (error) {
         console.error("Failed to fetch teachers:", error);
       }
@@ -35,17 +39,44 @@ const TeacherSelectList = () => {
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
     const filtered = teachers.filter(
       (teacher) =>
         teacher.empId.toLowerCase().includes(value) ||
         teacher.fullName.toLowerCase().includes(value)
     );
     setFilteredTeachers(filtered);
+    setCurrentPage(1); // Reset to first page after filtering
   };
 
   const handleSelect = (empId) => {
     navigate(`/admin/dashboard/teachers/update/${empId}`);
+  };
+
+  // Pagination logic
+  const indexOfLast = currentPage * teachersPerPage;
+  const indexOfFirst = indexOfLast - teachersPerPage;
+  const currentTeachers = filteredTeachers.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const renderPagination = () => {
+    const items = [];
+    for (let number = 1; number <= totalPages; number++) {
+      items.push(
+        <Pagination.Item
+          key={number}
+          active={number === currentPage}
+          onClick={() => paginate(number)}
+        >
+          {number}
+        </Pagination.Item>
+      );
+    }
+
+    return (
+      <Pagination className="justify-content-end mt-3">{items}</Pagination>
+    );
   };
 
   return (
@@ -95,8 +126,8 @@ const TeacherSelectList = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredTeachers.length > 0 ? (
-                  filteredTeachers.map((teacher, index) => (
+                {currentTeachers.length > 0 ? (
+                  currentTeachers.map((teacher, index) => (
                     <tr
                       key={teacher.empId}
                       style={{
@@ -125,6 +156,8 @@ const TeacherSelectList = () => {
                 )}
               </tbody>
             </Table>
+
+            {totalPages > 1 && renderPagination()}
           </Card.Body>
         </Card>
       </Container>
