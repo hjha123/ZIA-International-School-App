@@ -13,9 +13,10 @@ const getAllPendingLeaveRequests = async () => {
 };
 
 // ✅ Approve or reject a leave request
-const updateLeaveStatus = async (leaveId, status) => {
-  const response = await axios.patch(`/leaves/requests/${leaveId}`, {
+const updateLeaveStatus = async (leaveId, status, adminRemarks) => {
+  const response = await axios.put(`/leaves/requests/${leaveId}`, {
     status,
+    adminRemarks,
   });
   return response.data;
 };

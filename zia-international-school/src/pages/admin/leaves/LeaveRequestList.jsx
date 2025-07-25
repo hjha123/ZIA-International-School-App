@@ -8,6 +8,7 @@ import {
   Col,
   Form,
   Badge,
+  Modal,
 } from "react-bootstrap";
 import leaveService from "../../../services/leaveService";
 
@@ -17,6 +18,11 @@ const LeaveRequestList = () => {
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(null);
   const [error, setError] = useState(null);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalLeaveId, setModalLeaveId] = useState(null);
+  const [modalAction, setModalAction] = useState("");
+  const [adminRemarks, setAdminRemarks] = useState("");
 
   const fetchLeaveRequests = async () => {
     try {
@@ -42,10 +48,27 @@ const LeaveRequestList = () => {
     statusFilter === "ALL" ? true : req.status === statusFilter
   );
 
-  const handleAction = async (leaveId, action) => {
+  const handleOpenModal = (leaveId, action) => {
+    setModalLeaveId(leaveId);
+    setModalAction(action);
+    setAdminRemarks("");
+    setShowModal(true);
+  };
+
+  const handleModalSubmit = async () => {
+    if (!adminRemarks.trim()) {
+      alert("Please enter admin remarks before submitting.");
+      return;
+    }
+
     try {
-      setActionLoading(leaveId);
-      await leaveService.updateLeaveStatus(leaveId, action);
+      setActionLoading(modalLeaveId);
+      await leaveService.updateLeaveStatus(
+        modalLeaveId,
+        modalAction,
+        adminRemarks
+      );
+      setShowModal(false);
       fetchLeaveRequests();
     } catch (err) {
       alert("Failed to update status.");
@@ -127,7 +150,7 @@ const LeaveRequestList = () => {
                           variant="success"
                           size="sm"
                           className="me-2"
-                          onClick={() => handleAction(req.id, "APPROVED")}
+                          onClick={() => handleOpenModal(req.id, "APPROVED")}
                           disabled={actionLoading === req.id}
                         >
                           {actionLoading === req.id ? (
@@ -139,7 +162,7 @@ const LeaveRequestList = () => {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => handleAction(req.id, "REJECTED")}
+                          onClick={() => handleOpenModal(req.id, "REJECTED")}
                           disabled={actionLoading === req.id}
                         >
                           {actionLoading === req.id ? (
@@ -159,6 +182,45 @@ const LeaveRequestList = () => {
           </tbody>
         </Table>
       )}
+
+      {/* Modal for admin remarks */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {modalAction === "APPROVED" ? "Approve" : "Reject"} Leave Request
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>Admin Remarks</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={adminRemarks}
+              onChange={(e) => setAdminRemarks(e.target.value)}
+              placeholder="Enter your remarks here..."
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant={modalAction === "APPROVED" ? "success" : "danger"}
+            onClick={handleModalSubmit}
+            disabled={actionLoading === modalLeaveId}
+          >
+            {actionLoading === modalLeaveId ? (
+              <Spinner size="sm" animation="border" />
+            ) : modalAction === "APPROVED" ? (
+              "Approve"
+            ) : (
+              "Reject"
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
