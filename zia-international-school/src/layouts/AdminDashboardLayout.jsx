@@ -41,14 +41,6 @@ const AdminDashboardLayout = () => {
     navigate("/login");
   };
 
-  const pageTitles = {
-    teachers: "Manage Teachers",
-    students: "Manage Students",
-    classes: "Manage Classes",
-  };
-
-  const currentPage = location.pathname.split("/").pop();
-
   const isDashboardHome =
     location.pathname === "/admin/dashboard" ||
     location.pathname === "/admin/dashboard/";
@@ -60,9 +52,22 @@ const AdminDashboardLayout = () => {
     day: "numeric",
   });
 
+  const getLinkClasses = (isActive) =>
+    `mb-2 d-flex align-items-center px-2 py-1 rounded ${
+      isActive ? "fw-bold text-white bg-primary" : "text-dark"
+    }`;
+
+  const getLinkStyle = (isActive) =>
+    isActive
+      ? {}
+      : {
+          backgroundColor: "#eef4fb", // ✨ light blue-gray background for non-active links
+        };
+
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <SessionExpiredModal show={showModal} onClose={handleModalClose} />
+
       {/* Top Navbar */}
       <Navbar
         bg="primary"
@@ -75,15 +80,10 @@ const AdminDashboardLayout = () => {
       >
         <Navbar.Brand
           className="fw-bold mx-auto text-white"
-          style={{
-            fontSize: "1.5rem",
-            textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-            letterSpacing: "0.5px",
-          }}
+          style={{ fontSize: "1.5rem" }}
         >
           🚀 ZIS Admin Dashboard
         </Navbar.Brand>
-
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>
@@ -127,11 +127,10 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard"
-                className={`mb-2 d-flex align-items-center ${
+                className={getLinkClasses(
                   location.pathname === "/admin/dashboard"
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                )}
+                style={getLinkStyle(location.pathname === "/admin/dashboard")}
               >
                 <BsHouse className="me-2" />
                 Dashboard
@@ -140,11 +139,10 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard/teachers"
-                className={`mb-2 d-flex align-items-center ${
+                className={getLinkClasses(
                   location.pathname.includes("teachers")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                )}
+                style={getLinkStyle(location.pathname.includes("teachers"))}
               >
                 <BsPersonBadge className="me-2" />
                 Teachers
@@ -153,11 +151,10 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard/students"
-                className={`mb-2 d-flex align-items-center ${
+                className={getLinkClasses(
                   location.pathname.includes("students")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                )}
+                style={getLinkStyle(location.pathname.includes("students"))}
               >
                 <BsPeople className="me-2" />
                 Students
@@ -166,24 +163,23 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard/classes"
-                className={`mb-2 d-flex align-items-center ${
+                className={getLinkClasses(
                   location.pathname.includes("classes")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                )}
+                style={getLinkStyle(location.pathname.includes("classes"))}
               >
                 <BsBuilding className="me-2" />
                 Classes
               </Nav.Link>
 
+              {/* Leaves Section */}
               <Nav className="flex-column mb-2">
                 <Nav.Item>
                   <Nav.Link
-                    className={`d-flex align-items-center ${
+                    className={getLinkClasses(
                       location.pathname.includes("/leaves")
-                        ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                        : "text-dark"
-                    }`}
+                    )}
+                    style={getLinkStyle(location.pathname.includes("/leaves"))}
                     onClick={() => setLeavesExpanded(!leavesExpanded)}
                     aria-controls="leaves-submenu"
                     aria-expanded={leavesExpanded}
@@ -202,11 +198,12 @@ const AdminDashboardLayout = () => {
                     <Nav.Link
                       as={Link}
                       to="/admin/dashboard/leaves"
-                      className={`d-flex align-items-center mb-2 ${
+                      className={getLinkClasses(
                         location.pathname === "/admin/dashboard/leaves"
-                          ? "fw-semibold text-primary"
-                          : "text-dark"
-                      }`}
+                      )}
+                      style={getLinkStyle(
+                        location.pathname === "/admin/dashboard/leaves"
+                      )}
                     >
                       <BsClipboardCheck className="me-2" />
                       Approve Requests
@@ -215,11 +212,12 @@ const AdminDashboardLayout = () => {
                     <Nav.Link
                       as={Link}
                       to="/admin/dashboard/leaves/bulk-allocation"
-                      className={`d-flex align-items-center mb-2 ${
+                      className={getLinkClasses(
                         location.pathname.includes("/leaves/bulk-allocation")
-                          ? "fw-semibold text-primary"
-                          : "text-dark"
-                      }`}
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/leaves/bulk-allocation")
+                      )}
                     >
                       <BsPeople className="me-2" />
                       Bulk Allocation
@@ -228,11 +226,12 @@ const AdminDashboardLayout = () => {
                     <Nav.Link
                       as={Link}
                       to="/admin/dashboard/leaves/allocate"
-                      className={`d-flex align-items-center mb-2 ${
+                      className={getLinkClasses(
                         location.pathname.includes("/leaves/allocate")
-                          ? "fw-semibold text-primary"
-                          : "text-dark"
-                      }`}
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/leaves/allocate")
+                      )}
                     >
                       <BsPersonBadge className="me-2" />
                       Allocate to Employee
@@ -241,11 +240,12 @@ const AdminDashboardLayout = () => {
                     <Nav.Link
                       as={Link}
                       to="/admin/dashboard/leaves/types"
-                      className={`d-flex align-items-center mb-2 ${
+                      className={getLinkClasses(
                         location.pathname.includes("/leaves/types")
-                          ? "fw-semibold text-primary"
-                          : "text-dark"
-                      }`}
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/leaves/types")
+                      )}
                     >
                       <BsClipboardCheck className="me-2" />
                       Leave Types
@@ -254,11 +254,12 @@ const AdminDashboardLayout = () => {
                     <Nav.Link
                       as={Link}
                       to="/admin/dashboard/leaves/history"
-                      className={`d-flex align-items-center mb-2 ${
+                      className={getLinkClasses(
                         location.pathname.includes("/leaves/history")
-                          ? "fw-semibold text-primary"
-                          : "text-dark"
-                      }`}
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/leaves/history")
+                      )}
                     >
                       <BsClockHistory className="me-2" />
                       Leave History
@@ -270,11 +271,8 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard/tasks"
-                className={`mb-2 d-flex align-items-center ${
-                  location.pathname.includes("tasks")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                className={getLinkClasses(location.pathname.includes("tasks"))}
+                style={getLinkStyle(location.pathname.includes("tasks"))}
               >
                 <BsClipboardCheck className="me-2 text-warning" />
                 Tasks
@@ -283,11 +281,10 @@ const AdminDashboardLayout = () => {
               <Nav.Link
                 as={Link}
                 to="/admin/dashboard/notices"
-                className={`mb-2 d-flex align-items-center ${
+                className={getLinkClasses(
                   location.pathname.includes("notices")
-                    ? "fw-bold text-primary bg-light border rounded px-2 py-1"
-                    : "text-dark"
-                }`}
+                )}
+                style={getLinkStyle(location.pathname.includes("notices"))}
               >
                 <BsMegaphone className="me-2 text-danger" />
                 Notices
@@ -304,7 +301,6 @@ const AdminDashboardLayout = () => {
               minHeight: "calc(100vh - 56px)",
             }}
           >
-            {/* Welcome Card on Dashboard Home */}
             {isDashboardHome && (
               <Card
                 className="mb-4 shadow-sm border-0"

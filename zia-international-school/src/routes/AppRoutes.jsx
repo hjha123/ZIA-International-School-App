@@ -18,6 +18,8 @@ import LeaveRequestList from "../pages/admin/leaves/LeaveRequestList";
 import BulkLeaveAllocation from "../pages/admin/leaves/BulkLeaveAllocation";
 import LeaveTypesManagement from "../pages/admin/leaves/LeaveTypesManagement";
 import EmployeeLeaveHistory from "../pages/admin/leaves/EmployeeLeaveHistory";
+import AllocateLeavesToEmployee from "../pages/admin/leaves/AllocateLeavesToEmployee";
+import EmployeeSelector from "../pages/admin/leaves/EmployeeSelector";
 
 export default function AppRoutes() {
   return (
@@ -52,6 +54,11 @@ export default function AppRoutes() {
         />
         <Route path="leaves/types" element={<LeaveTypesManagement />} />
         <Route path="leaves/history" element={<EmployeeLeaveHistory />} />
+        <Route path="leaves/allocate" element={<EmployeeSelector />} />
+        <Route
+          path="leaves/allocate/:empId"
+          element={<AllocateLeavesToEmployee />}
+        />
       </Route>
     </Routes>
   );
