@@ -175,7 +175,7 @@ const AdminDashboardLayout = () => {
                       )}
                     >
                       <BsClipboardCheck className="me-2" />
-                      All Teachers
+                      Manage Teachers
                     </Nav.Link>
 
                     <Nav.Link

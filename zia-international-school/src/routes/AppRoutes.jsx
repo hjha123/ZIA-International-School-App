@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminDashboardLayout from "../layouts/AdminDashboardLayout";
 import AdminHome from "../pages/admin/AdminHome";
 
+import ManageTeachers from "../pages/admin/teachers/ManageTeachers";
 import TeacherList from "../pages/admin/teachers/TeacherList";
 import TeacherCreate from "../pages/admin/teachers/TeacherCreate";
 import TeacherProfile from "../pages/admin/teachers/TeacherProfile";
@@ -44,7 +45,8 @@ export default function AppRoutes() {
         {/* ✅ Default dashboard home */}
         <Route index element={<AdminHome />} />
         {/* ✅ Teacher routes */}
-        <Route path="teachers" element={<TeacherList />} />
+        {/* <Route path="teachers" element={<TeacherList />} /> */}
+        <Route path="teachers" element={<ManageTeachers />} />
         <Route path="teachers/create" element={<TeacherCreate />} />
         <Route path="teachers/:empId" element={<TeacherProfile />} />
         <Route path="teachers/update/:empId" element={<TeacherUpdate />} />
