@@ -123,53 +123,61 @@ const EmployeeLeaveHistory = () => {
         <>
           <Card className="mb-4 p-3 shadow-sm border-0">
             <h5 className="mb-3 text-primary">Leave Balance</h5>
-            <Row>
-              {leaveBalance.map((item, idx) => (
-                <Col sm={6} md={4} className="mb-3" key={idx}>
-                  <div
-                    className="d-flex justify-content-between align-items-center px-3 py-2 rounded shadow-sm"
-                    style={{
-                      backgroundColor: "#f8f9fa",
-                      borderLeft: `6px solid ${
-                        getBalanceBadgeColor(item.remaining, item.allocated) ===
-                        "success"
-                          ? "#28a745"
-                          : getBalanceBadgeColor(
-                              item.remaining,
-                              item.allocated
-                            ) === "warning"
-                          ? "#ffc107"
-                          : "#dc3545"
-                      }`,
-                    }}
-                  >
+            {leaveBalance.length === 0 ? (
+              <Alert variant="info" className="mb-0">
+                No leave allocations found for this employee.
+              </Alert>
+            ) : (
+              <Row>
+                {leaveBalance.map((item, idx) => (
+                  <Col sm={6} md={4} className="mb-3" key={idx}>
                     <div
+                      className="d-flex justify-content-between align-items-center px-3 py-2 rounded shadow-sm"
                       style={{
-                        fontSize: "1rem",
-                        fontWeight: "600",
-                        color: "#343a40",
+                        backgroundColor: "#f8f9fa",
+                        borderLeft: `6px solid ${
+                          getBalanceBadgeColor(
+                            item.remaining,
+                            item.allocated
+                          ) === "success"
+                            ? "#28a745"
+                            : getBalanceBadgeColor(
+                                item.remaining,
+                                item.allocated
+                              ) === "warning"
+                            ? "#ffc107"
+                            : "#dc3545"
+                        }`,
                       }}
                     >
-                      {item.leaveType}
-                    </div>
-                    <div>
-                      <span
-                        className={`badge bg-${getBalanceBadgeColor(
-                          item.remaining,
-                          item.allocated
-                        )} rounded-pill`}
+                      <div
                         style={{
-                          fontSize: "0.95rem",
-                          padding: "0.5em 0.9em",
+                          fontSize: "1rem",
+                          fontWeight: "600",
+                          color: "#343a40",
                         }}
                       >
-                        {item.remaining} / {item.allocated}
-                      </span>
+                        {item.leaveType}
+                      </div>
+                      <div>
+                        <span
+                          className={`badge bg-${getBalanceBadgeColor(
+                            item.remaining,
+                            item.allocated
+                          )} rounded-pill`}
+                          style={{
+                            fontSize: "0.95rem",
+                            padding: "0.5em 0.9em",
+                          }}
+                        >
+                          {item.remaining} / {item.allocated}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+                  </Col>
+                ))}
+              </Row>
+            )}
           </Card>
 
           <Card className="p-3 shadow-sm border-0">
