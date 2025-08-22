@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Card, Alert, Spinner, Row, Col } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Card,
+  Alert,
+  Spinner,
+  Row,
+  Col,
+  InputGroup,
+} from "react-bootstrap";
 import leaveService from "../../../services/leaveService";
 import teacherService from "../../../services/teacherService";
 
 const BulkLeaveAllocation = () => {
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [filteredTeachers, setFilteredTeachers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const teachersPerPage = 10;
+
   const [selectedType, setSelectedType] = useState("");
   const [leaveDays, setLeaveDays] = useState("");
   const [selectedTeachers, setSelectedTeachers] = useState([]);
   const [applyToAll, setApplyToAll] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -18,6 +33,10 @@ const BulkLeaveAllocation = () => {
     loadLeaveTypes();
     loadTeachers();
   }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery, teachers]);
 
   const loadLeaveTypes = async () => {
     try {
@@ -32,9 +51,20 @@ const BulkLeaveAllocation = () => {
     try {
       const data = await teacherService.getAllTeachers();
       setTeachers(data);
+      setFilteredTeachers(data);
     } catch (err) {
       setErrorMsg("Failed to load teachers.");
     }
+  };
+
+  const handleSearch = () => {
+    const filtered = teachers.filter(
+      (t) =>
+        t.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.empId.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredTeachers(filtered);
+    setCurrentPage(1);
   };
 
   const handleSubmit = async (e) => {
@@ -51,16 +81,21 @@ const BulkLeaveAllocation = () => {
       return;
     }
 
+    const currentYear = new Date().getFullYear();
+
     const payload = {
       leaveType: selectedType,
-      days: parseInt(leaveDays),
-      empIds: applyToAll ? null : selectedTeachers,
+      totalAllocated: parseInt(leaveDays, 10),
+      empIds: applyToAll
+        ? teachers.map((t) => t.empId) // ✅ send all employee IDs
+        : selectedTeachers,
+      year: currentYear,
     };
 
     try {
       setLoading(true);
       await leaveService.bulkAllocateLeaves(payload);
-      setSuccessMsg("Leave allocated successfully.");
+      setSuccessMsg(`Leave allocated successfully for year ${currentYear}.`);
       setLeaveDays("");
       setSelectedTeachers([]);
     } catch (err) {
@@ -69,6 +104,12 @@ const BulkLeaveAllocation = () => {
       setLoading(false);
     }
   };
+
+  // Pagination logic
+  const indexOfLast = currentPage * teachersPerPage;
+  const indexOfFirst = indexOfLast - teachersPerPage;
+  const currentTeachers = filteredTeachers.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
 
   return (
     <Card className="shadow-sm p-4">
@@ -121,24 +162,62 @@ const BulkLeaveAllocation = () => {
         </Form.Group>
 
         {!applyToAll && (
-          <Form.Group controlId="teacherSelect" className="mb-3">
-            <Form.Label>Select Teachers</Form.Label>
-            <Form.Select
-              multiple
-              value={selectedTeachers}
-              onChange={(e) =>
-                setSelectedTeachers(
-                  Array.from(e.target.selectedOptions, (option) => option.value)
-                )
-              }
-            >
-              {teachers.map((teacher) => (
-                <option key={teacher.empId} value={teacher.empId}>
-                  {teacher.fullName} ({teacher.empId})
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+          <>
+            <InputGroup className="mb-3">
+              <Form.Control
+                placeholder="Search by name or empId..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </InputGroup>
+
+            <Form.Group controlId="teacherSelect" className="mb-3">
+              <Form.Label>Select Teachers</Form.Label>
+              <Form.Select
+                multiple
+                value={selectedTeachers}
+                onChange={(e) =>
+                  setSelectedTeachers(
+                    Array.from(
+                      e.target.selectedOptions,
+                      (option) => option.value
+                    )
+                  )
+                }
+              >
+                {currentTeachers.map((teacher) => (
+                  <option key={teacher.empId} value={teacher.empId}>
+                    {teacher.fullName} ({teacher.empId})
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  Previous
+                </Button>
+                <span>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
         )}
 
         <Button type="submit" variant="primary" disabled={loading}>

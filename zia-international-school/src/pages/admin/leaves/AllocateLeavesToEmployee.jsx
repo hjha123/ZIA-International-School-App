@@ -22,7 +22,6 @@ const AllocateLeavesToEmployee = () => {
         setTeacher(teacherRes);
         setLeaveTypes(leaveTypesRes);
 
-        // Set default allocations to 0
         const initialAllocations = {};
         leaveTypesRes.forEach((type) => {
           initialAllocations[type.name] = 0;
@@ -36,9 +35,10 @@ const AllocateLeavesToEmployee = () => {
   }, [empId]);
 
   const handleChange = (e, typeName) => {
+    const val = parseInt(e.target.value, 10);
     setAllocations({
       ...allocations,
-      [typeName]: parseInt(e.target.value, 10) || 0,
+      [typeName]: isNaN(val) || val < 0 ? 0 : val,
     });
   };
 
@@ -54,7 +54,7 @@ const AllocateLeavesToEmployee = () => {
           days,
         })),
       };
-      await leaveService.bulkAllocateLeaves([data]); // backend expects list
+      await leaveService.allocateLeave([data]);
       setMessage({ type: "success", text: "Leaves allocated successfully." });
     } catch (err) {
       setMessage({ type: "danger", text: "Failed to allocate leaves." });
