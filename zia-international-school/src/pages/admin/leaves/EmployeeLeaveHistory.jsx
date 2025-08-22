@@ -26,7 +26,7 @@ const getBadgeVariant = (status) => {
 };
 
 const getBalanceBadgeColor = (remaining, allocated) => {
-  const ratio = remaining / allocated;
+  const ratio = allocated > 0 ? remaining / allocated : 0;
   if (ratio >= 0.6) return "success";
   if (ratio >= 0.3) return "warning";
   return "danger";
@@ -39,14 +39,20 @@ const EmployeeLeaveHistory = () => {
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [teacherError, setTeacherError] = useState("");
+  const [teacherLoading, setTeacherLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
+        setTeacherLoading(true);
         const res = await teacherService.getAllTeachers();
         setTeachers(res);
       } catch (err) {
         console.error("Failed to load teachers:", err);
+        setTeacherError("Unable to load teachers. Please try again later.");
+      } finally {
+        setTeacherLoading(false);
       }
     };
     fetchTeachers();
@@ -95,12 +101,23 @@ const EmployeeLeaveHistory = () => {
         Employee Leave History
       </h4>
 
+      {/* Teacher fetch error */}
+      {teacherError && (
+        <Alert variant="danger" className="mb-3">
+          {teacherError}
+        </Alert>
+      )}
+
       <Form.Group as={Row} className="mb-4">
-        <Form.Label column sm={2}>
+        <Form.Label column sm={2} className="fw-bold">
           Select Employee:
         </Form.Label>
         <Col sm={6}>
-          <Form.Select onChange={handleSelectChange} value={selectedEmpId}>
+          <Form.Select
+            onChange={handleSelectChange}
+            value={selectedEmpId}
+            disabled={teacherLoading || teacherError}
+          >
             <option value="">-- Select a Teacher --</option>
             {teachers.map((t) => (
               <option key={t.empId} value={t.empId}>
@@ -109,9 +126,19 @@ const EmployeeLeaveHistory = () => {
             ))}
           </Form.Select>
         </Col>
+        {teacherLoading && (
+          <Col sm="auto" className="d-flex align-items-center">
+            <Spinner animation="border" size="sm" />
+          </Col>
+        )}
       </Form.Group>
 
-      {loading && <Spinner animation="border" variant="primary" />}
+      {loading && (
+        <div className="text-center my-4">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-2 text-muted">Fetching leave details...</p>
+        </div>
+      )}
 
       {error && (
         <Alert variant="danger" className="mt-3">
@@ -119,10 +146,12 @@ const EmployeeLeaveHistory = () => {
         </Alert>
       )}
 
-      {selectedEmpId && !loading && (
+      {selectedEmpId && !loading && !error && (
         <>
           <Card className="mb-4 p-3 shadow-sm border-0">
-            <h5 className="mb-3 text-primary">Leave Balance</h5>
+            <h5 className="mb-3 text-primary">
+              <i className="bi bi-bar-chart me-2"></i>Leave Balance
+            </h5>
             {leaveBalance.length === 0 ? (
               <Alert variant="info" className="mb-0">
                 No leave allocations found for this employee.
@@ -181,7 +210,9 @@ const EmployeeLeaveHistory = () => {
           </Card>
 
           <Card className="p-3 shadow-sm border-0">
-            <h5 className="mb-3">Leave History</h5>
+            <h5 className="mb-3">
+              <i className="bi bi-clock-history me-2"></i>Leave History
+            </h5>
             {leaveHistory.length === 0 ? (
               <Alert variant="info">
                 No leave records found for this employee.

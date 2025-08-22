@@ -31,7 +31,7 @@ const LeaveRequestList = () => {
       const data = await leaveService.getAllLeaveRequests();
       setLeaveRequests(data || []);
     } catch (err) {
-      setError("Failed to load leave requests.");
+      setError("⚠️ Failed to load leave requests. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -79,32 +79,55 @@ const LeaveRequestList = () => {
   };
 
   return (
-    <Card className="shadow-sm p-4">
-      <h4 className="mb-4">📋 Leave Requests</h4>
+    <Card className="shadow-sm p-4 border-0">
+      {/* Header */}
+      <h4
+        className="mb-4 text-white px-4 py-2 rounded shadow-sm"
+        style={{ background: "linear-gradient(90deg, #36d1dc, #5b86e5)" }}
+      >
+        📋 Leave Requests
+      </h4>
 
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && (
+        <Alert variant="danger" className="mb-3 shadow-sm">
+          {error}
+        </Alert>
+      )}
 
       {/* Filter */}
-      <Row className="mb-3">
-        <Col md={3}>
-          <Form.Select value={statusFilter} onChange={handleStatusChange}>
+      <Row className="mb-4">
+        <Col md={4}>
+          <Form.Select
+            value={statusFilter}
+            onChange={handleStatusChange}
+            className="shadow-sm"
+          >
             <option value="ALL">All Statuses</option>
-            <option value="PENDING">Pending</option>
-            <option value="APPROVED">Approved</option>
-            <option value="REJECTED">Rejected</option>
+            <option value="PENDING">⏳ Pending</option>
+            <option value="APPROVED">✅ Approved</option>
+            <option value="REJECTED">❌ Rejected</option>
           </Form.Select>
         </Col>
       </Row>
 
       {/* Table or Loading */}
       {loading ? (
-        <div className="text-center mt-5">
+        <div className="text-center my-5">
           <Spinner animation="border" variant="primary" />
-          <p className="mt-2">Loading leave requests...</p>
+          <p className="mt-3 text-muted">Loading leave requests...</p>
         </div>
       ) : (
-        <Table striped bordered hover responsive className="align-middle">
-          <thead className="table-light">
+        <Table
+          bordered
+          hover
+          responsive
+          className="align-middle shadow-sm rounded"
+        >
+          <thead
+            style={{
+              background: "linear-gradient(90deg, #e3f2fd, #f1f8ff)",
+            }}
+          >
             <tr>
               <th>#</th>
               <th>Emp ID</th>
@@ -142,6 +165,7 @@ const LeaveRequestList = () => {
                           ? "danger"
                           : "warning"
                       }
+                      className="px-3 py-2 rounded-pill shadow-sm"
                     >
                       {req.status}
                     </Badge>
@@ -153,7 +177,7 @@ const LeaveRequestList = () => {
                         <Button
                           variant="success"
                           size="sm"
-                          className="me-2"
+                          className="me-2 shadow-sm"
                           onClick={() => handleOpenModal(req.id, "APPROVED")}
                           disabled={actionLoading === req.id}
                         >
@@ -166,6 +190,7 @@ const LeaveRequestList = () => {
                         <Button
                           variant="danger"
                           size="sm"
+                          className="shadow-sm"
                           onClick={() => handleOpenModal(req.id, "REJECTED")}
                           disabled={actionLoading === req.id}
                         >
