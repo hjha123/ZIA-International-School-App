@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import leaveService from "../../../services/leaveService";
 import teacherService from "../../../services/teacherService";
+import { BsClipboardPlus } from "react-icons/bs";
 
 const LeaveAllocation = () => {
   const [leaveTypes, setLeaveTypes] = useState([]);
@@ -111,9 +112,12 @@ const LeaveAllocation = () => {
 
   return (
     <Card className="shadow-lg border-0 rounded-3 p-4 bg-light">
-      <h3 className="mb-4 text-primary fw-bold border-bottom pb-2">
-        Leave Allocation
-      </h3>
+      <h4
+        className="mb-4 text-white px-4 py-2 rounded shadow-sm d-flex align-items-center"
+        style={{ background: "linear-gradient(90deg, #36d1dc, #5b86e5)" }}
+      >
+        <BsClipboardPlus className="me-2" size={22} /> Leave Allocation
+      </h4>
 
       {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
       {successMsg && <Alert variant="success">{successMsg}</Alert>}

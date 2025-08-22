@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import leaveService from "../../../services/leaveService";
 import teacherService from "../../../services/teacherService";
+import { BsJournalText } from "react-icons/bs";
 
 const getBadgeVariant = (status) => {
   switch (status) {
@@ -94,11 +95,10 @@ const EmployeeLeaveHistory = () => {
   return (
     <div>
       <h4
-        className="mb-4 text-white px-4 py-2 rounded shadow-sm"
+        className="mb-4 text-white px-4 py-2 rounded shadow-sm d-flex align-items-center"
         style={{ background: "linear-gradient(90deg, #36d1dc, #5b86e5)" }}
       >
-        <i className="bi bi-journal-text me-2"></i>
-        Employee Leave History
+        <BsJournalText className="me-2" size={22} /> Employee Leave History
       </h4>
 
       {/* Teacher fetch error */}

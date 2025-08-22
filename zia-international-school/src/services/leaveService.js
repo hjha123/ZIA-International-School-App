@@ -23,7 +23,7 @@ const updateLeaveStatus = async (leaveId, status, adminRemarks) => {
 
 // ✅ Allocate leaves to teachers
 const allocateLeaves = async (data) => {
-  const response = await axios.post("allocate/leaves/bulk", data);
+  const response = await axios.post("allocate/leaves", data);
   return response.data;
 };
 
