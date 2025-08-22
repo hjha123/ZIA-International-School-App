@@ -94,7 +94,24 @@ const LeaveAllocation = () => {
     try {
       setLoading(true);
       await leaveService.allocateLeaves(payload);
-      setSuccessMsg(`✅ Leave allocated successfully for year ${currentYear}.`);
+
+      if (applyToAll) {
+        setSuccessMsg(
+          `✅ Leave allocated successfully for all employees for year ${currentYear}.`
+        );
+      } else {
+        // Find selected employees' names
+        const selectedNames = teachers
+          .filter((t) => selectedTeachers.includes(t.empId))
+          .map((t) => t.fullName);
+
+        setSuccessMsg(
+          `✅ Leave allocated successfully for ${selectedNames.join(
+            ", "
+          )} for year ${currentYear}.`
+        );
+      }
+
       setLeaveDays("");
       setSelectedTeachers([]);
     } catch (err) {
