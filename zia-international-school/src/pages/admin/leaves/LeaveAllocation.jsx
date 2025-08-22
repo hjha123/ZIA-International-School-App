@@ -12,7 +12,7 @@ import {
 import leaveService from "../../../services/leaveService";
 import teacherService from "../../../services/teacherService";
 
-const BulkLeaveAllocation = () => {
+const LeaveAllocation = () => {
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
@@ -94,7 +94,7 @@ const BulkLeaveAllocation = () => {
 
     try {
       setLoading(true);
-      await leaveService.bulkAllocateLeaves(payload);
+      await leaveService.allocateLeaves(payload);
       setSuccessMsg(`Leave allocated successfully for year ${currentYear}.`);
       setLeaveDays("");
       setSelectedTeachers([]);
@@ -113,7 +113,7 @@ const BulkLeaveAllocation = () => {
 
   return (
     <Card className="shadow-sm p-4">
-      <h4 className="mb-3">Bulk Leave Allocation</h4>
+      <h4 className="mb-3">Leave Allocation</h4>
 
       {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
       {successMsg && <Alert variant="success">{successMsg}</Alert>}
@@ -232,4 +232,4 @@ const BulkLeaveAllocation = () => {
   );
 };
 
-export default BulkLeaveAllocation;
+export default LeaveAllocation;

@@ -303,30 +303,16 @@ const AdminDashboardLayout = () => {
 
                     <Nav.Link
                       as={Link}
-                      to="/admin/dashboard/leaves/bulk-allocation"
+                      to="/admin/dashboard/leaves/leave-allocation"
                       className={getLinkClasses(
-                        location.pathname.includes("/leaves/bulk-allocation")
+                        location.pathname.includes("/leaves/leave-allocation")
                       )}
                       style={getLinkStyle(
-                        location.pathname.includes("/leaves/bulk-allocation")
+                        location.pathname.includes("/leaves/leave-allocation")
                       )}
                     >
                       <BsPeople className="me-2" />
-                      Bulk Allocation
-                    </Nav.Link>
-
-                    <Nav.Link
-                      as={Link}
-                      to="/admin/dashboard/leaves/allocate"
-                      className={getLinkClasses(
-                        location.pathname.includes("/leaves/allocate")
-                      )}
-                      style={getLinkStyle(
-                        location.pathname.includes("/leaves/allocate")
-                      )}
-                    >
-                      <BsPersonBadge className="me-2" />
-                      Allocate to Employee
+                      Leave Allocation
                     </Nav.Link>
 
                     <Nav.Link

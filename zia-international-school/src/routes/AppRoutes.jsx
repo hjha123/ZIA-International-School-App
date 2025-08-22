@@ -17,11 +17,9 @@ import TeacherProfileList from "../pages/admin/teachers/TeacherProfileList";
 import TeacherOffboardList from "../pages/admin/teachers/TeacherOffboardList";
 
 import LeaveRequestList from "../pages/admin/leaves/LeaveRequestList";
-import BulkLeaveAllocation from "../pages/admin/leaves/BulkLeaveAllocation";
+import LeaveAllocation from "../pages/admin/leaves/LeaveAllocation";
 import LeaveTypesManagement from "../pages/admin/leaves/LeaveTypesManagement";
 import EmployeeLeaveHistory from "../pages/admin/leaves/EmployeeLeaveHistory";
-import AllocateLeavesToEmployee from "../pages/admin/leaves/AllocateLeavesToEmployee";
-import EmployeeSelector from "../pages/admin/leaves/EmployeeSelector";
 
 export default function AppRoutes() {
   return (
@@ -57,17 +55,9 @@ export default function AppRoutes() {
         {/* 🆕 */}
         {/* ✅ Leave management routes */}
         <Route path="leaves" element={<LeaveRequestList />} />
-        <Route
-          path="leaves/bulk-allocation"
-          element={<BulkLeaveAllocation />}
-        />
+        <Route path="leaves/leave-allocation" element={<LeaveAllocation />} />
         <Route path="leaves/types" element={<LeaveTypesManagement />} />
         <Route path="leaves/history" element={<EmployeeLeaveHistory />} />
-        <Route path="leaves/allocate" element={<EmployeeSelector />} />
-        <Route
-          path="leaves/allocate/:empId"
-          element={<AllocateLeavesToEmployee />}
-        />
       </Route>
     </Routes>
   );

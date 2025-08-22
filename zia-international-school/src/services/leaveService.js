@@ -21,15 +21,9 @@ const updateLeaveStatus = async (leaveId, status, adminRemarks) => {
   return response.data;
 };
 
-// ✅ Bulk allocate leaves to teachers
-const bulkAllocateLeaves = async (data) => {
+// ✅ Allocate leaves to teachers
+const allocateLeaves = async (data) => {
   const response = await axios.post("allocate/leaves/bulk", data);
-  return response.data;
-};
-
-// ✅ Allocate leave to a single employee
-const allocateLeave = async (data) => {
-  const response = await axios.post("allocate/leaves/bulk-allocate", data);
   return response.data;
 };
 
@@ -72,8 +66,7 @@ const getLeaveHistoryByEmpId = async (empId) => {
 export default {
   getAllLeaveRequests,
   updateLeaveStatus,
-  bulkAllocateLeaves,
-  allocateLeave,
+  allocateLeaves,
   getAllLeaveTypes,
   createLeaveType,
   updateLeaveType,
