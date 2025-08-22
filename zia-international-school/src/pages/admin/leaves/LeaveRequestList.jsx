@@ -9,6 +9,7 @@ import {
   Form,
   Badge,
   Modal,
+  Card,
 } from "react-bootstrap";
 import leaveService from "../../../services/leaveService";
 
@@ -78,11 +79,12 @@ const LeaveRequestList = () => {
   };
 
   return (
-    <div>
-      <h4 className="mb-3">Leave Requests</h4>
+    <Card className="shadow-sm p-4">
+      <h4 className="mb-4">📋 Leave Requests</h4>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
+      {/* Filter */}
       <Row className="mb-3">
         <Col md={3}>
           <Form.Select value={statusFilter} onChange={handleStatusChange}>
@@ -94,13 +96,15 @@ const LeaveRequestList = () => {
         </Col>
       </Row>
 
+      {/* Table or Loading */}
       {loading ? (
-        <div className="text-center mt-4">
-          <Spinner animation="border" />
+        <div className="text-center mt-5">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-2">Loading leave requests...</p>
         </div>
       ) : (
-        <Table striped bordered hover responsive>
-          <thead>
+        <Table striped bordered hover responsive className="align-middle">
+          <thead className="table-light">
             <tr>
               <th>#</th>
               <th>Emp ID</th>
@@ -110,13 +114,13 @@ const LeaveRequestList = () => {
               <th>To</th>
               <th>Status</th>
               <th>Reason</th>
-              <th>Actions</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredRequests.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="9" className="text-center text-muted py-4">
                   No leave requests found.
                 </td>
               </tr>
@@ -143,7 +147,7 @@ const LeaveRequestList = () => {
                     </Badge>
                   </td>
                   <td>{req.reason}</td>
-                  <td>
+                  <td className="text-center">
                     {req.status === "PENDING" ? (
                       <>
                         <Button
@@ -173,7 +177,7 @@ const LeaveRequestList = () => {
                         </Button>
                       </>
                     ) : (
-                      <span className="text-muted">No actions</span>
+                      <span className="text-muted">—</span>
                     )}
                   </td>
                 </tr>
@@ -187,7 +191,8 @@ const LeaveRequestList = () => {
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {modalAction === "APPROVED" ? "Approve" : "Reject"} Leave Request
+            {modalAction === "APPROVED" ? "✅ Approve" : "❌ Reject"} Leave
+            Request
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -221,7 +226,7 @@ const LeaveRequestList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </Card>
   );
 };
 

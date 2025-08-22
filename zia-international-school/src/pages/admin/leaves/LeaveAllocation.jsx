@@ -43,7 +43,7 @@ const LeaveAllocation = () => {
       const data = await leaveService.getAllLeaveTypes();
       setLeaveTypes(data);
     } catch (err) {
-      setErrorMsg("Failed to load leave types.");
+      setErrorMsg("⚠️ Failed to load leave types.");
     }
   };
 
@@ -53,7 +53,7 @@ const LeaveAllocation = () => {
       setTeachers(data);
       setFilteredTeachers(data);
     } catch (err) {
-      setErrorMsg("Failed to load teachers.");
+      setErrorMsg("⚠️ Failed to load teachers.");
     }
   };
 
@@ -86,49 +86,50 @@ const LeaveAllocation = () => {
     const payload = {
       leaveType: selectedType,
       totalAllocated: parseInt(leaveDays, 10),
-      empIds: applyToAll
-        ? teachers.map((t) => t.empId) // ✅ send all employee IDs
-        : selectedTeachers,
+      empIds: applyToAll ? teachers.map((t) => t.empId) : selectedTeachers,
       year: currentYear,
     };
 
     try {
       setLoading(true);
       await leaveService.allocateLeaves(payload);
-      setSuccessMsg(`Leave allocated successfully for year ${currentYear}.`);
+      setSuccessMsg(`✅ Leave allocated successfully for year ${currentYear}.`);
       setLeaveDays("");
       setSelectedTeachers([]);
     } catch (err) {
-      setErrorMsg("Failed to allocate leave.");
+      setErrorMsg("❌ Failed to allocate leave.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Pagination logic
+  // Pagination
   const indexOfLast = currentPage * teachersPerPage;
   const indexOfFirst = indexOfLast - teachersPerPage;
   const currentTeachers = filteredTeachers.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredTeachers.length / teachersPerPage);
 
   return (
-    <Card className="shadow-sm p-4">
-      <h4 className="mb-3">Leave Allocation</h4>
+    <Card className="shadow-lg border-0 rounded-3 p-4 bg-light">
+      <h3 className="mb-4 text-primary fw-bold border-bottom pb-2">
+        Leave Allocation
+      </h3>
 
       {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
       {successMsg && <Alert variant="success">{successMsg}</Alert>}
 
       <Form onSubmit={handleSubmit}>
-        <Row className="mb-3">
+        {/* Allocation Options */}
+        <Row className="mb-4">
           <Col md={6}>
-            <Form.Group controlId="leaveType">
-              <Form.Label>Leave Type</Form.Label>
+            <Form.Group>
+              <Form.Label className="fw-semibold">Leave Type</Form.Label>
               <Form.Select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
                 required
               >
-                <option value="">Select Leave Type</option>
+                <option value="">-- Select Leave Type --</option>
                 {leaveTypes.map((type) => (
                   <option key={type.id} value={type.name}>
                     {type.name}
@@ -139,8 +140,8 @@ const LeaveAllocation = () => {
           </Col>
 
           <Col md={6}>
-            <Form.Group controlId="leaveDays">
-              <Form.Label>Number of Days</Form.Label>
+            <Form.Group>
+              <Form.Label className="fw-semibold">Number of Days</Form.Label>
               <Form.Control
                 type="number"
                 value={leaveDays}
@@ -152,81 +153,85 @@ const LeaveAllocation = () => {
           </Col>
         </Row>
 
-        <Form.Group controlId="applyToAll" className="mb-3">
+        {/* Apply to all toggle */}
+        <Form.Group className="mb-3">
           <Form.Check
-            type="checkbox"
+            type="switch"
+            id="applyToAllSwitch"
             label="Apply to all teachers"
             checked={applyToAll}
             onChange={() => setApplyToAll(!applyToAll)}
+            className="fw-semibold"
           />
         </Form.Group>
 
+        {/* Teacher Selection */}
         {!applyToAll && (
-          <>
+          <Card className="p-3 shadow-sm mb-4">
+            <h6 className="fw-bold mb-3 text-secondary">Select Teachers</h6>
+
             <InputGroup className="mb-3">
               <Form.Control
-                placeholder="Search by name or empId..."
+                placeholder="🔍 Search by name or empId..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </InputGroup>
 
-            <Form.Group controlId="teacherSelect" className="mb-3">
-              <Form.Label>Select Teachers</Form.Label>
-              <Form.Select
-                multiple
-                value={selectedTeachers}
-                onChange={(e) =>
-                  setSelectedTeachers(
-                    Array.from(
-                      e.target.selectedOptions,
-                      (option) => option.value
-                    )
-                  )
-                }
-              >
-                {currentTeachers.map((teacher) => (
-                  <option key={teacher.empId} value={teacher.empId}>
-                    {teacher.fullName} ({teacher.empId})
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+            <Form.Select
+              multiple
+              value={selectedTeachers}
+              onChange={(e) =>
+                setSelectedTeachers(
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+              }
+              style={{ height: "200px", fontSize: "0.9rem" }}
+            >
+              {currentTeachers.map((teacher) => (
+                <option key={teacher.empId} value={teacher.empId}>
+                  {teacher.fullName} ({teacher.empId})
+                </option>
+              ))}
+            </Form.Select>
 
-            {/* Pagination Controls */}
+            {/* Pagination */}
             {totalPages > 1 && (
-              <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-flex justify-content-between align-items-center mt-3">
                 <Button
-                  variant="secondary"
+                  variant="outline-primary"
                   size="sm"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => p - 1)}
                 >
-                  Previous
+                  ⬅ Previous
                 </Button>
-                <span>
+                <span className="fw-semibold small text-muted">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button
-                  variant="secondary"
+                  variant="outline-primary"
                   size="sm"
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => p + 1)}
                 >
-                  Next
+                  Next ➡
                 </Button>
               </div>
             )}
-          </>
+          </Card>
         )}
 
-        <Button type="submit" variant="primary" disabled={loading}>
-          {loading ? (
-            <Spinner size="sm" animation="border" />
-          ) : (
-            "Allocate Leave"
-          )}
-        </Button>
+        {/* Submit */}
+        <div className="text-end">
+          <Button type="submit" variant="success" size="lg" disabled={loading}>
+            {loading ? (
+              <Spinner size="sm" animation="border" />
+            ) : (
+              "🚀 Allocate Leave"
+            )}
+          </Button>
+        </div>
       </Form>
     </Card>
   );
