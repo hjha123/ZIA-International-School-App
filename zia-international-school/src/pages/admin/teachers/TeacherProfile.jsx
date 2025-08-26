@@ -15,7 +15,9 @@ export default function TeacherProfile() {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const data = await teacherService.getTeacherByEmpId(empId);
+        const data = empId
+          ? await teacherService.getTeacherByEmpId(empId)
+          : await teacherService.getMyProfile();
         setTeacher(data);
       } catch (error) {
         console.error("Error fetching teacher profile:", error);
@@ -23,7 +25,6 @@ export default function TeacherProfile() {
         setLoading(false);
       }
     };
-
     fetchTeacher();
   }, [empId]);
 
@@ -40,12 +41,16 @@ export default function TeacherProfile() {
 
     try {
       setUploading(true);
+      // Use URL param empId if present (admin), otherwise use the loaded teacher.empId (self view)
+      const targetEmpId = empId || teacher?.empId;
+      if (!targetEmpId) throw new Error("No employee ID available for upload.");
+
       const updatedTeacher = await teacherService.uploadProfileImage(
-        empId,
+        targetEmpId,
         formData
       );
-      setTeacher(updatedTeacher); // Refresh with new image
-      setSelectedImage(null); // Clear after upload
+      setTeacher(updatedTeacher);
+      setSelectedImage(null);
     } catch (error) {
       console.error("Image upload failed:", error);
     } finally {
@@ -67,13 +72,9 @@ export default function TeacherProfile() {
   };
 
   const renderGenderIcon = (gender) => {
-    if (gender === "Male") {
-      return <FaMale className="text-primary me-2" />;
-    } else if (gender === "Female") {
-      return <FaFemale className="text-pink-500 me-2" />;
-    } else {
-      return <FaUser className="text-secondary me-2" />;
-    }
+    if (gender === "Male") return <FaMale className="text-primary me-2" />;
+    if (gender === "Female") return <FaFemale className="text-pink-500 me-2" />;
+    return <FaUser className="text-secondary me-2" />;
   };
 
   if (loading) {
@@ -115,7 +116,6 @@ export default function TeacherProfile() {
                 className="position-relative d-inline-block group"
                 style={{ width: 150, height: 150 }}
               >
-                {/* Profile Image */}
                 <img
                   src={
                     selectedImage
@@ -137,7 +137,6 @@ export default function TeacherProfile() {
                   style={{ objectFit: "cover", border: "4px solid #dee2e6" }}
                 />
 
-                {/* Overlay (only appears on hover) */}
                 <div
                   className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center rounded-circle bg-dark bg-opacity-50"
                   style={{
@@ -153,20 +152,14 @@ export default function TeacherProfile() {
                     accept="image/*"
                     className="form-control form-control-sm mb-1"
                     onChange={handleImageChange}
-                    style={{
-                      width: "80%",
-                      fontSize: "0.75rem",
-                    }}
+                    style={{ width: "80%", fontSize: "0.75rem" }}
                   />
                   <Button
                     variant="light"
                     size="sm"
                     onClick={handleImageUpload}
                     disabled={!selectedImage || uploading}
-                    style={{
-                      fontSize: "0.75rem",
-                      padding: "0.25rem 0.5rem",
-                    }}
+                    style={{ fontSize: "0.75rem", padding: "0.25rem 0.5rem" }}
                   >
                     {uploading ? "Uploading..." : "Upload"}
                   </Button>
@@ -230,7 +223,6 @@ export default function TeacherProfile() {
             </Col>
           </Row>
 
-          {/* Optional Info */}
           <Row className="mt-3">
             <Col md={4}>
               <p>
@@ -263,6 +255,17 @@ export default function TeacherProfile() {
             </Col>
           </Row>
         </Card.Body>
+
+        {!empId && (
+          <div className="text-end p-3">
+            <Button
+              variant="primary"
+              onClick={() => navigate("/teacher/dashboard/profile/edit")}
+            >
+              ✏️ Edit My Profile
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );

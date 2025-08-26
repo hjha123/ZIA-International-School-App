@@ -52,6 +52,14 @@ const uploadProfileImage = async (empId, formData) => {
   return response.data;
 };
 
+const getMyProfile = async () => {
+  const res = await axios.get(`/teachers/me`);
+  return res.data;
+};
+
+const updateMyProfile = (updateRequest) =>
+  axios.put(`teachers/me}`, updateRequest).then((res) => res.data);
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -62,4 +70,6 @@ export default {
   getTeacherByEmpId,
   updateTeacherByEmpId,
   uploadProfileImage,
+  getMyProfile,
+  updateMyProfile,
 };
