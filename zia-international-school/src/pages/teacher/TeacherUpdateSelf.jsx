@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Card, Row, Col, Alert, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import teacherService from "../../services/teacherService";
 
 export default function TeacherUpdateSelf() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     maritalStatus: "",
     emergencyContactInfo: "",
@@ -10,6 +13,7 @@ export default function TeacherUpdateSelf() {
     nationality: "",
     aadharNumber: "",
     experienceYears: "",
+    address: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -35,6 +39,7 @@ export default function TeacherUpdateSelf() {
             nationality: profile.nationality || "",
             aadharNumber: profile.aadharNumber || "",
             experienceYears: profile.experienceYears || "",
+            address: profile.address || "",
           });
         }
       } catch (err) {
@@ -59,6 +64,11 @@ export default function TeacherUpdateSelf() {
     try {
       await teacherService.updateMyProfile(formData);
       setMessage({ type: "success", text: "Profile updated successfully!" });
+
+      // Redirect to profile after 1 second
+      setTimeout(() => {
+        navigate("/teacher/dashboard/profile");
+      }, 1000);
     } catch (err) {
       console.error("Error updating profile:", err);
       setMessage({ type: "danger", text: "Update failed. Please try again." });
@@ -157,6 +167,23 @@ export default function TeacherUpdateSelf() {
             </Col>
           </Row>
 
+          {/* New Address Field */}
+          <Row className="mb-3">
+            <Col md={12}>
+              <Form.Group>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Enter your address"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
@@ -190,7 +217,7 @@ export default function TeacherUpdateSelf() {
             </Col>
           </Row>
 
-          <div className="text-center mt-4">
+          <div className="d-flex justify-content-center gap-3 mt-4">
             <Button
               type="button"
               className="px-5 py-2 rounded-pill shadow fw-bold"
@@ -209,7 +236,7 @@ export default function TeacherUpdateSelf() {
                 e.currentTarget.style.transform = "scale(1)";
                 e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
               }}
-              onClick={() => window.history.back()}
+              onClick={() => navigate("/teacher/dashboard/profile")}
             >
               ❌ Cancel
             </Button>

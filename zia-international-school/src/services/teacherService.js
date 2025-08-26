@@ -58,7 +58,7 @@ const getMyProfile = async () => {
 };
 
 const updateMyProfile = (updateRequest) =>
-  axios.put(`teachers/me}`, updateRequest).then((res) => res.data);
+  axios.put(`teachers/me`, updateRequest).then((res) => res.data);
 
 export default {
   getAllTeachers,

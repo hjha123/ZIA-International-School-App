@@ -92,9 +92,11 @@ export default function TeacherProfile() {
 
   return (
     <div className="container mt-4">
-      <Button variant="outline-primary mb-3" onClick={() => navigate(-1)}>
-        ← Back to List
-      </Button>
+      {empId && (
+        <Button variant="outline-primary mb-3" onClick={() => navigate(-1)}>
+          ← Back to List
+        </Button>
+      )}
 
       <Card className="shadow-lg rounded-4 border-0">
         <Card.Header
