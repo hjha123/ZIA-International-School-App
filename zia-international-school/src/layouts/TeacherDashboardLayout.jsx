@@ -172,13 +172,70 @@ const TeacherDashboardLayout = () => {
                 as={Link}
                 to="/teacher/dashboard/leaves"
                 className={getLinkClasses(
-                  location.pathname.includes("/leaves")
+                  location.pathname === "/teacher/dashboard/leaves"
                 )}
-                style={getLinkStyle(location.pathname.includes("/leaves"))}
+                style={getLinkStyle(
+                  location.pathname === "/teacher/dashboard/leaves"
+                )}
               >
                 <BsCalendar2Check className="me-2 text-primary" />
-                Leave Requests
+                My Leaves
               </Nav.Link>
+
+              {/* My Leaves - Child Links */}
+              <div className="ms-4">
+                <Nav.Link
+                  as={Link}
+                  to="/teacher/dashboard/leaves/entitlements"
+                  className={getLinkClasses(
+                    location.pathname.includes("/leaves/entitlements")
+                  )}
+                  style={getLinkStyle(
+                    location.pathname.includes("/leaves/entitlements")
+                  )}
+                >
+                  📊 My Entitlements
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
+                  to="/teacher/dashboard/leaves/apply"
+                  className={getLinkClasses(
+                    location.pathname.includes("/leaves/apply")
+                  )}
+                  style={getLinkStyle(
+                    location.pathname.includes("/leaves/apply")
+                  )}
+                >
+                  📝 Apply Leave
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
+                  to="/teacher/dashboard/leaves/requests"
+                  className={getLinkClasses(
+                    location.pathname.includes("/leaves/requests")
+                  )}
+                  style={getLinkStyle(
+                    location.pathname.includes("/leaves/requests")
+                  )}
+                >
+                  📋 Leave Requests
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
+                  to="/teacher/dashboard/leaves/history"
+                  className={getLinkClasses(
+                    location.pathname.includes("/leaves/history")
+                  )}
+                  style={getLinkStyle(
+                    location.pathname.includes("/leaves/history")
+                  )}
+                >
+                  📅 Leave History
+                </Nav.Link>
+              </div>
 
               <Nav.Link
                 as={Link}

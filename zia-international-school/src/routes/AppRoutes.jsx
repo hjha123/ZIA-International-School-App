@@ -25,13 +25,9 @@ import EmployeeLeaveHistory from "../pages/admin/leaves/EmployeeLeaveHistory";
 import TeacherDashboardLayout from "../layouts/TeacherDashboardLayout";
 import TeacherHome from "../pages/teacher/TeacherHome";
 import TeacherUpdateSelf from "../pages/teacher/TeacherUpdateSelf";
-// import MyProfile from "../pages/teacher/MyProfile";
-// import MyLeaves from "../pages/teacher/MyLeaves";
-// import ApplyLeave from "../pages/teacher/ApplyLeave";
-// import MyTasks from "../pages/teacher/MyTasks";
-// import Notices from "../pages/teacher/Notices";
-// import MyClasses from "../pages/teacher/MyClasses";
-// import MyStudents from "../pages/teacher/MyStudents";
+import AssignmentListPage from "../pages/teacher/assignments/AssignmentListPage";
+import AssignmentCreatePage from "../pages/teacher/assignments/AssignmentCreatePage";
+import AssignmentStudentStatusPage from "../pages/teacher/assignments/AssignmentStudentStatus";
 
 export default function AppRoutes() {
   return (
@@ -84,12 +80,17 @@ export default function AppRoutes() {
         <Route index element={<TeacherHome />} />
         <Route path="profile" element={<TeacherProfile />} />
         <Route path="profile/edit" element={<TeacherUpdateSelf />} />
-        {/* <Route path="leaves" element={<MyLeaves />} />
-        <Route path="leaves/apply" element={<ApplyLeave />} />
-        <Route path="tasks" element={<MyTasks />} />
-        <Route path="notices" element={<Notices />} />
-        <Route path="classes" element={<MyClasses />} />
-        <Route path="students" element={<MyStudents />} /> */}
+        {/* 🆕 Teacher Assignments */}
+        <Route path="assignments" element={<AssignmentListPage />} />
+        <Route path="assignments/create" element={<AssignmentCreatePage />} />
+        <Route
+          path="assignments/edit/:assignmentId"
+          element={<AssignmentCreatePage />}
+        />
+        <Route
+          path="assignments/:assignmentId/students"
+          element={<AssignmentStudentStatusPage />}
+        />
       </Route>
     </Routes>
   );
