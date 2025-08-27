@@ -63,6 +63,24 @@ const getLeaveHistoryByEmpId = async (empId) => {
   return response.data;
 };
 
+// ✅ Employee apply leave
+const applyLeave = async (request) => {
+  const response = await axios.post(`/leaves/apply`, request);
+  return response.data;
+};
+
+// ✅ Get leave requests for the logged in teacher
+const myLeaveRequests = async () => {
+  const response = await axios.get(`/leaves/my-leave-requests`);
+  return response.data;
+};
+
+// ✅ Get my leave entitlements for the logged in teacher
+const myLeaveEntitlements = async () => {
+  const response = await axios.get(`/leaves/my-entitlements`);
+  return response.data;
+};
+
 export default {
   getAllLeaveRequests,
   updateLeaveStatus,
@@ -74,4 +92,7 @@ export default {
   getLeaveBalanceByEmpId,
   getLeaveHistoryByEmpId,
   getAllPendingLeaveRequests,
+  applyLeave,
+  myLeaveRequests,
+  myLeaveEntitlements,
 };

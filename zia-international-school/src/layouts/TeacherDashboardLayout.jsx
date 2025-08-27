@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useAutoLogout from "../hooks/useAutoLogout";
 import SessionExpiredModal from "../components/SessionExpiredModal";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
@@ -59,6 +59,16 @@ const TeacherDashboardLayout = () => {
       : {
           backgroundColor: "#eefbf1", // ✨ soft green for teacher
         };
+
+  // 🔹 State for collapsible My Leaves menu
+  const [openLeaves, setOpenLeaves] = useState(false);
+
+  // Auto-expand if any child is active
+  useEffect(() => {
+    if (location.pathname.includes("/leaves")) {
+      setOpenLeaves(true);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -168,74 +178,59 @@ const TeacherDashboardLayout = () => {
                 Attendance
               </Nav.Link>
 
-              <Nav.Link
-                as={Link}
-                to="/teacher/dashboard/leaves"
-                className={getLinkClasses(
-                  location.pathname === "/teacher/dashboard/leaves"
-                )}
-                style={getLinkStyle(
-                  location.pathname === "/teacher/dashboard/leaves"
-                )}
+              {/* 🔹 Collapsible My Leaves */}
+              <div
+                onClick={() => setOpenLeaves(!openLeaves)}
+                className="d-flex align-items-center mb-2 ms-2 fw-bold text-primary"
+                style={{ cursor: "pointer" }}
               >
-                <BsCalendar2Check className="me-2 text-primary" />
+                <BsCalendar2Check className="me-2" />
                 My Leaves
-              </Nav.Link>
-
-              {/* My Leaves - Child Links */}
-              <div className="ms-4">
-                <Nav.Link
-                  as={Link}
-                  to="/teacher/dashboard/leaves/entitlements"
-                  className={getLinkClasses(
-                    location.pathname.includes("/leaves/entitlements")
-                  )}
-                  style={getLinkStyle(
-                    location.pathname.includes("/leaves/entitlements")
-                  )}
-                >
-                  📊 My Entitlements
-                </Nav.Link>
-
-                <Nav.Link
-                  as={Link}
-                  to="/teacher/dashboard/leaves/apply"
-                  className={getLinkClasses(
-                    location.pathname.includes("/leaves/apply")
-                  )}
-                  style={getLinkStyle(
-                    location.pathname.includes("/leaves/apply")
-                  )}
-                >
-                  📝 Apply Leave
-                </Nav.Link>
-
-                <Nav.Link
-                  as={Link}
-                  to="/teacher/dashboard/leaves/requests"
-                  className={getLinkClasses(
-                    location.pathname.includes("/leaves/requests")
-                  )}
-                  style={getLinkStyle(
-                    location.pathname.includes("/leaves/requests")
-                  )}
-                >
-                  📋 Leave Requests
-                </Nav.Link>
-
-                <Nav.Link
-                  as={Link}
-                  to="/teacher/dashboard/leaves/history"
-                  className={getLinkClasses(
-                    location.pathname.includes("/leaves/history")
-                  )}
-                  style={getLinkStyle(
-                    location.pathname.includes("/leaves/history")
-                  )}
-                >
-                  📅 Leave History
-                </Nav.Link>
+                <span className="ms-auto me-2">{openLeaves ? "▾" : "▸"}</span>
               </div>
+
+              {openLeaves && (
+                <div className="ms-4">
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/leaves/entitlements"
+                    className={getLinkClasses(
+                      location.pathname.includes("/leaves/entitlements")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/leaves/entitlements")
+                    )}
+                  >
+                    📊 My Entitlements
+                  </Nav.Link>
+
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/leaves/apply"
+                    className={getLinkClasses(
+                      location.pathname.includes("/leaves/apply")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/leaves/apply")
+                    )}
+                  >
+                    📝 Apply Leave
+                  </Nav.Link>
+
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/leaves/requests"
+                    className={getLinkClasses(
+                      location.pathname.includes("/leaves/requests")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/leaves/requests")
+                    )}
+                  >
+                    📋 Leave Requests
+                  </Nav.Link>
+                </div>
+              )}
 
               <Nav.Link
                 as={Link}

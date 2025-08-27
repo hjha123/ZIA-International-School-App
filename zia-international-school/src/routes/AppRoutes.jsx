@@ -28,6 +28,9 @@ import TeacherUpdateSelf from "../pages/teacher/TeacherUpdateSelf";
 import AssignmentListPage from "../pages/teacher/assignments/AssignmentListPage";
 import AssignmentCreatePage from "../pages/teacher/assignments/AssignmentCreatePage";
 import AssignmentStudentStatusPage from "../pages/teacher/assignments/AssignmentStudentStatus";
+import ApplyLeave from "../pages/teacher/leaves/ApplyLeave";
+import LeaveRequests from "../pages/teacher/leaves/LeaveRequests";
+import LeaveEntitlements from "../pages/teacher/leaves/LeaveEntitlements";
 
 export default function AppRoutes() {
   return (
@@ -80,6 +83,10 @@ export default function AppRoutes() {
         <Route index element={<TeacherHome />} />
         <Route path="profile" element={<TeacherProfile />} />
         <Route path="profile/edit" element={<TeacherUpdateSelf />} />
+        {/* 🆕 Teacher Leaves */}
+        <Route path="leaves/apply" element={<ApplyLeave />} />
+        <Route path="leaves/requests" element={<LeaveRequests />} />
+        <Route path="leaves/entitlements" element={<LeaveEntitlements />} />
         {/* 🆕 Teacher Assignments */}
         <Route path="assignments" element={<AssignmentListPage />} />
         <Route path="assignments/create" element={<AssignmentCreatePage />} />

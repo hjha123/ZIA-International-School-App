@@ -60,6 +60,11 @@ const getMyProfile = async () => {
 const updateMyProfile = (updateRequest) =>
   axios.put(`teachers/me`, updateRequest).then((res) => res.data);
 
+const getMyEmpIdAndName = async () => {
+  const res = await axios.get(`/teachers/myDetails`);
+  return res.data;
+};
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -72,4 +77,5 @@ export default {
   uploadProfileImage,
   getMyProfile,
   updateMyProfile,
+  getMyEmpIdAndName,
 };
