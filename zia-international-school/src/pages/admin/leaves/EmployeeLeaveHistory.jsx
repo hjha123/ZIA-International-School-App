@@ -101,7 +101,6 @@ const EmployeeLeaveHistory = () => {
         <BsJournalText className="me-2" size={22} /> Employee Leave History
       </h4>
 
-      {/* Teacher fetch error */}
       {teacherError && (
         <Alert variant="danger" className="mb-3">
           {teacherError}
@@ -225,6 +224,7 @@ const EmployeeLeaveHistory = () => {
                     <th>Type</th>
                     <th>From</th>
                     <th>To</th>
+                    <th>Applied On</th>
                     <th>Status</th>
                     <th>Reason</th>
                     <th>Remarks</th>
@@ -237,6 +237,11 @@ const EmployeeLeaveHistory = () => {
                       <td>{leave.leaveType}</td>
                       <td>{leave.startDate}</td>
                       <td>{leave.endDate}</td>
+                      <td>
+                        {leave.appliedOn
+                          ? new Date(leave.appliedOn).toLocaleDateString()
+                          : "-"}
+                      </td>
                       <td>
                         <Badge bg={getBadgeVariant(leave.status)}>
                           {leave.status}

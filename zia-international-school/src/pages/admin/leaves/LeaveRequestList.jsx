@@ -135,6 +135,7 @@ const LeaveRequestList = () => {
               <th>Type</th>
               <th>From</th>
               <th>To</th>
+              <th>Applied On</th>
               <th>Status</th>
               <th>Reason</th>
               <th className="text-center">Actions</th>
@@ -143,7 +144,7 @@ const LeaveRequestList = () => {
           <tbody>
             {filteredRequests.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center text-muted py-4">
+                <td colSpan="10" className="text-center text-muted py-4">
                   No leave requests found.
                 </td>
               </tr>
@@ -156,6 +157,11 @@ const LeaveRequestList = () => {
                   <td>{req.leaveType}</td>
                   <td>{req.startDate}</td>
                   <td>{req.endDate}</td>
+                  <td>
+                    {req.appliedOn
+                      ? new Date(req.appliedOn).toLocaleDateString()
+                      : "-"}
+                  </td>{" "}
                   <td>
                     <Badge
                       bg={
