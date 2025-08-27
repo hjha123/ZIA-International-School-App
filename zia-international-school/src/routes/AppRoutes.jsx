@@ -32,6 +32,11 @@ import ApplyLeave from "../pages/teacher/leaves/ApplyLeave";
 import LeaveRequests from "../pages/teacher/leaves/LeaveRequests";
 import LeaveEntitlements from "../pages/teacher/leaves/LeaveEntitlements";
 import StudentCreate from "../pages/admin/students/StudentCreate";
+import ManageStudents from "../pages/admin/students/ManageStudents";
+import StudentProfile from "../pages/admin/students/StudentProfile";
+import StudentUpdate from "../pages/admin/students/StudentUpdate";
+import StudentUpdateList from "../pages/admin/students/StudentUpdateList";
+import StudentOffboardList from "../pages/admin/students/StudentOffboardList";
 
 export default function AppRoutes() {
   return (
@@ -67,6 +72,14 @@ export default function AppRoutes() {
         {/* 🆕 */}
         {/* ✅ Students routes */}
         <Route path="students/create" element={<StudentCreate />} />
+        <Route path="students" element={<ManageStudents />} />
+        <Route
+          path="/admin/dashboard/students/view/:studentId"
+          element={<StudentProfile />}
+        />
+        <Route path="students/update/:studentId" element={<StudentUpdate />} />
+        <Route path="students/update" element={<StudentUpdateList />} />
+        <Route path="students/offboard" element={<StudentOffboardList />} />
         {/* ✅ Leave management routes */}
         <Route path="leaves" element={<LeaveRequestList />} />
         <Route path="leaves/leave-allocation" element={<LeaveAllocation />} />
