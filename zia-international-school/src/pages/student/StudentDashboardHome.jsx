@@ -16,9 +16,18 @@ import {
 } from "react-icons/bs";
 import studentService from "../../services/studentService";
 
+const motivationalQuotes = [
+  "Believe you can and you're halfway there.",
+  "Your potential is endless. Keep pushing!",
+  "Success is the sum of small efforts repeated daily.",
+  "Dream big, work hard, stay focused.",
+  "Mistakes are proof that you are trying.",
+];
+
 const StudentDashboardHome = () => {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quote, setQuote] = useState("");
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -31,6 +40,11 @@ const StudentDashboardHome = () => {
         setLoading(false);
       }
     };
+
+    // Pick a random quote
+    setQuote(
+      motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
+    );
 
     fetchStudentData();
   }, []);
@@ -54,14 +68,14 @@ const StudentDashboardHome = () => {
     <Container fluid className="py-4">
       {/* Welcome Card */}
       <Card
-        className="mb-4 shadow-sm border-0"
+        className="mb-4 shadow-lg border-0"
         style={{
-          background: "linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%)",
-          borderRadius: "1rem",
+          background: "linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%)",
+          borderRadius: "1.5rem",
         }}
       >
-        <Card.Body className="d-flex align-items-center">
-          <div className="me-3">
+        <Card.Body className="d-flex flex-column flex-md-row align-items-center">
+          <div className="me-md-4 mb-3 mb-md-0">
             <Image
               src={
                 student.profileImageUrl
@@ -71,24 +85,33 @@ const StudentDashboardHome = () => {
                   : "/images/no-profile.png"
               }
               roundedCircle
-              width={80}
-              height={80}
-              style={{ objectFit: "cover", border: "3px solid #2563eb" }}
+              width={100}
+              height={100}
+              style={{ objectFit: "cover", border: "4px solid #2563eb" }}
             />
           </div>
           <div>
-            <h5 className="fw-bold mb-1" style={{ color: "#1e3a8a" }}>
+            <h4 className="fw-bold mb-1" style={{ color: "#1e3a8a" }}>
               Welcome back, {student.firstName} {student.lastName}!
-            </h5>
+            </h4>
             <p className="mb-1 text-muted" style={{ fontSize: "0.95rem" }}>
               Grade: <strong>{student.gradeName}</strong>, Section:{" "}
               <strong>{student.sectionName}</strong>
             </p>
-            <Badge bg={student.status === "ACTIVE" ? "success" : "secondary"}>
+            <Badge
+              bg={student.status === "ACTIVE" ? "success" : "secondary"}
+              className="mb-2"
+            >
               {student.status}
             </Badge>
+            <p
+              className="fst-italic mb-2"
+              style={{ fontSize: "1rem", color: "#0c4a6e" }}
+            >
+              "{quote}"
+            </p>
             <p className="mb-0 text-muted" style={{ fontSize: "0.9rem" }}>
-              Here’s your dashboard to stay on top of your classes, tasks, and
+              Here's your dashboard to stay on top of your classes, tasks, and
               notices 🚀
             </p>
           </div>
