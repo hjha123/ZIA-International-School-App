@@ -49,6 +49,11 @@ const deleteStudent = async (studentId) => {
   return response.data;
 };
 
+const getMyProfile = async () => {
+  const res = await axios.get(`/students/me`);
+  return res.data;
+};
+
 export default {
   getAllGrades,
   getSectionsByGrade,
@@ -58,4 +63,5 @@ export default {
   uploadProfileImage,
   updateStudent,
   deleteStudent,
+  getMyProfile,
 };

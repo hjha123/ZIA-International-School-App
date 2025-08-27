@@ -37,6 +37,8 @@ import StudentProfile from "../pages/admin/students/StudentProfile";
 import StudentUpdate from "../pages/admin/students/StudentUpdate";
 import StudentUpdateList from "../pages/admin/students/StudentUpdateList";
 import StudentOffboardList from "../pages/admin/students/StudentOffboardList";
+import StudentDashboardLayout from "../layouts/StudentDashboardLayout";
+import StudentDashboardHome from "../pages/student/StudentDashboardHome";
 
 export default function AppRoutes() {
   return (
@@ -114,6 +116,35 @@ export default function AppRoutes() {
           path="assignments/:assignmentId/students"
           element={<AssignmentStudentStatusPage />}
         />
+      </Route>
+
+      {/* ✅ Student Dashboard Layout */}
+      <Route
+        path="/student/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["STUDENT"]}>
+            <StudentDashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        {/* Nested Routes for Student Dashboard */}
+        <Route index element={<StudentDashboardHome />} />
+        {/* <Route
+          path="profile"
+          element={<StudentProfile />} // Component for viewing/updating student profile
+        />
+        <Route
+          path="attendance"
+          element={<StudentAttendance />} // Component for attendance details
+        />
+        <Route
+          path="tasks"
+          element={<StudentTasks />} // Component to show student tasks/assignments
+        />
+        <Route
+          path="notices"
+          element={<StudentNotices />} // Component to show notices relevant to student
+        /> */}
       </Route>
     </Routes>
   );
