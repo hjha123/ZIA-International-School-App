@@ -31,6 +31,7 @@ import AssignmentStudentStatusPage from "../pages/teacher/assignments/Assignment
 import ApplyLeave from "../pages/teacher/leaves/ApplyLeave";
 import LeaveRequests from "../pages/teacher/leaves/LeaveRequests";
 import LeaveEntitlements from "../pages/teacher/leaves/LeaveEntitlements";
+import StudentCreate from "../pages/admin/students/StudentCreate";
 
 export default function AppRoutes() {
   return (
@@ -64,6 +65,8 @@ export default function AppRoutes() {
           element={<TeacherOffboardList />}
         />{" "}
         {/* 🆕 */}
+        {/* ✅ Students routes */}
+        <Route path="students/create" element={<StudentCreate />} />
         {/* ✅ Leave management routes */}
         <Route path="leaves" element={<LeaveRequestList />} />
         <Route path="leaves/leave-allocation" element={<LeaveAllocation />} />

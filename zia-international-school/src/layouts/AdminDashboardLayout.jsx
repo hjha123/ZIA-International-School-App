@@ -33,6 +33,9 @@ const AdminDashboardLayout = () => {
   const [teachersExpanded, setTeachersExpanded] = React.useState(
     location.pathname.includes("/teachers")
   );
+  const [studentsExpanded, setStudentsExpanded] = React.useState(
+    location.pathname.includes("/students")
+  );
 
   const username = localStorage.getItem("username") || "Admin";
   const role = localStorage.getItem("role") || "ADMIN";
@@ -240,17 +243,89 @@ const AdminDashboardLayout = () => {
                 )}
               </Nav>
 
-              <Nav.Link
-                as={Link}
-                to="/admin/dashboard/students"
-                className={getLinkClasses(
-                  location.pathname.includes("students")
+              {/* Students Section */}
+              <Nav className="flex-column mb-2">
+                <Nav.Item>
+                  <Nav.Link
+                    className={getLinkClasses(
+                      location.pathname.includes("/students")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/students")
+                    )}
+                    onClick={() => setStudentsExpanded(!studentsExpanded)}
+                    aria-controls="students-submenu"
+                    aria-expanded={studentsExpanded}
+                  >
+                    <BsPeople className="me-2 text-primary" />
+                    Students
+                  </Nav.Link>
+                </Nav.Item>
+
+                {studentsExpanded && (
+                  <div
+                    id="students-submenu"
+                    className="ms-3 mt-2 py-2 px-2 rounded bg-light border"
+                    style={{ fontSize: "0.92rem" }}
+                  >
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/students"
+                      className={getLinkClasses(
+                        location.pathname === "/admin/dashboard/students"
+                      )}
+                      style={getLinkStyle(
+                        location.pathname === "/admin/dashboard/students"
+                      )}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Manage Students
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/students/create"
+                      className={getLinkClasses(
+                        location.pathname.includes("/students/create")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/students/create")
+                      )}
+                    >
+                      <BsPersonBadge className="me-2" />
+                      Onboard Student
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/students/update"
+                      className={getLinkClasses(
+                        location.pathname.includes("/students/update")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/students/update")
+                      )}
+                    >
+                      <BsPeople className="me-2" />
+                      Update Student
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/students/offboard"
+                      className={getLinkClasses(
+                        location.pathname.includes("/students/offboard")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/students/offboard")
+                      )}
+                    >
+                      <BsBoxArrowRight className="me-2" />
+                      Offboard Student
+                    </Nav.Link>
+                  </div>
                 )}
-                style={getLinkStyle(location.pathname.includes("students"))}
-              >
-                <BsPeople className="me-2" />
-                Students
-              </Nav.Link>
+              </Nav>
 
               <Nav.Link
                 as={Link}
