@@ -115,14 +115,6 @@ export default function AppRoutes() {
         <Route path="assignments/view/:id" element={<ViewAssignment />} />
         <Route path="assignments/edit/:id" element={<EditAssignment />} />
         <Route path="assignments/submissions" element={<SubmissionsPage />} />
-        {/* <Route
-          path="assignments/edit/:assignmentId"
-          element={<AssignmentCreatePage />}
-        />
-        <Route
-          path="assignments/:assignmentId/students"
-          element={<AssignmentStudentStatusPage />}
-        /> */}
       </Route>
 
       {/* ✅ Student Dashboard Layout */}

@@ -10,6 +10,8 @@ import {
   Spinner,
   Modal,
   Badge,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -247,38 +249,79 @@ const ManageStudents = () => {
                       </td>
                       <td>{s.admissionDate}</td>
                       <td className="d-flex justify-content-center gap-2">
-                        <Button
-                          variant="info"
-                          size="sm"
-                          onClick={() =>
-                            navigate(
-                              `/admin/dashboard/students/view/${s.studentId}`
-                            )
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 0, hide: 0 }} // appear immediately
+                          overlay={
+                            <Tooltip
+                              id={`tooltip-view-${s.studentId}`}
+                              style={{ fontSize: "1rem" }} // larger font
+                            >
+                              View student details
+                            </Tooltip>
                           }
                         >
-                          <FaEye />
-                        </Button>
-                        <Button
-                          variant="warning"
-                          size="sm"
-                          onClick={() =>
-                            navigate(
-                              `/admin/dashboard/students/update/${s.studentId}`
-                            )
+                          <Button
+                            variant="info"
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                `/admin/dashboard/students/view/${s.studentId}`
+                              )
+                            }
+                          >
+                            <FaEye />
+                          </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 0, hide: 0 }}
+                          overlay={
+                            <Tooltip
+                              id={`tooltip-edit-${s.studentId}`}
+                              style={{ fontSize: "1rem" }}
+                            >
+                              Edit student information
+                            </Tooltip>
                           }
                         >
-                          <FaEdit />
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedStudent(s);
-                            setShowDeleteModal(true);
-                          }}
+                          <Button
+                            variant="warning"
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                `/admin/dashboard/students/update/${s.studentId}`
+                              )
+                            }
+                          >
+                            <FaEdit />
+                          </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                          placement="top"
+                          delay={{ show: 0, hide: 0 }}
+                          overlay={
+                            <Tooltip
+                              id={`tooltip-delete-${s.studentId}`}
+                              style={{ fontSize: "1rem" }}
+                            >
+                              Delete this student
+                            </Tooltip>
+                          }
                         >
-                          <FaTrash />
-                        </Button>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedStudent(s);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            <FaTrash />
+                          </Button>
+                        </OverlayTrigger>
                       </td>
                     </tr>
                   ))
