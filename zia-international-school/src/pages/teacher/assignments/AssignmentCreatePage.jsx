@@ -1,81 +1,169 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Form, Button, Row, Col, Modal, Alert } from "react-bootstrap";
+import {
+  Card,
+  Form,
+  Button,
+  Row,
+  Col,
+  Modal,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
+import assignmentService from "../../../services/assignmentService";
+import studentService from "../../../services/studentService";
 
 const AssignmentCreatePage = () => {
-  const { assignmentId } = useParams(); // edit mode
+  const { assignmentId } = useParams();
   const navigate = useNavigate();
 
-  // ---- Mock Data (replace with API calls later) ----
-  const mockGrades = ["Grade 9", "Grade 10", "Grade 11"];
-  const mockSections = ["A", "B", "C"];
-  const mockSubjects = ["Math", "Science", "English"];
+  const [grades, setGrades] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
-  // ---- Form State ----
   const [form, setForm] = useState({
     title: "",
     description: "",
-    grade: "",
-    section: "",
-    subject: "",
+    gradeId: "",
+    sectionId: "",
+    subjectId: "",
     dueDate: "",
     attachments: [],
   });
 
-  // ---- Modal State ----
+  const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [actionType, setActionType] = useState(null); // "draft" or "publish"
-
-  // ---- Feedback Alert ----
+  const [actionType, setActionType] = useState(null);
   const [feedback, setFeedback] = useState({
     show: false,
     type: "",
     message: "",
   });
 
-  // ---- On Edit Mode, Load Existing Data ----
+  // ---- Fetch Grades on load ----
   useEffect(() => {
-    if (assignmentId) {
-      const mockAssignment = {
-        id: assignmentId,
-        title: "Algebra Homework",
-        description: "Solve 10 problems from chapter 5",
-        grade: "Grade 10",
-        section: "A",
-        subject: "Math",
-        dueDate: "2025-09-01T23:59",
-        attachments: [],
-      };
-      setForm(mockAssignment);
-    }
+    const fetchGrades = async () => {
+      try {
+        const data = await studentService.getAllGrades();
+        setGrades(data);
+      } catch (err) {
+        console.error("Failed to fetch grades:", err);
+      }
+    };
+    fetchGrades();
+  }, []);
+
+  // ---- Fetch Sections & Subjects when grade changes ----
+  useEffect(() => {
+    const fetchSectionsSubjects = async () => {
+      if (!form.gradeId) {
+        setSections([]);
+        setSubjects([]);
+        return;
+      }
+      try {
+        const secs = await studentService.getSectionsByGrade(form.gradeId);
+        const subs = await studentService.getSubjects(form.gradeId);
+        setSections(secs);
+        setSubjects(subs);
+      } catch (err) {
+        console.error("Failed to fetch sections/subjects:", err);
+      }
+    };
+    fetchSectionsSubjects();
+  }, [form.gradeId]);
+
+  // ---- Edit Mode: Load Assignment ----
+  useEffect(() => {
+    if (!assignmentId) return;
+
+    const fetchAssignment = async () => {
+      try {
+        const data = await assignmentService.getAssignmentById(assignmentId);
+        setForm({
+          title: data.title,
+          description: data.description,
+          gradeId: data.gradeId,
+          sectionId: data.sectionId,
+          subjectId: data.subjectId,
+          dueDate: data.dueDate ? data.dueDate.split("T")[0] : "",
+          attachments: data.attachments || [],
+        });
+      } catch (err) {
+        console.error("Failed to load assignment:", err);
+      }
+    };
+    fetchAssignment();
   }, [assignmentId]);
 
-  // ---- Handlers ----
-  const handleChange = (field, value) => {
-    setForm({ ...form, [field]: value });
-  };
+  const handleChange = (field, value) => setForm({ ...form, [field]: value });
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
     setForm({ ...form, attachments: [...form.attachments, ...files] });
   };
 
-  const showFeedback = (type, message) => {
+  const showFeedback = (type, message, shouldRedirect = false) => {
     setFeedback({ show: true, type, message });
     setTimeout(() => {
       setFeedback({ show: false, type: "", message: "" });
-      navigate("/teacher/dashboard/assignments");
-    }, 2000); // 2 seconds
+      if (shouldRedirect) {
+        navigate("/teacher/dashboard/assignments/manage");
+      }
+    }, 2000);
   };
 
-  const handleSaveDraft = () => {
-    console.log("Saving as draft:", form);
-    showFeedback("secondary", "✅ Assignment saved as draft successfully!");
-  };
+  const handleSave = async (status) => {
+    // ✅ Prevent saving with past due date
+    if (new Date(form.dueDate) < new Date()) {
+      alert("⚠️ Due date must be in the future.");
+      return;
+    }
 
-  const handlePublish = () => {
-    console.log("Publishing:", form);
-    showFeedback("success", "🚀 Assignment published successfully!");
+    setLoading(true);
+    try {
+      const data = new FormData();
+
+      const requestObj = {
+        title: form.title,
+        description: form.description,
+        gradeId: form.gradeId,
+        sectionId: form.sectionId,
+        subjectId: form.subjectId,
+        dueDate: form.dueDate,
+        status: status,
+      };
+
+      data.append(
+        "request",
+        new Blob([JSON.stringify(requestObj)], { type: "application/json" })
+      );
+
+      form.attachments.forEach((file) => {
+        if (file instanceof File) {
+          data.append("files", file);
+        }
+      });
+
+      if (assignmentId) {
+        await assignmentService.updateAssignment(assignmentId, data);
+      } else {
+        await assignmentService.createAssignment(data);
+      }
+
+      showFeedback(
+        status === "DRAFT" ? "secondary" : "success",
+        status === "DRAFT"
+          ? "✅ Assignment saved as draft successfully!"
+          : "🚀 Assignment published successfully!",
+        true // ✅ only redirect on success
+      );
+    } catch (err) {
+      console.error("Error saving assignment:", err);
+      showFeedback("danger", "❌ Error saving assignment!", false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleShowConfirm = (type) => {
@@ -84,21 +172,14 @@ const AssignmentCreatePage = () => {
   };
 
   const handleConfirm = () => {
-    if (actionType === "draft") {
-      handleSaveDraft();
-    } else if (actionType === "publish") {
-      handlePublish();
-    }
+    handleSave(actionType === "draft" ? "DRAFT" : "PUBLISHED");
     setShowConfirm(false);
   };
 
-  const handleCancel = () => {
-    navigate("/teacher/dashboard/assignments"); // go back to list
-  };
+  const handleCancel = () => navigate("/teacher/dashboard/assignments/manage");
 
   return (
     <div className="container mt-4">
-      {/* Floating Feedback Message */}
       {feedback.show && (
         <Alert
           variant={feedback.type}
@@ -106,8 +187,8 @@ const AssignmentCreatePage = () => {
           style={{
             zIndex: 2000,
             minWidth: "280px",
-            borderRadius: "12px",
-            fontWeight: "500",
+            borderRadius: 12,
+            fontWeight: 500,
           }}
         >
           {feedback.message}
@@ -125,7 +206,7 @@ const AssignmentCreatePage = () => {
         <Form>
           <Row className="mb-3">
             <Col md={6}>
-              <Form.Group controlId="title" className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label className="fw-semibold">Title *</Form.Label>
                 <Form.Control
                   type="text"
@@ -138,20 +219,21 @@ const AssignmentCreatePage = () => {
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group controlId="dueDate" className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Label className="fw-semibold">Due Date *</Form.Label>
                 <Form.Control
-                  type="datetime-local"
+                  type="date"
                   value={form.dueDate}
                   onChange={(e) => handleChange("dueDate", e.target.value)}
                   required
                   className="rounded-3"
+                  min={new Date().toISOString().split("T")[0]} // ✅ Restrict past dates
                 />
               </Form.Group>
             </Col>
           </Row>
 
-          <Form.Group controlId="description" className="mb-3">
+          <Form.Group className="mb-3">
             <Form.Label className="fw-semibold">Description</Form.Label>
             <Form.Control
               as="textarea"
@@ -165,18 +247,18 @@ const AssignmentCreatePage = () => {
 
           <Row className="mb-3">
             <Col md={4}>
-              <Form.Group controlId="grade">
+              <Form.Group>
                 <Form.Label className="fw-semibold">Grade *</Form.Label>
                 <Form.Select
-                  value={form.grade}
-                  onChange={(e) => handleChange("grade", e.target.value)}
+                  value={form.gradeId}
+                  onChange={(e) => handleChange("gradeId", e.target.value)}
                   required
                   className="rounded-3"
                 >
                   <option value="">Select Grade</option>
-                  {mockGrades.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
+                  {grades.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.name}
                     </option>
                   ))}
                 </Form.Select>
@@ -184,18 +266,19 @@ const AssignmentCreatePage = () => {
             </Col>
 
             <Col md={4}>
-              <Form.Group controlId="section">
+              <Form.Group>
                 <Form.Label className="fw-semibold">Section *</Form.Label>
                 <Form.Select
-                  value={form.section}
-                  onChange={(e) => handleChange("section", e.target.value)}
+                  value={form.sectionId}
+                  onChange={(e) => handleChange("sectionId", e.target.value)}
                   required
                   className="rounded-3"
+                  disabled={!sections.length}
                 >
                   <option value="">Select Section</option>
-                  {mockSections.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
+                  {sections.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
                     </option>
                   ))}
                 </Form.Select>
@@ -203,18 +286,19 @@ const AssignmentCreatePage = () => {
             </Col>
 
             <Col md={4}>
-              <Form.Group controlId="subject">
+              <Form.Group>
                 <Form.Label className="fw-semibold">Subject *</Form.Label>
                 <Form.Select
-                  value={form.subject}
-                  onChange={(e) => handleChange("subject", e.target.value)}
+                  value={form.subjectId}
+                  onChange={(e) => handleChange("subjectId", e.target.value)}
                   required
                   className="rounded-3"
+                  disabled={!subjects.length}
                 >
                   <option value="">Select Subject</option>
-                  {mockSubjects.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
+                  {subjects.map((sub) => (
+                    <option key={sub.id} value={sub.id}>
+                      {sub.name}
                     </option>
                   ))}
                 </Form.Select>
@@ -222,7 +306,7 @@ const AssignmentCreatePage = () => {
             </Col>
           </Row>
 
-          <Form.Group controlId="attachments" className="mb-4">
+          <Form.Group className="mb-4">
             <Form.Label className="fw-semibold">Attachments</Form.Label>
             <Form.Control
               type="file"
@@ -308,6 +392,13 @@ const AssignmentCreatePage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {loading && (
+        <Spinner
+          animation="border"
+          className="position-fixed top-50 start-50 translate-middle"
+        />
+      )}
     </div>
   );
 };

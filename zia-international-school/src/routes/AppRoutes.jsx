@@ -25,7 +25,6 @@ import EmployeeLeaveHistory from "../pages/admin/leaves/EmployeeLeaveHistory";
 import TeacherDashboardLayout from "../layouts/TeacherDashboardLayout";
 import TeacherHome from "../pages/teacher/TeacherHome";
 import TeacherUpdateSelf from "../pages/teacher/TeacherUpdateSelf";
-import AssignmentListPage from "../pages/teacher/assignments/AssignmentListPage";
 import AssignmentCreatePage from "../pages/teacher/assignments/AssignmentCreatePage";
 import AssignmentStudentStatusPage from "../pages/teacher/assignments/AssignmentStudentStatus";
 import ApplyLeave from "../pages/teacher/leaves/ApplyLeave";
@@ -39,6 +38,9 @@ import StudentUpdateList from "../pages/admin/students/StudentUpdateList";
 import StudentOffboardList from "../pages/admin/students/StudentOffboardList";
 import StudentDashboardLayout from "../layouts/StudentDashboardLayout";
 import StudentDashboardHome from "../pages/student/StudentDashboardHome";
+import ManageAssignments from "../pages/teacher/assignments/ManageAssignments";
+import ViewAssignment from "../pages/teacher/assignments/ViewAssignment";
+import EditAssignment from "../pages/teacher/assignments/EditAssignment";
 
 export default function AppRoutes() {
   return (
@@ -106,16 +108,18 @@ export default function AppRoutes() {
         <Route path="leaves/requests" element={<LeaveRequests />} />
         <Route path="leaves/entitlements" element={<LeaveEntitlements />} />
         {/* 🆕 Teacher Assignments */}
-        <Route path="assignments" element={<AssignmentListPage />} />
         <Route path="assignments/create" element={<AssignmentCreatePage />} />
-        <Route
+        <Route path="assignments/manage" element={<ManageAssignments />} />
+        <Route path="assignments/view/:id" element={<ViewAssignment />} />
+        <Route path="assignments/edit/:id" element={<EditAssignment />} />
+        {/* <Route
           path="assignments/edit/:assignmentId"
           element={<AssignmentCreatePage />}
         />
         <Route
           path="assignments/:assignmentId/students"
           element={<AssignmentStudentStatusPage />}
-        />
+        /> */}
       </Route>
 
       {/* ✅ Student Dashboard Layout */}

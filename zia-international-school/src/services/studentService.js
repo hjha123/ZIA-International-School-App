@@ -54,6 +54,11 @@ const getMyProfile = async () => {
   return res.data;
 };
 
+const getSubjects = async () => {
+  const res = await axios.get(`/subjects`);
+  return res.data;
+};
+
 export default {
   getAllGrades,
   getSectionsByGrade,
@@ -64,4 +69,5 @@ export default {
   updateStudent,
   deleteStudent,
   getMyProfile,
+  getSubjects,
 };

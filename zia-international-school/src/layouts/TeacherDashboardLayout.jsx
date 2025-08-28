@@ -62,11 +62,18 @@ const TeacherDashboardLayout = () => {
 
   // 🔹 State for collapsible My Leaves menu
   const [openLeaves, setOpenLeaves] = useState(false);
+  const [openAssignments, setOpenAssignments] = useState(false);
 
   // Auto-expand if any child is active
   useEffect(() => {
     if (location.pathname.includes("/leaves")) {
       setOpenLeaves(true);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.includes("/assignments")) {
+      setOpenAssignments(true);
     }
   }, [location.pathname]);
 
@@ -154,17 +161,60 @@ const TeacherDashboardLayout = () => {
                 My Classes
               </Nav.Link>
 
-              <Nav.Link
-                as={Link}
-                to="/teacher/dashboard/assignments"
-                className={getLinkClasses(
-                  location.pathname.includes("/assignments")
-                )}
-                style={getLinkStyle(location.pathname.includes("/assignments"))}
+              <div
+                onClick={() => setOpenAssignments(!openAssignments)}
+                className="d-flex align-items-center mb-2 ms-2 fw-bold text-warning"
+                style={{ cursor: "pointer" }}
               >
-                <BsClipboardCheck className="me-2 text-warning" />
+                <BsClipboardCheck className="me-2" />
                 Assignments
-              </Nav.Link>
+                <span className="ms-auto me-2">
+                  {openAssignments ? "▾" : "▸"}
+                </span>
+              </div>
+
+              {openAssignments && (
+                <div className="ms-4">
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/assignments/create"
+                    className={getLinkClasses(
+                      location.pathname.includes("/assignments/create")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/assignments/create")
+                    )}
+                  >
+                    📝 Create Assignment
+                  </Nav.Link>
+
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/assignments/manage"
+                    className={getLinkClasses(
+                      location.pathname.includes("/assignments/manage")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/assignments/manage")
+                    )}
+                  >
+                    📋 Manage Assignments
+                  </Nav.Link>
+
+                  <Nav.Link
+                    as={Link}
+                    to="/teacher/dashboard/assignments/submissions"
+                    className={getLinkClasses(
+                      location.pathname.includes("/assignments/submissions")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/assignments/submissions")
+                    )}
+                  >
+                    🏆 Submissions
+                  </Nav.Link>
+                </div>
+              )}
 
               <Nav.Link
                 as={Link}
