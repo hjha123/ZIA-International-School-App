@@ -333,6 +333,19 @@ const AdminDashboardLayout = () => {
                       <BsPeople className="me-2" />
                       Update Student
                     </Nav.Link>
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/students/profile"
+                      className={getLinkClasses(
+                        location.pathname.includes("/students/profile")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/students/profile")
+                      )}
+                    >
+                      <BsPersonBadge className="me-2" />
+                      View Profile
+                    </Nav.Link>
 
                     <Nav.Link
                       as={Link}

@@ -43,6 +43,7 @@ import SubmissionsPage from "../pages/teacher/assignments/SubmissionsPage";
 import AdminAssignmentsPage from "../pages/admin/teachers/assignments/AdminAssignmentsPage";
 import GradeManagement from "../pages/admin/gradeAndSections/GradeManagement";
 import SectionManagement from "../pages/admin/gradeAndSections/SectionManagement";
+import StudentProfileSearch from "../pages/admin/students/StudentProfileSearch";
 
 export default function AppRoutes() {
   return (
@@ -81,6 +82,14 @@ export default function AppRoutes() {
         <Route path="students" element={<ManageStudents />} />
         <Route
           path="/admin/dashboard/students/view/:studentId"
+          element={<StudentProfile />}
+        />
+        <Route
+          path="/admin/dashboard/students/profile"
+          element={<StudentProfileSearch />}
+        />
+        <Route
+          path="/admin/dashboard/students/profile/:studentId"
           element={<StudentProfile />}
         />
         <Route path="students/update/:studentId" element={<StudentUpdate />} />

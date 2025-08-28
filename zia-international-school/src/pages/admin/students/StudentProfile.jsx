@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Row, Col, Badge, Spinner, Button } from "react-bootstrap";
-import { FaMale, FaFemale, FaUser } from "react-icons/fa";
+import {
+  Card,
+  Row,
+  Col,
+  Badge,
+  Spinner,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
+import { FaMale, FaFemale, FaUser, FaArrowLeft } from "react-icons/fa";
 import studentService from "../../../services/studentService";
 
 export default function StudentProfile() {
@@ -61,21 +70,22 @@ export default function StudentProfile() {
       case "GRADUATED":
         return "info";
       default:
-        return "info";
+        return "dark";
     }
   };
 
   const renderGenderIcon = (gender) => {
     if (gender === "Male") return <FaMale className="text-primary me-2" />;
-    if (gender === "Female") return <FaFemale className="text-pink-500 me-2" />;
+    if (gender === "Female")
+      return <FaFemale style={{ color: "#d63384" }} className="me-2" />;
     return <FaUser className="text-secondary me-2" />;
   };
 
   if (loading) {
     return (
       <div className="text-center mt-5">
-        <Spinner animation="border" />
-        <div>Loading Student Profile...</div>
+        <Spinner animation="border" variant="primary" />
+        <div className="mt-2">Loading Student Profile...</div>
       </div>
     );
   }
@@ -86,10 +96,16 @@ export default function StudentProfile() {
 
   return (
     <div className="container mt-4">
-      <Button variant="outline-primary mb-3" onClick={() => navigate(-1)}>
-        ← Back to List
+      {/* Back Button */}
+      <Button
+        variant="outline-primary"
+        className="mb-3 d-flex align-items-center gap-2"
+        onClick={() => navigate(-1)}
+      >
+        <FaArrowLeft /> Back to List
       </Button>
 
+      {/* Profile Card */}
       <Card className="shadow-lg rounded-4 border-0">
         <Card.Header
           className="text-white d-flex align-items-center gap-2"
@@ -103,14 +119,18 @@ export default function StudentProfile() {
           <h4 className="mb-0">
             {student.firstName} {student.lastName}
           </h4>
+          <Badge bg={getStatusVariant(student.status)} className="ms-auto">
+            {student.status}
+          </Badge>
         </Card.Header>
 
         <Card.Body>
           <Row className="mb-4 align-items-center">
+            {/* Profile Image */}
             <Col md={3} className="text-center">
               <div
-                className="position-relative d-inline-block group"
-                style={{ width: 150, height: 150 }}
+                className="position-relative d-inline-block"
+                style={{ width: 160, height: 160 }}
               >
                 <img
                   src={
@@ -128,18 +148,15 @@ export default function StudentProfile() {
                   }}
                   alt="Profile"
                   className="rounded-circle shadow"
-                  width={150}
-                  height={150}
+                  width={160}
+                  height={160}
                   style={{ objectFit: "cover", border: "4px solid #dee2e6" }}
                 />
 
+                {/* Upload Overlay */}
                 <div
                   className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center rounded-circle bg-dark bg-opacity-50"
-                  style={{
-                    cursor: "pointer",
-                    opacity: 0,
-                    transition: "opacity 0.3s",
-                  }}
+                  style={{ opacity: 0, transition: "opacity 0.3s" }}
                   onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
                   onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
                 >
@@ -162,42 +179,44 @@ export default function StudentProfile() {
                 </div>
               </div>
 
-              <div className="mt-3">
-                <Badge bg={getStatusVariant(student.status)}>
-                  {student.status}
-                </Badge>
-                <div className="text-muted mt-1">
-                  Student ID: {student.studentId}
-                </div>
+              <div className="mt-3 text-muted small">
+                <div>Student ID: {student.studentId}</div>
+                <div>Username: {student.username}</div>
               </div>
             </Col>
 
+            {/* Info Section */}
             <Col md={9}>
               <Row>
+                {/* Personal Info */}
                 <Col md={6}>
+                  <h6 className="text-primary fw-bold mb-2">Personal Info</h6>
                   <p>
-                    <strong>Username:</strong> {student.username}
+                    <strong>Email:</strong> {student.email || "N/A"}
                   </p>
                   <p>
-                    <strong>Email:</strong> {student.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {student.phone}
+                    <strong>Phone:</strong> {student.phone || "N/A"}
                   </p>
                   <p>
                     <strong>Gender:</strong> {student.gender || "N/A"}
                   </p>
                   <p>
-                    <strong>Date of Birth:</strong> {student.dateOfBirth}
+                    <strong>Date of Birth:</strong>{" "}
+                    {student.dateOfBirth || "N/A"}
                   </p>
                   <p>
-                    <strong>Blood Group:</strong> {student.bloodGroup || "N/A"}
+                    <strong>Blood Group:</strong>{" "}
+                    <Badge bg="danger">{student.bloodGroup || "N/A"}</Badge>
                   </p>
                   <p>
-                    <strong>Nationality:</strong> {student.nationality || "N/A"}
+                    <strong>Nationality:</strong>{" "}
+                    <Badge bg="info">{student.nationality || "N/A"}</Badge>
                   </p>
                 </Col>
+
+                {/* School Info */}
                 <Col md={6}>
+                  <h6 className="text-success fw-bold mb-2">School Info</h6>
                   <p>
                     <strong>Grade:</strong>{" "}
                     {student.gradeName || "Not Assigned"}
@@ -207,7 +226,8 @@ export default function StudentProfile() {
                     {student.sectionName || "Not Assigned"}
                   </p>
                   <p>
-                    <strong>Admission Date:</strong> {student.admissionDate}
+                    <strong>Admission Date:</strong>{" "}
+                    {student.admissionDate || "N/A"}
                   </p>
                   <p>
                     <strong>Address:</strong> {student.address || "N/A"}

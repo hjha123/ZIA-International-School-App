@@ -73,6 +73,19 @@ const getStudentsByGradeSection = async (gradeName, sectionName) => {
   return res.data;
 };
 
+const searchStudents = async (filters) => {
+  const params = {};
+
+  // map UI filters to backend params
+  if (filters.gradeId) params.gradeId = filters.gradeId;
+  if (filters.sectionId) params.sectionId = filters.sectionId;
+  if (filters.name) params.name = filters.name;
+  if (filters.studentId) params.studentId = filters.studentId;
+
+  const response = await axios.get(`/students/search`, { params });
+  return response.data;
+};
+
 export default {
   getAllGrades,
   getSectionsByGrade,
@@ -85,4 +98,5 @@ export default {
   getMyProfile,
   getSubjects,
   getStudentsByGradeSection,
+  searchStudents,
 };

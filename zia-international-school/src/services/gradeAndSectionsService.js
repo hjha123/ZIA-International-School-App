@@ -50,6 +50,11 @@ const deleteSection = async (gradeName, sectionName) => {
   return response.data;
 };
 
+const getSectionsByGrade = async (gradeId) => {
+  const response = await axios.get(`/sections/grade/${gradeId}`);
+  return response.data;
+};
+
 export default {
   // Grades
   getAllGrades,
@@ -63,4 +68,5 @@ export default {
   getSimpleSectionsByGradeName,
   createSection,
   deleteSection,
+  getSectionsByGrade,
 };
