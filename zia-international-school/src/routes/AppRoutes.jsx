@@ -41,6 +41,8 @@ import ViewAssignment from "../pages/teacher/assignments/ViewAssignment";
 import EditAssignment from "../pages/teacher/assignments/EditAssignment";
 import SubmissionsPage from "../pages/teacher/assignments/SubmissionsPage";
 import AdminAssignmentsPage from "../pages/admin/teachers/assignments/AdminAssignmentsPage";
+import GradeManagement from "../pages/admin/gradeAndSections/GradeManagement";
+import SectionManagement from "../pages/admin/gradeAndSections/SectionManagement";
 
 export default function AppRoutes() {
   return (
@@ -91,6 +93,9 @@ export default function AppRoutes() {
         <Route path="leaves/history" element={<EmployeeLeaveHistory />} />
         {/* ✅ Assignments routes */}
         <Route path="assignments" element={<AdminAssignmentsPage />} />
+        {/* ✅ Leave management routes */}
+        <Route path="grades" element={<GradeManagement />} />
+        <Route path="sections" element={<SectionManagement />} />
       </Route>
 
       {/* ✅ Teacher Dashboard Layout */}

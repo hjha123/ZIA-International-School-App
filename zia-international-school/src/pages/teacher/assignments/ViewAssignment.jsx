@@ -96,6 +96,15 @@ const ViewAssignment = () => {
               ? new Date(assignment.updatedAt).toLocaleString()
               : "-"}
           </p>
+
+          {/* Admin Remarks - only for PUBLISHED or CLOSED */}
+          {(assignment.status === "PUBLISHED" ||
+            assignment.status === "CLOSED") &&
+            assignment.adminRemarks && (
+              <p>
+                <strong>Admin Remarks:</strong> {assignment.adminRemarks}
+              </p>
+            )}
         </Card.Body>
       </Card>
     </div>

@@ -40,6 +40,10 @@ const AdminDashboardLayout = () => {
   const [assignmentsExpanded, setAssignmentsExpanded] = React.useState(
     location.pathname.includes("/assignments")
   );
+  const [gradesSectionsExpanded, setGradesSectionsExpanded] = React.useState(
+    location.pathname.includes("/grades") ||
+      location.pathname.includes("/sections")
+  );
 
   const username = localStorage.getItem("username") || "Admin";
   const role = localStorage.getItem("role") || "ADMIN";
@@ -398,6 +402,68 @@ const AdminDashboardLayout = () => {
                     >
                       <BsFileText className="me-2" />
                       Create Assignment
+                    </Nav.Link>
+                  </div>
+                )}
+              </Nav>
+
+              {/* Grades & Sections Section */}
+              <Nav className="flex-column mb-2">
+                <Nav.Item>
+                  <Nav.Link
+                    className={getLinkClasses(
+                      location.pathname.includes("/grades") ||
+                        location.pathname.includes("/sections")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/grades") ||
+                        location.pathname.includes("/sections")
+                    )}
+                    onClick={() =>
+                      setGradesSectionsExpanded(!gradesSectionsExpanded)
+                    }
+                    aria-controls="grades-sections-submenu"
+                    aria-expanded={gradesSectionsExpanded}
+                  >
+                    <BsBuilding className="me-2 text-primary" />
+                    Grades & Sections
+                  </Nav.Link>
+                </Nav.Item>
+
+                {gradesSectionsExpanded && (
+                  <div
+                    id="grades-sections-submenu"
+                    className="ms-3 mt-2 py-2 px-2 rounded bg-light border"
+                    style={{ fontSize: "0.92rem" }}
+                  >
+                    {/* Grades Links */}
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/grades"
+                      className={getLinkClasses(
+                        location.pathname === "/admin/dashboard/grades"
+                      )}
+                      style={getLinkStyle(
+                        location.pathname === "/admin/dashboard/grades"
+                      )}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Manage Grades
+                    </Nav.Link>
+
+                    {/* Sections Links */}
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/sections"
+                      className={getLinkClasses(
+                        location.pathname === "/admin/dashboard/sections"
+                      )}
+                      style={getLinkStyle(
+                        location.pathname === "/admin/dashboard/sections"
+                      )}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Manage Sections
                     </Nav.Link>
                   </div>
                 )}
