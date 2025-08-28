@@ -70,6 +70,22 @@ const AdminDashboardLayout = () => {
           backgroundColor: "#eef4fb", // ✨ light blue-gray background for non-active links
         };
 
+  // Inside your AdminDashboardLayout component, before return
+  const welcomeMessages = [
+    "Let's make it productive 🚀",
+    "Time to conquer your tasks today 💪",
+    "Another day, another opportunity to excel 🌟",
+    "Lead the way and inspire your team ✨",
+    "Your leadership makes a difference 👏",
+    "Keep pushing forward and achieve greatness 🏆",
+    "Success is a journey, not a destination 🚀",
+    "Let's make amazing things happen today 🔥",
+  ];
+
+  // Select a random message
+  const randomMessage =
+    welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <SessionExpiredModal show={showModal} onClose={handleModalClose} />
@@ -478,8 +494,7 @@ const AdminDashboardLayout = () => {
                       className="mb-0 text-muted"
                       style={{ fontSize: "0.95rem" }}
                     >
-                      Today is <strong>{currentDate}</strong>. Let’s make it
-                      productive 🚀
+                      Today is <strong>{currentDate}</strong>. {randomMessage}
                     </p>
                   </div>
                 </Card.Body>

@@ -8,11 +8,18 @@ import {
   InputGroup,
   Spinner,
   Modal,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
-import { FaSearch, FaEye, FaEdit, FaUserSlash } from "react-icons/fa";
+import {
+  FaSearch,
+  FaEye,
+  FaEdit,
+  FaUserSlash,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
 import teacherService from "../../../services/teacherService";
 import { useNavigate } from "react-router-dom";
-import { FaChalkboardTeacher } from "react-icons/fa";
 
 const ManageTeachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -123,35 +130,66 @@ const ManageTeachers = () => {
                 <td>{teacher.status}</td>
                 <td>{teacher.joiningDate}</td>
                 <td>
-                  <Button
-                    size="sm"
-                    variant="info"
-                    className="me-2"
-                    onClick={() =>
-                      navigate(`/admin/dashboard/teachers/${teacher.empId}`)
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-view-${teacher.empId}`}>
+                        <div style={{ fontSize: "14px" }}>
+                          View Teacher Details
+                        </div>
+                      </Tooltip>
                     }
                   >
-                    <FaEye />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="warning"
-                    className="me-2"
-                    onClick={() =>
-                      navigate(
-                        `/admin/dashboard/teachers/update/${teacher.empId}`
-                      )
+                    <Button
+                      size="sm"
+                      variant="info"
+                      className="me-2"
+                      onClick={() =>
+                        navigate(`/admin/dashboard/teachers/${teacher.empId}`)
+                      }
+                    >
+                      <FaEye />
+                    </Button>
+                  </OverlayTrigger>
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-edit-${teacher.empId}`}>
+                        <div style={{ fontSize: "14px" }}>Edit Teacher</div>
+                      </Tooltip>
                     }
                   >
-                    <FaEdit />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => handleDelete(teacher)}
+                    <Button
+                      size="sm"
+                      variant="warning"
+                      className="me-2"
+                      onClick={() =>
+                        navigate(
+                          `/admin/dashboard/teachers/update/${teacher.empId}`
+                        )
+                      }
+                    >
+                      <FaEdit />
+                    </Button>
+                  </OverlayTrigger>
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-offboard-${teacher.empId}`}>
+                        <div style={{ fontSize: "14px" }}>Offboard Teacher</div>
+                      </Tooltip>
+                    }
                   >
-                    <FaUserSlash />
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => handleDelete(teacher)}
+                    >
+                      <FaUserSlash />
+                    </Button>
+                  </OverlayTrigger>
                 </td>
               </tr>
             ))}

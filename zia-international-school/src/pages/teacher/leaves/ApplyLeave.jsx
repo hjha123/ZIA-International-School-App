@@ -67,16 +67,27 @@ const ApplyLeave = () => {
     }
 
     setLoading(true);
+    setErrors({});
+    setSuccessMsg("");
+
     try {
       const response = await leaveService.applyLeave(formData, {
         headers: { "Content-Type": "application/json" },
       });
       setSuccessMsg("Leave applied successfully ✅");
-      // ✅ Redirect to requests page instead of leaves
       setTimeout(() => navigate("/teacher/dashboard/leaves/requests"), 1500);
     } catch (err) {
       console.error(err);
-      setErrors({ api: "Failed to apply leave. Please try again." });
+
+      // Check for insufficient leave balance error from backend
+      if (
+        err.response?.data?.message &&
+        err.response.data.message.includes("Insufficient leave balance")
+      ) {
+        setErrors({ api: err.response.data.message });
+      } else {
+        setErrors({ api: "Failed to apply leave. Please try again." });
+      }
     } finally {
       setLoading(false);
     }

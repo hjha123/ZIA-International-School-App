@@ -77,6 +77,22 @@ const TeacherDashboardLayout = () => {
     }
   }, [location.pathname]);
 
+  // Inside TeacherDashboardLayout, before return
+  const teacherMessages = [
+    "Let’s inspire your students 🚀",
+    "Time to spark curiosity and learning ✨",
+    "Another day to make a difference 🌟",
+    "Teach, guide, and empower your students 💡",
+    "Your dedication shapes the future 👏",
+    "Engage minds and ignite creativity 🎨",
+    "Every lesson is a step towards success 🏆",
+    "Learning today, leading tomorrow 🚀",
+  ];
+
+  // Pick a random message each render
+  const randomTeacherMessage =
+    teacherMessages[Math.floor(Math.random() * teacherMessages.length)];
+
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <SessionExpiredModal show={showModal} onClose={handleModalClose} />
@@ -351,8 +367,8 @@ const TeacherDashboardLayout = () => {
                       className="mb-0 text-muted"
                       style={{ fontSize: "0.95rem" }}
                     >
-                      Today is <strong>{currentDate}</strong>. Let’s inspire
-                      your students 🚀
+                      Today is <strong>{currentDate}</strong>.{" "}
+                      {randomTeacherMessage}
                     </p>
                   </div>
                 </Card.Body>
