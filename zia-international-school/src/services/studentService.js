@@ -59,6 +59,20 @@ const getSubjects = async () => {
   return res.data;
 };
 
+const getStudentsByGradeSection = async (gradeName, sectionName) => {
+  const params = new URLSearchParams();
+  if (gradeName) params.append("gradeName", gradeName);
+  if (sectionName) params.append("sectionName", sectionName);
+
+  const res = await axios.get(
+    `/students/by-grade-section?${params.toString()}`,
+    {
+      withCredentials: true, // needed for session auth
+    }
+  );
+  return res.data;
+};
+
 export default {
   getAllGrades,
   getSectionsByGrade,
@@ -70,4 +84,5 @@ export default {
   deleteStudent,
   getMyProfile,
   getSubjects,
+  getStudentsByGradeSection,
 };

@@ -41,6 +41,7 @@ import StudentDashboardHome from "../pages/student/StudentDashboardHome";
 import ManageAssignments from "../pages/teacher/assignments/ManageAssignments";
 import ViewAssignment from "../pages/teacher/assignments/ViewAssignment";
 import EditAssignment from "../pages/teacher/assignments/EditAssignment";
+import SubmissionsPage from "../pages/teacher/assignments/SubmissionsPage";
 
 export default function AppRoutes() {
   return (
@@ -112,6 +113,7 @@ export default function AppRoutes() {
         <Route path="assignments/manage" element={<ManageAssignments />} />
         <Route path="assignments/view/:id" element={<ViewAssignment />} />
         <Route path="assignments/edit/:id" element={<EditAssignment />} />
+        <Route path="assignments/submissions" element={<SubmissionsPage />} />
         {/* <Route
           path="assignments/edit/:assignmentId"
           element={<AssignmentCreatePage />}
