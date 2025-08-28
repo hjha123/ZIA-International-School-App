@@ -1,4 +1,3 @@
-// src/services/assignmentService.js
 import axios from "../api/axios";
 
 // Create Assignment
@@ -86,6 +85,24 @@ const getMyAssignments = async () => {
   return response.data;
 };
 
+const getAllAssignmentsAdmin = async () => {
+  const response = await axios.get(`/assignments/admin/all`);
+  return response.data;
+};
+
+// Update admin remarks for assignment
+const updateAdminRemarks = async (assignmentId, adminRemarks) => {
+  const response = await axios.patch(
+    `/assignments/${assignmentId}/admin-remarks`,
+    { adminRemarks },
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
 export default {
   createAssignment,
   updateAssignment,
@@ -96,4 +113,6 @@ export default {
   submitAssignment,
   updateSubmissionStatus,
   getMyAssignments,
+  getAllAssignmentsAdmin,
+  updateAdminRemarks,
 };

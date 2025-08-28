@@ -114,7 +114,19 @@ const AssignmentCreatePage = () => {
   };
 
   const handleSave = async (status) => {
-    // ✅ Prevent saving with past due date
+    // 🔹 Validate Grade selection
+    if (!form.gradeId) {
+      alert("⚠️ Please select a Grade before saving or publishing.");
+      return;
+    }
+
+    // 🔹 Validate Subject selection
+    if (!form.subjectId) {
+      alert("⚠️ Please select a Subject before saving or publishing.");
+      return;
+    }
+
+    // 🔹 Prevent saving with past due date
     if (new Date(form.dueDate) < new Date()) {
       alert("⚠️ Due date must be in the future.");
       return;
@@ -156,7 +168,7 @@ const AssignmentCreatePage = () => {
         status === "DRAFT"
           ? "✅ Assignment saved as draft successfully!"
           : "🚀 Assignment published successfully!",
-        true // ✅ only redirect on success
+        true
       );
     } catch (err) {
       console.error("Error saving assignment:", err);

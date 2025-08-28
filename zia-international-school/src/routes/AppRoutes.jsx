@@ -21,12 +21,10 @@ import LeaveAllocation from "../pages/admin/leaves/LeaveAllocation";
 import LeaveTypesManagement from "../pages/admin/leaves/LeaveTypesManagement";
 import EmployeeLeaveHistory from "../pages/admin/leaves/EmployeeLeaveHistory";
 
-// 🆕 Teacher Dashboard Layout & Pages
 import TeacherDashboardLayout from "../layouts/TeacherDashboardLayout";
 import TeacherHome from "../pages/teacher/TeacherHome";
 import TeacherUpdateSelf from "../pages/teacher/TeacherUpdateSelf";
 import AssignmentCreatePage from "../pages/teacher/assignments/AssignmentCreatePage";
-import AssignmentStudentStatusPage from "../pages/teacher/assignments/AssignmentStudentStatus";
 import ApplyLeave from "../pages/teacher/leaves/ApplyLeave";
 import LeaveRequests from "../pages/teacher/leaves/LeaveRequests";
 import LeaveEntitlements from "../pages/teacher/leaves/LeaveEntitlements";
@@ -42,6 +40,7 @@ import ManageAssignments from "../pages/teacher/assignments/ManageAssignments";
 import ViewAssignment from "../pages/teacher/assignments/ViewAssignment";
 import EditAssignment from "../pages/teacher/assignments/EditAssignment";
 import SubmissionsPage from "../pages/teacher/assignments/SubmissionsPage";
+import AdminAssignmentsPage from "../pages/admin/teachers/assignments/AdminAssignmentsPage";
 
 export default function AppRoutes() {
   return (
@@ -90,6 +89,8 @@ export default function AppRoutes() {
         <Route path="leaves/leave-allocation" element={<LeaveAllocation />} />
         <Route path="leaves/types" element={<LeaveTypesManagement />} />
         <Route path="leaves/history" element={<EmployeeLeaveHistory />} />
+        {/* ✅ Assignments routes */}
+        <Route path="assignments" element={<AdminAssignmentsPage />} />
       </Route>
 
       {/* ✅ Teacher Dashboard Layout */}

@@ -21,6 +21,7 @@ import {
   BsMegaphone,
   BsHouse,
   BsClockHistory,
+  BsFileText,
 } from "react-icons/bs";
 
 const AdminDashboardLayout = () => {
@@ -35,6 +36,9 @@ const AdminDashboardLayout = () => {
   );
   const [studentsExpanded, setStudentsExpanded] = React.useState(
     location.pathname.includes("/students")
+  );
+  const [assignmentsExpanded, setAssignmentsExpanded] = React.useState(
+    location.pathname.includes("/assignments")
   );
 
   const username = localStorage.getItem("username") || "Admin";
@@ -338,6 +342,62 @@ const AdminDashboardLayout = () => {
                     >
                       <BsBoxArrowRight className="me-2" />
                       Offboard Student
+                    </Nav.Link>
+                  </div>
+                )}
+              </Nav>
+
+              {/* Assignments Section */}
+              <Nav className="flex-column mb-2">
+                <Nav.Item>
+                  <Nav.Link
+                    className={getLinkClasses(
+                      location.pathname.includes("/assignments")
+                    )}
+                    style={getLinkStyle(
+                      location.pathname.includes("/assignments")
+                    )}
+                    onClick={() => setAssignmentsExpanded(!assignmentsExpanded)}
+                    aria-controls="assignments-submenu"
+                    aria-expanded={assignmentsExpanded}
+                  >
+                    <BsFileText className="me-2 text-primary" />
+                    Assignments
+                  </Nav.Link>
+                </Nav.Item>
+
+                {assignmentsExpanded && (
+                  <div
+                    id="assignments-submenu"
+                    className="ms-3 mt-2 py-2 px-2 rounded bg-light border"
+                    style={{ fontSize: "0.92rem" }}
+                  >
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/assignments"
+                      className={getLinkClasses(
+                        location.pathname.includes("/assignments")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/assignments")
+                      )}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Manage Assignments
+                    </Nav.Link>
+
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/assignments/create"
+                      className={getLinkClasses(
+                        location.pathname.includes("/assignments/create")
+                      )}
+                      style={getLinkStyle(
+                        location.pathname.includes("/assignments/create")
+                      )}
+                    >
+                      <BsFileText className="me-2" />
+                      Create Assignment
                     </Nav.Link>
                   </div>
                 )}

@@ -89,9 +89,13 @@ const TeacherDashboardLayout = () => {
     "Learning today, leading tomorrow 🚀",
   ];
 
-  // Pick a random message each render
+  // Get a consistent message based on current date
+  const todayString = new Date().toISOString().slice(0, 10);
+  const hashCode = todayString
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const randomTeacherMessage =
-    teacherMessages[Math.floor(Math.random() * teacherMessages.length)];
+    teacherMessages[hashCode % teacherMessages.length];
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
