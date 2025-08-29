@@ -36,10 +36,8 @@ const StudentUpdate = () => {
           studentService.getStudentById(studentId),
           studentService.getAllGrades(),
         ]);
-
         setStudent(studentData);
         setGrades(gradeList || []);
-
         if (studentData.gradeName) {
           const selectedGrade = gradeList.find(
             (g) => g.name === studentData.gradeName
@@ -49,9 +47,7 @@ const StudentUpdate = () => {
               selectedGrade.id
             );
             setSections(sectionList || []);
-          } else {
-            setSections([]);
-          }
+          } else setSections([]);
         }
       } catch (err) {
         console.error("Error fetching student data:", err);
@@ -59,7 +55,6 @@ const StudentUpdate = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [studentId]);
 
@@ -71,16 +66,13 @@ const StudentUpdate = () => {
   const handleGradeChange = async (e) => {
     const gradeName = e.target.value;
     setStudent((prev) => ({ ...prev, gradeName, sectionName: "" }));
-
     const selectedGrade = grades.find((g) => g.name === gradeName);
     if (selectedGrade) {
       const sectionList = await studentService.getSectionsByGrade(
         selectedGrade.id
       );
       setSections(sectionList || []);
-    } else {
-      setSections([]);
-    }
+    } else setSections([]);
   };
 
   const handleImageChange = (e) => {
@@ -111,14 +103,12 @@ const StudentUpdate = () => {
       setUpdateMessage("Student profile updated successfully!");
       setUpdateSuccess(true);
       setShowResultModal(true);
-
       setTimeout(() => setShowResultModal(false), 3000);
     } catch (err) {
       console.error("Error updating student:", err);
       setUpdateMessage("Failed to update student profile. Please try again.");
       setUpdateSuccess(false);
       setShowResultModal(true);
-
       setTimeout(() => setShowResultModal(false), 3000);
     } finally {
       setSaving(false);
@@ -158,12 +148,18 @@ const StudentUpdate = () => {
   }
 
   return (
-    <Container className="py-4">
+    <Container
+      className="py-4"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #e0f7fa, #fffde7)",
+      }}
+    >
       <Card className="shadow-lg rounded-4 border-0">
         <Card.Header
-          className="text-white d-flex align-items-center gap-2 px-4 py-3"
+          className="text-white d-flex align-items-center gap-3 px-4 py-3"
           style={{
-            background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+            background: "linear-gradient(90deg, #00c6ff, #0072ff)",
             borderTopLeftRadius: "1rem",
             borderTopRightRadius: "1rem",
           }}
@@ -172,13 +168,14 @@ const StudentUpdate = () => {
           <h4 className="mb-0">
             {student.firstName} {student.lastName}
           </h4>
-          <Badge bg={getStatusVariant(student.status)} className="ms-3">
+          <Badge bg={getStatusVariant(student.status)} className="ms-3 p-2">
             {student.status}
           </Badge>
         </Card.Header>
 
         <Card.Body>
           <Row className="mb-4">
+            {/* Profile Image */}
             <Col md={3} className="text-center">
               <div
                 className="position-relative d-inline-block"
@@ -198,7 +195,7 @@ const StudentUpdate = () => {
                   className="rounded-circle shadow-sm"
                   width={150}
                   height={150}
-                  style={{ objectFit: "cover", border: "4px solid #dee2e6" }}
+                  style={{ objectFit: "cover", border: "4px solid #fff" }}
                 />
                 <div
                   className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center rounded-circle bg-dark bg-opacity-50"
@@ -228,140 +225,183 @@ const StudentUpdate = () => {
                   </Button>
                 </div>
               </div>
-              <div className="text-muted mt-2">ID: {student.studentId}</div>
+              <div className="text-muted mt-2 fw-bold">
+                ID: {student.studentId}
+              </div>
             </Col>
 
+            {/* Form Fields */}
             <Col md={9}>
               <Row className="g-3">
+                {/* Personal Info Section */}
                 <Col md={6}>
-                  <Form.Group className="mb-2">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                      name="firstName"
-                      value={student.firstName}
-                      onChange={handleInputChange}
-                      placeholder="Enter first name"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                      name="lastName"
-                      value={student.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Enter last name"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={student.email}
-                      onChange={handleInputChange}
-                      placeholder="Enter email"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                      name="phone"
-                      value={student.phone}
-                      onChange={handleInputChange}
-                      placeholder="Enter phone number"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Gender</Form.Label>
-                    <Form.Select
-                      name="gender"
-                      value={student.gender}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </Form.Select>
-                  </Form.Group>
+                  <Card
+                    className="p-3 mb-3 shadow-sm"
+                    style={{ backgroundColor: "#e3f2fd", borderRadius: "1rem" }}
+                  >
+                    <h6 className="text-primary mb-3">Personal Info</h6>
+                    <Form.Group className="mb-2">
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Control
+                        name="firstName"
+                        value={student.firstName}
+                        onChange={handleInputChange}
+                        placeholder="Enter first name"
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control
+                        name="lastName"
+                        value={student.lastName}
+                        onChange={handleInputChange}
+                        placeholder="Enter last name"
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        value={student.email}
+                        onChange={handleInputChange}
+                        placeholder="Enter email"
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                      <Form.Text className="text-warning">
+                        Changing the email will update the student's login
+                        credentials. They will need to login using the new
+                        email.
+                      </Form.Text>
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Phone</Form.Label>
+                      <Form.Control
+                        name="phone"
+                        value={student.phone}
+                        onChange={handleInputChange}
+                        placeholder="Enter phone number"
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Gender</Form.Label>
+                      <Form.Select
+                        name="gender"
+                        value={student.gender}
+                        onChange={handleInputChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Card>
                 </Col>
 
+                {/* Academic Info Section */}
                 <Col md={6}>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Grade</Form.Label>
-                    <Form.Select
-                      name="gradeName"
-                      value={student.gradeName}
-                      onChange={handleGradeChange}
-                    >
-                      <option value="">Select Grade</option>
-                      {grades.map((g) => (
-                        <option key={g.id} value={g.name}>
-                          {g.name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Section</Form.Label>
-                    <Form.Select
-                      name="sectionName"
-                      value={student.sectionName || ""}
-                      onChange={handleInputChange}
-                      disabled={!student.gradeName}
-                    >
-                      <option value="">Select Section</option>
-                      {sections.map((s) => (
-                        <option key={s.id} value={s.name}>
-                          {s.name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Status</Form.Label>
-                    <Form.Select
-                      name="status"
-                      value={student.status}
-                      onChange={handleInputChange}
-                    >
-                      <option value="ACTIVE">Active</option>
-                      <option value="INACTIVE">Inactive</option>
-                      <option value="GRADUATED">Graduated</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Admission Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="admissionDate"
-                      value={student.admissionDate}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Guardian Name</Form.Label>
-                    <Form.Control
-                      name="guardianName"
-                      value={student.guardianName || ""}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Guardian Phone</Form.Label>
-                    <Form.Control
-                      name="guardianPhone"
-                      value={student.guardianPhone || ""}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
+                  <Card
+                    className="p-3 mb-3 shadow-sm"
+                    style={{ backgroundColor: "#fff3e0", borderRadius: "1rem" }}
+                  >
+                    <h6 className="text-warning mb-3">Academic Info</h6>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Grade</Form.Label>
+                      <Form.Select
+                        name="gradeName"
+                        value={student.gradeName}
+                        onChange={handleGradeChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      >
+                        <option value="">Select Grade</option>
+                        {grades.map((g) => (
+                          <option key={g.id} value={g.name}>
+                            {g.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Section</Form.Label>
+                      <Form.Select
+                        name="sectionName"
+                        value={student.sectionName || ""}
+                        onChange={handleInputChange}
+                        disabled={!student.gradeName}
+                        style={{ backgroundColor: "#ffffff" }}
+                      >
+                        <option value="">Select Section</option>
+                        {sections.map((s) => (
+                          <option key={s.id} value={s.name}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Status</Form.Label>
+                      <Form.Select
+                        name="status"
+                        value={student.status}
+                        onChange={handleInputChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      >
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                        <option value="GRADUATED">Graduated</option>
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Admission Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="admissionDate"
+                        value={student.admissionDate}
+                        onChange={handleInputChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                  </Card>
+
+                  {/* Guardian Info Section */}
+                  <Card
+                    className="p-3 shadow-sm"
+                    style={{ backgroundColor: "#f3e5f5", borderRadius: "1rem" }}
+                  >
+                    <h6 className="text-purple mb-3">Guardian Info</h6>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Guardian Name</Form.Label>
+                      <Form.Control
+                        name="guardianName"
+                        value={student.guardianName || ""}
+                        onChange={handleInputChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                      <Form.Label>Guardian Phone</Form.Label>
+                      <Form.Control
+                        name="guardianPhone"
+                        value={student.guardianPhone || ""}
+                        onChange={handleInputChange}
+                        style={{ backgroundColor: "#ffffff" }}
+                      />
+                    </Form.Group>
+                  </Card>
                 </Col>
               </Row>
 
-              <div className="mt-4 d-flex justify-content-end gap-2">
+              {/* Action Buttons */}
+              <div className="mt-4 d-flex justify-content-end gap-3">
                 <Button
                   variant="secondary"
-                  onClick={() => navigate("/admin/dashboard/students")}
+                  onClick={() => navigate("/admin/dashboard/students/update")}
+                  className="shadow-sm"
                 >
                   Back to List
                 </Button>
@@ -369,6 +409,7 @@ const StudentUpdate = () => {
                   variant="primary"
                   onClick={handleSave}
                   disabled={saving}
+                  className="shadow-sm"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
@@ -378,12 +419,18 @@ const StudentUpdate = () => {
         </Card.Body>
       </Card>
 
+      {/* Result Modal */}
       <Modal
         show={showResultModal}
         onHide={() => setShowResultModal(false)}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header
+          closeButton
+          className={
+            updateSuccess ? "bg-success text-white" : "bg-danger text-white"
+          }
+        >
           <Modal.Title>{updateSuccess ? "Success" : "Error"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{updateMessage}</Modal.Body>
