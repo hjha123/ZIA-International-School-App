@@ -8,6 +8,7 @@ import {
   Form,
   Spinner,
   Modal,
+  Badge,
 } from "react-bootstrap";
 import gradeService from "../../../services/gradeAndSectionsService";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,11 @@ const GradeManagement = () => {
   const [newGradeName, setNewGradeName] = useState("");
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // New state for View Details Modal
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [gradeDetails, setGradeDetails] = useState(null);
+  const [viewLoading, setViewLoading] = useState(false);
 
   // Fetch grades
   const fetchGrades = async () => {
@@ -62,6 +68,21 @@ const GradeManagement = () => {
     }
   };
 
+  // View grade details
+  const handleViewGrade = async (grade) => {
+    setSelectedGrade(grade);
+    setShowViewModal(true);
+    setViewLoading(true);
+    try {
+      const data = await gradeService.getGradeStats(grade.id); // API should return { totalStudents, totalTeachers }
+      setGradeDetails(data);
+    } catch (err) {
+      console.error("Failed to fetch grade details", err);
+      setGradeDetails({ totalStudents: 0, totalTeachers: 0 });
+    }
+    setViewLoading(false);
+  };
+
   return (
     <Card className="shadow-sm border-0 rounded-3">
       <Card.Body>
@@ -100,11 +121,9 @@ const GradeManagement = () => {
                     <td>
                       <div className="d-flex justify-content-center gap-2">
                         <Button
-                          variant="primary"
+                          variant="info"
                           size="sm"
-                          onClick={() =>
-                            navigate(`/admin/dashboard/grades/${g.id}`)
-                          }
+                          onClick={() => handleViewGrade(g)}
                         >
                           View
                         </Button>
@@ -182,6 +201,49 @@ const GradeManagement = () => {
             </Button>
             <Button variant="danger" onClick={handleDeleteGrade}>
               Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* View Grade Modal */}
+        <Modal
+          show={showViewModal}
+          onHide={() => setShowViewModal(false)}
+          centered
+          size="md"
+        >
+          <Modal.Header
+            closeButton
+            style={{
+              background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+              color: "#fff",
+            }}
+          >
+            <Modal.Title>Grade: {selectedGrade?.name}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {viewLoading ? (
+              <div className="text-center my-3">
+                <Spinner animation="border" variant="primary" />
+              </div>
+            ) : (
+              <div className="text-center">
+                <h5>
+                  Total Students:{" "}
+                  <Badge bg="success">{gradeDetails?.totalStudents}</Badge>
+                </h5>
+                <h5 className="mt-3">
+                  Total Teachers:{" "}
+                  <Badge bg="warning" text="dark">
+                    {gradeDetails?.totalTeachers}
+                  </Badge>
+                </h5>
+              </div>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowViewModal(false)}>
+              Close
             </Button>
           </Modal.Footer>
         </Modal>

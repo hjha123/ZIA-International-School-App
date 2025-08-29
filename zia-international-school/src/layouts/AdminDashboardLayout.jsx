@@ -64,7 +64,7 @@ const AdminDashboardLayout = () => {
         case "assignments":
           setAssignmentsExpanded(true);
           break;
-        case "gradesSections":
+        case "classes":
           setGradesSectionsExpanded(true);
           break;
         default:

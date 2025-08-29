@@ -55,6 +55,11 @@ const getSectionsByGrade = async (gradeId) => {
   return response.data;
 };
 
+const getGradeStats = async (gradeId) => {
+  const response = await axios.get(`/grades/${gradeId}/stats`);
+  return response.data;
+};
+
 export default {
   // Grades
   getAllGrades,
@@ -62,6 +67,7 @@ export default {
   createGrade,
   deleteGrade,
   getAllGradesWithSections,
+  getGradeStats,
 
   // Sections
   getSectionsByGradeId,

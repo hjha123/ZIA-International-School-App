@@ -241,7 +241,12 @@ const TeacherUpdate = () => {
                     required
                     style={{ backgroundColor: "#fffde7" }}
                   />
+                  <Form.Text className="text-warning">
+                    Changing the email will update the teacher's login
+                    credentials. They will need to login using the new email.
+                  </Form.Text>
                 </Form.Group>
+
                 <Form.Group controlId="phone" className="mb-3">
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
