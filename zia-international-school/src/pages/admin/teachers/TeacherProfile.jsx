@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, Row, Col, Badge, Spinner, Button } from "react-bootstrap";
-import { FaMale, FaFemale, FaUser } from "react-icons/fa";
+import {
+  FaMale,
+  FaFemale,
+  FaUser,
+  FaBookOpen,
+  FaArrowLeft,
+} from "react-icons/fa";
 import teacherService from "../../../services/teacherService";
 
 export default function TeacherProfile() {
   const { empId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation(); // <-- to read state passed via navigate
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -35,16 +42,13 @@ export default function TeacherProfile() {
 
   const handleImageUpload = async () => {
     if (!selectedImage) return;
-
     const formData = new FormData();
     formData.append("image", selectedImage);
 
     try {
       setUploading(true);
-      // Use URL param empId if present (admin), otherwise use the loaded teacher.empId (self view)
       const targetEmpId = empId || teacher?.empId;
       if (!targetEmpId) throw new Error("No employee ID available for upload.");
-
       const updatedTeacher = await teacherService.uploadProfileImage(
         targetEmpId,
         formData
@@ -73,7 +77,7 @@ export default function TeacherProfile() {
 
   const renderGenderIcon = (gender) => {
     if (gender === "Male") return <FaMale className="text-primary me-2" />;
-    if (gender === "Female") return <FaFemale className="text-pink-500 me-2" />;
+    if (gender === "Female") return <FaFemale className="text-danger me-2" />;
     return <FaUser className="text-secondary me-2" />;
   };
 
@@ -90,33 +94,66 @@ export default function TeacherProfile() {
     return <p className="text-danger mt-4 text-center">Teacher not found.</p>;
   }
 
+  // Determine Back button text dynamically
+  const backButtonText =
+    location.state?.fromSearch && empId ? "Back to Search" : "Back to List";
+
   return (
     <div className="container mt-4">
-      {empId && (
-        <Button variant="outline-primary mb-3" onClick={() => navigate(-1)}>
-          ← Back to List
-        </Button>
-      )}
-
       <Card className="shadow-lg rounded-4 border-0">
         <Card.Header
-          className="text-white d-flex align-items-center gap-2"
+          className="text-white d-flex align-items-center gap-2 justify-content-between"
           style={{
-            background: "linear-gradient(to right, #6a11cb, #2575fc)",
+            background: "linear-gradient(to right, #f7971e, #ffd200)",
             borderTopLeftRadius: "1rem",
             borderTopRightRadius: "1rem",
           }}
         >
-          {renderGenderIcon(teacher.gender)}
-          <h4 className="mb-0">{teacher.fullName}</h4>
+          <div className="d-flex align-items-center">
+            {renderGenderIcon(teacher.gender)}
+            <h4 className="mb-0">{teacher.fullName}</h4>
+          </div>
+
+          {/* Enhanced Back Button */}
+          {empId && (
+            <Button
+              onClick={() => navigate(-1)}
+              style={{
+                background: "linear-gradient(90deg, #11998e, #38ef7d)",
+                border: "none",
+                color: "#fff",
+                fontWeight: 500,
+                boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
+                padding: "0.4rem 1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                borderRadius: "0.5rem",
+                transition: "transform 0.2s, box-shadow 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow =
+                  "0px 6px 12px rgba(0,0,0,0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0px 4px 8px rgba(0,0,0,0.2)";
+              }}
+            >
+              <FaArrowLeft />
+              {backButtonText}
+            </Button>
+          )}
         </Card.Header>
 
         <Card.Body>
           <Row className="mb-4 align-items-center">
+            {/* Profile Image */}
             <Col md={3} className="text-center">
               <div
-                className="position-relative d-inline-block group"
-                style={{ width: 150, height: 150 }}
+                className="position-relative d-inline-block"
+                style={{ width: 160, height: 160 }}
               >
                 <img
                   src={
@@ -128,15 +165,18 @@ export default function TeacherProfile() {
                         }`
                       : "/images/no-profile.png"
                   }
+                  alt="Profile"
+                  className="rounded-circle shadow-lg"
+                  width={160}
+                  height={160}
+                  style={{
+                    objectFit: "cover",
+                    border: "4px solid #f8f9fa",
+                  }}
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/images/no-profile.png";
                   }}
-                  alt="Profile"
-                  className="rounded-circle shadow"
-                  width={150}
-                  height={150}
-                  style={{ objectFit: "cover", border: "4px solid #dee2e6" }}
                 />
 
                 <div
@@ -161,7 +201,6 @@ export default function TeacherProfile() {
                     size="sm"
                     onClick={handleImageUpload}
                     disabled={!selectedImage || uploading}
-                    style={{ fontSize: "0.75rem", padding: "0.25rem 0.5rem" }}
                   >
                     {uploading ? "Uploading..." : "Upload"}
                   </Button>
@@ -174,14 +213,29 @@ export default function TeacherProfile() {
                 </Badge>
                 <div className="text-muted mt-1">Emp ID: {teacher.empId}</div>
               </div>
+
+              {/* Subjects */}
+              {teacher.subjects?.length > 0 && (
+                <div className="mt-3">
+                  <h6 className="fw-bold">
+                    <FaBookOpen className="me-1" /> Subjects
+                  </h6>
+                  <div className="d-flex flex-wrap gap-2 justify-content-center">
+                    {teacher.subjects.map((subj, idx) => (
+                      <Badge bg="info" key={idx}>
+                        {subj}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </Col>
 
+            {/* Teacher Details */}
             <Col md={9}>
+              <h5 className="mb-3 text-primary">👤 Personal Information</h5>
               <Row>
                 <Col md={6}>
-                  <p>
-                    <strong>Username:</strong> {teacher.username}
-                  </p>
                   <p>
                     <strong>Email:</strong> {teacher.email}
                   </p>
@@ -189,15 +243,36 @@ export default function TeacherProfile() {
                     <strong>Phone:</strong> {teacher.phone}
                   </p>
                   <p>
-                    <strong>Gender:</strong> {teacher.gender || "N/A"}
-                  </p>
-                  <p>
                     <strong>Date of Birth:</strong> {teacher.dateOfBirth}
                   </p>
                   <p>
-                    <strong>Qualification:</strong> {teacher.qualification}
+                    <strong>Gender:</strong> {teacher.gender}
+                  </p>
+                  <p>
+                    <strong>Marital Status:</strong>{" "}
+                    {teacher.maritalStatus || "N/A"}
                   </p>
                 </Col>
+                <Col md={6}>
+                  <p>
+                    <strong>Nationality:</strong> {teacher.nationality || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Blood Group:</strong> {teacher.bloodGroup || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Aadhar No:</strong> {teacher.aadharNumber || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {teacher.address || "N/A"}
+                  </p>
+                </Col>
+              </Row>
+
+              <h5 className="mt-4 mb-3 text-success">
+                📚 Professional Information
+              </h5>
+              <Row>
                 <Col md={6}>
                   <p>
                     <strong>Joining Date:</strong> {teacher.joiningDate}
@@ -205,6 +280,11 @@ export default function TeacherProfile() {
                   <p>
                     <strong>Experience:</strong> {teacher.experienceYears} yrs
                   </p>
+                  <p>
+                    <strong>Qualification:</strong> {teacher.qualification}
+                  </p>
+                </Col>
+                <Col md={6}>
                   <p>
                     <strong>Grade:</strong>{" "}
                     {teacher.gradeName || "Not Assigned"}
@@ -217,43 +297,18 @@ export default function TeacherProfile() {
                     <strong>Teacher Type:</strong>{" "}
                     {teacher.teacherType || "N/A"}
                   </p>
+                </Col>
+              </Row>
+
+              <h5 className="mt-4 mb-3 text-danger">📌 Other Information</h5>
+              <Row>
+                <Col md={6}>
                   <p>
-                    <strong>Address:</strong> {teacher.address || "N/A"}
+                    <strong>Emergency Contact:</strong>{" "}
+                    {teacher.emergencyContactInfo || "N/A"}
                   </p>
                 </Col>
               </Row>
-            </Col>
-          </Row>
-
-          <Row className="mt-3">
-            <Col md={4}>
-              <p>
-                <strong>Marital Status:</strong>{" "}
-                {teacher.maritalStatus || "N/A"}
-              </p>
-            </Col>
-            <Col md={4}>
-              <p>
-                <strong>Nationality:</strong> {teacher.nationality || "N/A"}
-              </p>
-            </Col>
-            <Col md={4}>
-              <p>
-                <strong>Blood Group:</strong> {teacher.bloodGroup || "N/A"}
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <p>
-                <strong>Emergency Contact:</strong>{" "}
-                {teacher.emergencyContactInfo || "N/A"}
-              </p>
-            </Col>
-            <Col md={6}>
-              <p>
-                <strong>Aadhar No:</strong> {teacher.aadharNumber || "N/A"}
-              </p>
             </Col>
           </Row>
         </Card.Body>
@@ -261,7 +316,7 @@ export default function TeacherProfile() {
         {!empId && (
           <div className="text-end p-3">
             <Button
-              variant="primary"
+              variant="warning"
               onClick={() => navigate("/teacher/dashboard/profile/edit")}
             >
               ✏️ Edit My Profile

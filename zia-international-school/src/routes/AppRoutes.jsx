@@ -44,6 +44,7 @@ import AdminAssignmentsPage from "../pages/admin/teachers/assignments/AdminAssig
 import GradeManagement from "../pages/admin/gradeAndSections/GradeManagement";
 import SectionManagement from "../pages/admin/gradeAndSections/SectionManagement";
 import StudentProfileSearch from "../pages/admin/students/StudentProfileSearch";
+import TeacherProfileSearch from "../pages/admin/teachers/TeacherProfileSearch";
 
 export default function AppRoutes() {
   return (
@@ -71,7 +72,9 @@ export default function AppRoutes() {
         <Route path="teachers/:empId" element={<TeacherProfile />} />
         <Route path="teachers/update/:empId" element={<TeacherUpdate />} />
         <Route path="teachers/select" element={<TeacherSelectList />} />
-        <Route path="teachers/list" element={<TeacherProfileList />} />
+        {/* <Route path="teachers/list" element={<TeacherProfileList />} /> */}
+        <Route path="teachers/profile" element={<TeacherProfileSearch />} />
+        <Route path="teachers/profile/:empId" element={<TeacherProfile />} />
         <Route
           path="teachers/offboard"
           element={<TeacherOffboardList />}

@@ -237,17 +237,16 @@ const AdminDashboardLayout = () => {
 
                     <Nav.Link
                       as={Link}
-                      to="/admin/dashboard/teachers/list"
+                      to="/admin/dashboard/teachers/profile"
                       className={getLinkClasses(
-                        location.pathname.includes("/teachers/list") ||
-                          location.pathname.includes("/teachers/profile")
+                        location.pathname.includes("/teachers/profile")
                       )}
                       style={getLinkStyle(
                         location.pathname.includes("/teachers/profile")
                       )}
                     >
                       <BsPersonBadge className="me-2" />
-                      View Profile
+                      Teacher Directory
                     </Nav.Link>
 
                     <Nav.Link
@@ -344,7 +343,7 @@ const AdminDashboardLayout = () => {
                       )}
                     >
                       <BsPersonBadge className="me-2" />
-                      View Profile
+                      Student Directory
                     </Nav.Link>
 
                     <Nav.Link

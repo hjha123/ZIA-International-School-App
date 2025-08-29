@@ -65,6 +65,18 @@ const getMyEmpIdAndName = async () => {
   return res.data;
 };
 
+const searchTeachers = async (filters) => {
+  const params = {};
+  Object.keys(filters).forEach((key) => {
+    if (filters[key] !== "" && filters[key] !== null) {
+      params[key] = filters[key];
+    }
+  });
+
+  const response = await axios.get("/teachers/search", { params });
+  return response.data;
+};
+
 export default {
   getAllTeachers,
   createTeacher,
@@ -78,4 +90,5 @@ export default {
   getMyProfile,
   updateMyProfile,
   getMyEmpIdAndName,
+  searchTeachers,
 };
