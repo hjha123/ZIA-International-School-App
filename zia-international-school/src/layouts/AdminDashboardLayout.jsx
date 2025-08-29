@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useAutoLogout from "../hooks/useAutoLogout";
 import SessionExpiredModal from "../components/SessionExpiredModal";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
@@ -28,6 +28,7 @@ const AdminDashboardLayout = () => {
   const { showModal, handleModalClose } = useAutoLogout();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [leavesExpanded, setLeavesExpanded] = React.useState(
     location.pathname.includes("/leaves")
   );
@@ -45,6 +46,33 @@ const AdminDashboardLayout = () => {
       location.pathname.includes("/sections") ||
       location.pathname.includes("/subjects")
   );
+
+  // ✅ Minimal change: expand sidebar when coming from AdminHome "Go" buttons
+  useEffect(() => {
+    const expandKey = localStorage.getItem("expandSidebar");
+    if (expandKey) {
+      switch (expandKey) {
+        case "teachers":
+          setTeachersExpanded(true);
+          break;
+        case "students":
+          setStudentsExpanded(true);
+          break;
+        case "leaves":
+          setLeavesExpanded(true);
+          break;
+        case "assignments":
+          setAssignmentsExpanded(true);
+          break;
+        case "gradesSections":
+          setGradesSectionsExpanded(true);
+          break;
+        default:
+          break;
+      }
+      localStorage.removeItem("expandSidebar");
+    }
+  }, [location.pathname]);
 
   const username = localStorage.getItem("username") || "Admin";
   const role = localStorage.getItem("role") || "ADMIN";
@@ -76,10 +104,9 @@ const AdminDashboardLayout = () => {
     isActive
       ? {}
       : {
-          backgroundColor: "#eef4fb", // ✨ light blue-gray background for non-active links
+          backgroundColor: "#eef4fb",
         };
 
-  // Inside your AdminDashboardLayout component, before return
   const welcomeMessages = [
     "Let's make it productive 🚀",
     "Time to conquer your tasks today 💪",
@@ -91,7 +118,6 @@ const AdminDashboardLayout = () => {
     "Let's make amazing things happen today 🔥",
   ];
 
-  // Select a random message
   const randomMessage =
     welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
 
@@ -439,7 +465,7 @@ const AdminDashboardLayout = () => {
                     aria-expanded={gradesSectionsExpanded}
                   >
                     <BsBuilding className="me-2 text-primary" />
-                    Grades & Sections
+                    Classes
                   </Nav.Link>
                 </Nav.Item>
 
@@ -496,18 +522,6 @@ const AdminDashboardLayout = () => {
                   </div>
                 )}
               </Nav>
-
-              <Nav.Link
-                as={Link}
-                to="/admin/dashboard/classes"
-                className={getLinkClasses(
-                  location.pathname.includes("classes")
-                )}
-                style={getLinkStyle(location.pathname.includes("classes"))}
-              >
-                <BsBuilding className="me-2" />
-                Classes
-              </Nav.Link>
 
               {/* Leaves Section */}
               <Nav className="flex-column mb-2">

@@ -10,135 +10,112 @@ import {
   BsMegaphone,
 } from "react-icons/bs";
 
+const cardData = [
+  {
+    title: "Manage Teachers",
+    text: "Onboard, update or remove teacher records.",
+    icon: <BsPersonCheck size={32} />,
+    link: "/admin/dashboard/teachers",
+    gradient: "linear-gradient(135deg, #6a11cb, #2575fc)",
+    buttonVariant: "light",
+    sidebarKey: "teachers",
+  },
+  {
+    title: "Manage Students",
+    text: "Manage student data, enrollments, and profiles.",
+    icon: <BsPeople size={32} />,
+    link: "/admin/dashboard/students",
+    gradient: "linear-gradient(135deg, #11998e, #38ef7d)",
+    buttonVariant: "light",
+    sidebarKey: "students",
+  },
+  {
+    title: "Class Management",
+    text: "Configure grades, sections, and assign subjects.",
+    icon: <BsBookHalf size={32} />,
+    link: "/admin/dashboard/grades",
+    gradient: "linear-gradient(135deg, #f7971e, #ffd200)",
+    buttonVariant: "light",
+    sidebarKey: "classes",
+  },
+  {
+    title: "Manage Leaves",
+    text: "Allocate leaves or review and approve teacher and staff leave requests.",
+    icon: <BsCalendarCheck size={32} />,
+    link: "/admin/dashboard/leaves",
+    gradient: "linear-gradient(135deg, #56ccf2, #2f80ed)",
+    buttonVariant: "light",
+    sidebarKey: "leaves",
+  },
+  {
+    title: "Assign Tasks",
+    text: "Allocate duties or assignments to teachers.",
+    icon: <BsClipboardCheck size={32} />,
+    link: "/admin/dashboard/tasks",
+    gradient: "linear-gradient(135deg, #ff416c, #ff4b2b)",
+    buttonVariant: "light",
+  },
+  {
+    title: "Notices",
+    text: "Post important announcements for staff or students.",
+    icon: <BsMegaphone size={32} />,
+    link: "/admin/dashboard/notices",
+    gradient: "linear-gradient(135deg, #bdc3c7, #2c3e50)",
+    buttonVariant: "light",
+  },
+];
+
 const AdminHome = () => {
+  const handleGoClick = (sidebarKey) => {
+    if (sidebarKey) {
+      localStorage.setItem("expandSidebar", sidebarKey);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <Row className="g-4">
-        {/* TEACHERS */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsPersonCheck size={28} className="text-primary mb-2" />
-              <Card.Title className="fw-semibold">Manage Teachers</Card.Title>
-              <Card.Text className="text-muted">
-                Onboard, update or remove teacher records.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/teachers"
-                variant="outline-primary"
-                size="sm"
-              >
-                Go to Teachers
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* STUDENTS */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsPeople size={28} className="text-success mb-2" />
-              <Card.Title className="fw-semibold">Student Directory</Card.Title>
-              <Card.Text className="text-muted">
-                Manage student data, enrollments, and profiles.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/students"
-                variant="outline-success"
-                size="sm"
-              >
-                Go to Students
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* CLASSES */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsBookHalf size={28} className="text-warning mb-2" />
-              <Card.Title className="fw-semibold">Class Management</Card.Title>
-              <Card.Text className="text-muted">
-                Configure grades, sections, and assign subjects.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/classes"
-                variant="outline-warning"
-                size="sm"
-              >
-                Go to Classes
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* LEAVES */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsCalendarCheck size={28} className="text-info mb-2" />
-              <Card.Title className="fw-semibold">Leave Requests</Card.Title>
-              <Card.Text className="text-muted">
-                View and approve teacher/staff leave applications.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/leaves"
-                variant="outline-info"
-                size="sm"
-              >
-                Manage Leaves
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* TASKS */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsClipboardCheck size={28} className="text-danger mb-2" />
-              <Card.Title className="fw-semibold">Assign Tasks</Card.Title>
-              <Card.Text className="text-muted">
-                Allocate duties or assignments to teachers.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/tasks"
-                variant="outline-danger"
-                size="sm"
-              >
-                View Tasks
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        {/* NOTICES */}
-        <Col md={4}>
-          <Card className="shadow-sm border-0 rounded-4">
-            <Card.Body>
-              <BsMegaphone size={28} className="text-secondary mb-2" />
-              <Card.Title className="fw-semibold">Notices</Card.Title>
-              <Card.Text className="text-muted">
-                Post important announcements for staff or students.
-              </Card.Text>
-              <Button
-                as={Link}
-                to="/admin/dashboard/notices"
-                variant="outline-secondary"
-                size="sm"
-              >
-                View Notices
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
+        {cardData.map((card, idx) => (
+          <Col md={4} key={idx}>
+            <Card
+              className="shadow-lg border-0 rounded-4 text-white"
+              style={{
+                background: card.gradient,
+                transition: "transform 0.3s, box-shadow 0.3s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 15px 30px rgba(0,0,0,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 6px 12px rgba(0,0,0,0.1)";
+              }}
+            >
+              <Card.Body className="d-flex flex-column align-items-start">
+                <div className="mb-3">{card.icon}</div>
+                <Card.Title className="fw-bold">{card.title}</Card.Title>
+                <Card.Text>{card.text}</Card.Text>
+                <Button
+                  as={Link}
+                  to={card.link}
+                  variant={card.buttonVariant}
+                  size="sm"
+                  className="mt-auto text-dark fw-semibold"
+                  style={{
+                    borderRadius: "25px",
+                    background: "#fff",
+                    border: "none",
+                  }}
+                  onClick={() => handleGoClick(card.sidebarKey)}
+                >
+                  Go
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
       </Row>
     </div>
   );
