@@ -45,6 +45,7 @@ import GradeManagement from "../pages/admin/gradeAndSections/GradeManagement";
 import SectionManagement from "../pages/admin/gradeAndSections/SectionManagement";
 import StudentProfileSearch from "../pages/admin/students/StudentProfileSearch";
 import TeacherProfileSearch from "../pages/admin/teachers/TeacherProfileSearch";
+import SubjectsManagement from "../pages/admin/gradeAndSections/SubjectsManagement";
 
 export default function AppRoutes() {
   return (
@@ -108,6 +109,7 @@ export default function AppRoutes() {
         {/* ✅ Leave management routes */}
         <Route path="grades" element={<GradeManagement />} />
         <Route path="sections" element={<SectionManagement />} />
+        <Route path="subjects" element={<SubjectsManagement />} />
       </Route>
 
       {/* ✅ Teacher Dashboard Layout */}

@@ -10,6 +10,7 @@ import {
   Modal,
   OverlayTrigger,
   Tooltip,
+  Pagination,
 } from "react-bootstrap";
 import {
   FaSearch,
@@ -28,20 +29,49 @@ const ManageTeachers = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const teachersPerPage = 10;
+
   const navigate = useNavigate();
 
+  // Fetch teachers
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await teacherService.getAllTeachers();
-      setTeachers(data);
-      setLoading(false);
+      setLoading(true);
+      try {
+        const data = await teacherService.getAllTeachers();
+        setTeachers(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchTeachers();
   }, []);
 
-  const filtered = teachers.filter((t) =>
-    `${t.fullName} ${t.empId}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Reset page when searchTerm changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  // Filter by name, empId, or subject
+  const filtered = teachers.filter((t) => {
+    const search = searchTerm.toLowerCase();
+    const subjects = t.subjects ? t.subjects.join(" ").toLowerCase() : "";
+    return (
+      `${t.fullName} ${t.empId}`.toLowerCase().includes(search) ||
+      subjects.includes(search)
+    );
+  });
+
+  // Pagination logic
+  const indexOfLast = currentPage * teachersPerPage;
+  const indexOfFirst = indexOfLast - teachersPerPage;
+  const currentTeachers = filtered.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filtered.length / teachersPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleDelete = (teacher) => {
     setSelectedTeacher(teacher);
@@ -68,37 +98,55 @@ const ManageTeachers = () => {
 
   return (
     <div className="container-fluid">
+      {/* Header */}
       <h3
-        className="mb-4 text-white px-4 py-2 rounded shadow-sm d-flex align-items-center"
-        style={{ background: "linear-gradient(90deg, #4e54c8, #8f94fb)" }}
+        className="mb-4 text-white px-4 py-2 rounded shadow-sm d-flex align-items-center justify-content-between"
+        style={{ background: "linear-gradient(90deg, #ff7e5f, #feb47b)" }}
       >
-        <FaChalkboardTeacher className="me-2" size={24} />
-        Manage Teachers
+        <span className="d-flex align-items-center">
+          <FaChalkboardTeacher className="me-2" size={24} />
+          Manage Teachers
+        </span>
       </h3>
 
+      {/* Search */}
       <Row className="mb-3">
         <Col md={6}>
           <InputGroup>
-            <InputGroup.Text>
+            <InputGroup.Text style={{ backgroundColor: "#ffe0b2" }}>
               <FaSearch />
             </InputGroup.Text>
             <Form.Control
               type="text"
-              placeholder="Search by name or employee ID"
+              placeholder="Search by name, employee ID, or subject"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="shadow-sm"
             />
           </InputGroup>
         </Col>
       </Row>
 
+      {/* Table */}
       {loading ? (
-        <Spinner animation="border" />
+        <div className="text-center py-5">
+          <Spinner animation="border" />
+        </div>
       ) : (
-        <Table bordered hover responsive className="rounded shadow-sm">
-          <thead className="table-dark">
+        <Table
+          bordered
+          hover
+          responsive
+          className="rounded shadow-sm"
+          style={{ backgroundColor: "#f9f9f9" }}
+        >
+          <thead
+            style={{
+              background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+              color: "#fff",
+            }}
+          >
             <tr>
-              <th>#</th>
               <th>Emp ID</th>
               <th>Name</th>
               <th>Subject</th>
@@ -108,9 +156,15 @@ const ManageTeachers = () => {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((teacher, index) => (
+            {currentTeachers.length === 0 && (
+              <tr>
+                <td colSpan={6} className="text-center text-muted">
+                  No teachers found.
+                </td>
+              </tr>
+            )}
+            {currentTeachers.map((teacher) => (
               <tr key={teacher.empId} className={getRowClass(teacher.status)}>
-                <td>{index + 1}</td>
                 <td>{teacher.empId}</td>
                 <td>{teacher.fullName}</td>
                 <td>
@@ -118,7 +172,7 @@ const ManageTeachers = () => {
                     teacher.subjects.map((subj, i) => (
                       <span
                         key={i}
-                        className="badge rounded-pill bg-primary me-1"
+                        className="badge rounded-pill bg-info text-dark me-1"
                       >
                         {subj}
                       </span>
@@ -127,18 +181,24 @@ const ManageTeachers = () => {
                     <span className="text-muted">No subjects</span>
                   )}
                 </td>
-                <td>{teacher.status}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      teacher.status === "ACTIVE"
+                        ? "bg-success"
+                        : teacher.status === "ON_LEAVE"
+                        ? "bg-warning text-dark"
+                        : "bg-secondary"
+                    }`}
+                  >
+                    {teacher.status}
+                  </span>
+                </td>
                 <td>{teacher.joiningDate}</td>
                 <td>
                   <OverlayTrigger
                     placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-view-${teacher.empId}`}>
-                        <div style={{ fontSize: "14px" }}>
-                          View Teacher Details
-                        </div>
-                      </Tooltip>
-                    }
+                    overlay={<Tooltip>View Teacher Details</Tooltip>}
                   >
                     <Button
                       size="sm"
@@ -154,11 +214,7 @@ const ManageTeachers = () => {
 
                   <OverlayTrigger
                     placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-edit-${teacher.empId}`}>
-                        <div style={{ fontSize: "14px" }}>Edit Teacher</div>
-                      </Tooltip>
-                    }
+                    overlay={<Tooltip>Edit Teacher</Tooltip>}
                   >
                     <Button
                       size="sm"
@@ -176,11 +232,7 @@ const ManageTeachers = () => {
 
                   <OverlayTrigger
                     placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-offboard-${teacher.empId}`}>
-                        <div style={{ fontSize: "14px" }}>Offboard Teacher</div>
-                      </Tooltip>
-                    }
+                    overlay={<Tooltip>Offboard Teacher</Tooltip>}
                   >
                     <Button
                       size="sm"
@@ -197,7 +249,22 @@ const ManageTeachers = () => {
         </Table>
       )}
 
-      {/* Offboard Confirmation Modal */}
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination className="justify-content-center mt-3">
+          {[...Array(totalPages)].map((_, i) => (
+            <Pagination.Item
+              key={i + 1}
+              active={i + 1 === currentPage}
+              onClick={() => paginate(i + 1)}
+            >
+              {i + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
+      )}
+
+      {/* Offboard Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton className="bg-danger text-white">
           <Modal.Title>Confirm Offboarding</Modal.Title>

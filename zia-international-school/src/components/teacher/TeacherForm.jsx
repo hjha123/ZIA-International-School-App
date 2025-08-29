@@ -178,27 +178,54 @@ const TeacherForm = () => {
         show={showSuccessModal}
         onHide={() => setShowSuccessModal(false)}
         centered
+        size="md"
+        backdrop="static"
+        keyboard={false}
+        contentClassName="p-0 overflow-hidden shadow-lg"
       >
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: "#d4edda", color: "#155724" }}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #28a745, #218838)",
+            color: "#fff",
+            padding: "1rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontWeight: "600",
+            fontSize: "1.25rem",
+            borderTopLeftRadius: "0.5rem",
+            borderTopRightRadius: "0.5rem",
+          }}
         >
-          <Modal.Title>
-            <i className="bi bi-check-circle-fill me-2 text-success"></i>
-            Success
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="text-center">
-          <i
-            className="bi bi-check-circle-fill text-success"
-            style={{ fontSize: "3rem" }}
-          ></i>
-          <p className="mt-3 mb-0">
+          <FaUserPlus size={24} />
+          Teacher Onboarding Successful
+        </div>
+        <Modal.Body className="text-center py-4">
+          <div
+            className="mb-3"
+            style={{
+              fontSize: "3rem",
+              color: "#28a745",
+            }}
+          >
+            <i className="bi bi-check-circle-fill"></i>
+          </div>
+          <p className="mb-0" style={{ fontSize: "1.1rem" }}>
             Teacher created successfully.
             <br />
             <strong>Employee ID: {generatedStaffId}</strong>
           </p>
         </Modal.Body>
+        <Modal.Footer className="border-0 justify-content-center pb-3">
+          <Button
+            variant="success"
+            onClick={() => setShowSuccessModal(false)}
+            className="px-4 py-2 shadow-sm"
+            style={{ fontWeight: "600" }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       <Form onSubmit={handleSubmit}>

@@ -42,7 +42,8 @@ const AdminDashboardLayout = () => {
   );
   const [gradesSectionsExpanded, setGradesSectionsExpanded] = React.useState(
     location.pathname.includes("/grades") ||
-      location.pathname.includes("/sections")
+      location.pathname.includes("/sections") ||
+      location.pathname.includes("/subjects")
   );
 
   const username = localStorage.getItem("username") || "Admin";
@@ -476,6 +477,21 @@ const AdminDashboardLayout = () => {
                     >
                       <BsClipboardCheck className="me-2" />
                       Manage Sections
+                    </Nav.Link>
+
+                    {/* Subjects Links */}
+                    <Nav.Link
+                      as={Link}
+                      to="/admin/dashboard/subjects"
+                      className={getLinkClasses(
+                        location.pathname === "/admin/dashboard/subjects"
+                      )}
+                      style={getLinkStyle(
+                        location.pathname === "/admin/dashboard/subjects"
+                      )}
+                    >
+                      <BsClipboardCheck className="me-2" />
+                      Manage Subjects
                     </Nav.Link>
                   </div>
                 )}

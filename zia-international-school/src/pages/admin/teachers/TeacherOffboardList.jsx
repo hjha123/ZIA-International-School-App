@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Form, Row, Col, Spinner, Modal } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Form,
+  Row,
+  Col,
+  Spinner,
+  Modal,
+  Card,
+} from "react-bootstrap";
 import { FaUserSlash } from "react-icons/fa";
 import teacherService from "../../../services/teacherService";
 
@@ -67,19 +76,23 @@ export default function TeacherOffboardList() {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="mb-4 px-2">
-        <h3
-          className="text-white px-4 py-2 rounded shadow-sm"
+    <div
+      className="container-fluid py-4"
+      style={{ background: "#f0f4f8", minHeight: "100vh" }}
+    >
+      <Card className="shadow-sm mb-4">
+        <Card.Body
+          className="d-flex align-items-center"
           style={{
-            background: "linear-gradient(90deg, #c0392b, #e74c3c)", // industry-style soft red
-            width: "100%",
-            fontSize: "20px",
+            background: "linear-gradient(90deg, #ff758c, #ff7eb3)",
+            color: "#fff",
+            fontWeight: 600,
           }}
         >
-          <FaUserSlash className="me-2" /> Offboard a Teacher
-        </h3>
-      </div>
+          <FaUserSlash size={24} className="me-2" />{" "}
+          <span style={{ fontSize: "1.2rem" }}>Offboard a Teacher</span>
+        </Card.Body>
+      </Card>
 
       <Row className="mb-3">
         <Col md={6}>
@@ -88,81 +101,107 @@ export default function TeacherOffboardList() {
             placeholder="Search by Emp ID or Name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              borderRadius: "25px",
+              padding: "10px 20px",
+              border: "2px solid #ff7eb3",
+            }}
           />
         </Col>
       </Row>
 
       {loading ? (
-        <div className="text-center py-4">
-          <Spinner animation="border" />
-          <div>Loading Teachers...</div>
+        <div className="text-center py-5">
+          <Spinner animation="border" variant="primary" />
+          <div className="mt-2 fw-bold">Loading Teachers...</div>
         </div>
       ) : (
-        <Table bordered hover responsive className="bg-white">
-          <thead className="table-light">
-            <tr>
-              <th>Emp ID</th>
-              <th>Full Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTeachers.map((t) => (
-              <tr
-                key={t.empId}
-                className={t.status === "OFFBOARDED" ? "table-secondary" : ""}
-              >
-                <td>{t.empId}</td>
-                <td>{t.fullName}</td>
-                <td>{t.email}</td>
-                <td>{t.status}</td>
-                <td>
-                  <Button
-                    size="sm"
-                    variant="outline-danger"
-                    onClick={() => handleOffboardClick(t)}
-                    disabled={t.status === "OFFBOARDED"}
-                  >
-                    Offboard
-                  </Button>
-                </td>
+        <Card className="shadow-sm mb-4">
+          <Table
+            bordered
+            hover
+            responsive
+            className="mb-0"
+            style={{
+              background: "#fff",
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}
+          >
+            <thead
+              style={{
+                background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+                color: "#fff",
+              }}
+            >
+              <tr>
+                <th>Emp ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {currentTeachers.map((t) => (
+                <tr key={t.empId}>
+                  <td>{t.empId}</td>
+                  <td>{t.fullName}</td>
+                  <td>{t.email}</td>
+                  <td>
+                    <Button
+                      size="sm"
+                      variant="outline-danger"
+                      onClick={() => handleOffboardClick(t)}
+                      disabled={t.status === "OFFBOARDED"}
+                      style={{ fontWeight: 600, borderRadius: "25px" }}
+                    >
+                      Offboard
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+              {currentTeachers.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="text-center text-muted py-3">
+                    No teachers found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Card>
       )}
 
       {totalPages > 1 && (
-        <div className="d-flex justify-content-end">
-          <div className="mt-2">
-            <strong>
-              Page {currentPage} of {totalPages}
-            </strong>
-            <div>
-              <Button
-                size="sm"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-                className="me-2"
-              >
-                Previous
-              </Button>
-              <Button
-                size="sm"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-              >
-                Next
-              </Button>
-            </div>
+        <div className="d-flex justify-content-end align-items-center mb-4">
+          <div className="me-3 fw-bold">
+            Page {currentPage} of {totalPages}
           </div>
+          <Button
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="me-2"
+            style={{ borderRadius: "20px" }}
+          >
+            Previous
+          </Button>
+          <Button
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            style={{ borderRadius: "20px" }}
+          >
+            Next
+          </Button>
         </div>
       )}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header
+          closeButton
+          style={{ background: "#ff7eb3", color: "#fff" }}
+        >
           <Modal.Title>Confirm Offboard</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -178,14 +217,23 @@ export default function TeacherOffboardList() {
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
               placeholder="Enter remarks..."
+              style={{ borderRadius: "10px" }}
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowModal(false)}
+            style={{ borderRadius: "20px" }}
+          >
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleConfirmOffboard}>
+          <Button
+            variant="danger"
+            onClick={handleConfirmOffboard}
+            style={{ borderRadius: "20px" }}
+          >
             Confirm Offboard
           </Button>
         </Modal.Footer>
