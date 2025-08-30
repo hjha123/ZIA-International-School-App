@@ -40,12 +40,13 @@ import ManageAssignments from "../pages/teacher/assignments/ManageAssignments";
 import ViewAssignment from "../pages/teacher/assignments/ViewAssignment";
 import EditAssignment from "../pages/teacher/assignments/EditAssignment";
 import SubmissionsPage from "../pages/teacher/assignments/SubmissionsPage";
-import AdminAssignmentsPage from "../pages/admin/teachers/assignments/AdminAssignmentsPage";
+import AdminAssignmentsPage from "../pages/admin/assignments/AdminAssignmentsPage";
 import GradeManagement from "../pages/admin/gradeAndSections/GradeManagement";
 import SectionManagement from "../pages/admin/gradeAndSections/SectionManagement";
 import StudentProfileSearch from "../pages/admin/students/StudentProfileSearch";
 import TeacherProfileSearch from "../pages/admin/teachers/TeacherProfileSearch";
 import SubjectsManagement from "../pages/admin/gradeAndSections/SubjectsManagement";
+import EditAssignmentAdmin from "../pages/admin/assignments/EditAssignmentAdmin";
 
 export default function AppRoutes() {
   return (
@@ -105,7 +106,9 @@ export default function AppRoutes() {
         <Route path="leaves/types" element={<LeaveTypesManagement />} />
         <Route path="leaves/history" element={<EmployeeLeaveHistory />} />
         {/* ✅ Assignments routes */}
-        <Route path="assignments" element={<AdminAssignmentsPage />} />
+        <Route path="assignments/manage" element={<AdminAssignmentsPage />} />
+        <Route path="assignments/create" element={<AssignmentCreatePage />} />
+        <Route path="assignments/edit/:id" element={<EditAssignmentAdmin />} />
         {/* ✅ Leave management routes */}
         <Route path="grades" element={<GradeManagement />} />
         <Route path="sections" element={<SectionManagement />} />

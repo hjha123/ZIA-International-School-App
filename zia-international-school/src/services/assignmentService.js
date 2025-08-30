@@ -1,14 +1,19 @@
 import axios from "../api/axios";
 
-// Create Assignment
-const createAssignment = async (formData) => {
-  const response = await axios.post("/assignments", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    withCredentials: true,
+// TEACHER API
+const createAssignmentAsTeacher = async (formData) => {
+  const res = await axios.post(`/assignments`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-  return response.data;
+  return res.data;
+};
+
+// ADMIN API
+const createAssignmentAsAdmin = async (formData) => {
+  const res = await axios.post(`/assignments/admin`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
 };
 
 // Update Assignment
@@ -104,7 +109,8 @@ const updateAdminRemarks = async (assignmentId, adminRemarks) => {
 };
 
 export default {
-  createAssignment,
+  createAssignmentAsTeacher,
+  createAssignmentAsAdmin,
   updateAssignment,
   getAssignmentById,
   getAllAssignments,

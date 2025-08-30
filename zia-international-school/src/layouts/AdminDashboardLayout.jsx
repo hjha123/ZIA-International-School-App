@@ -417,12 +417,12 @@ const AdminDashboardLayout = () => {
                   >
                     <Nav.Link
                       as={Link}
-                      to="/admin/dashboard/assignments"
+                      to="/admin/dashboard/assignments/manage"
                       className={getLinkClasses(
-                        location.pathname.includes("/assignments")
+                        location.pathname.includes("/assignments/manage")
                       )}
                       style={getLinkStyle(
-                        location.pathname.includes("/assignments")
+                        location.pathname.includes("/assignments/manage")
                       )}
                     >
                       <BsClipboardCheck className="me-2" />
