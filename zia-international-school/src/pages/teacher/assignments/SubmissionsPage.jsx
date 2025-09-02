@@ -8,9 +8,10 @@ import {
   Button,
   Spinner,
   Alert,
-  Badge,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import studentService from "../../../services/studentService";
 import assignmentService from "../../../services/assignmentService";
 
@@ -105,9 +106,27 @@ const SubmissionsPage = () => {
         }
       );
       setError("");
+      toast.success(
+        <span>
+          Updated{" "}
+          <strong>
+            {student.firstName} {student.lastName}
+          </strong>
+          ’s submission
+        </span>
+      );
     } catch (err) {
       console.error("Failed to update student:", err);
       setError(`Failed to update ${student.firstName} ${student.lastName}.`);
+      toast.error(
+        <span>
+          Failed to update{" "}
+          <strong>
+            {student.firstName} {student.lastName}
+          </strong>
+          ’s submission
+        </span>
+      );
     } finally {
       setUpdatingStudentId(null);
     }
@@ -115,7 +134,6 @@ const SubmissionsPage = () => {
 
   const isEditable = (status) => status !== "PENDING";
 
-  // Map status to badge colors
   const statusVariant = (status) => {
     switch (status) {
       case "PENDING":
@@ -133,6 +151,8 @@ const SubmissionsPage = () => {
 
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={3000} />
+
       {/* Header */}
       <Row className="mb-4 align-items-center">
         <Col>
@@ -166,7 +186,7 @@ const SubmissionsPage = () => {
               .filter((a) => a.status === "PUBLISHED")
               .map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.title} {/* Only show title */}
+                  {a.title}
                 </option>
               ))}
           </Form.Select>
