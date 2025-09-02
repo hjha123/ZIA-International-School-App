@@ -63,7 +63,7 @@ const SubmissionsPage = () => {
         const enhancedStudents = studentsList.map((s) => ({
           ...s,
           marks: s.marks || "",
-          remarks: s.remarks || "",
+          feedback: s.feedback || "",
           submissionStatus: s.submissionStatus || "PENDING",
         }));
 
@@ -95,11 +95,15 @@ const SubmissionsPage = () => {
   const handleUpdateStudent = async (student) => {
     setUpdatingStudentId(student.studentId);
     try {
-      await studentService.updateStudent(student.studentId, {
-        marks: student.marks,
-        remarks: student.remarks,
-        submissionStatus: student.submissionStatus,
-      });
+      await assignmentService.updateSubmission(
+        selectedAssignmentId,
+        student.studentId,
+        {
+          marks: student.marks,
+          feedback: student.feedback,
+          submissionStatus: student.submissionStatus,
+        }
+      );
       setError("");
     } catch (err) {
       console.error("Failed to update student:", err);
@@ -201,7 +205,7 @@ const SubmissionsPage = () => {
                   <th>Grade</th>
                   <th>Section</th>
                   <th>Marks</th>
-                  <th>Remarks</th>
+                  <th>Feedback</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -225,6 +229,13 @@ const SubmissionsPage = () => {
                         type="number"
                         min={0}
                         value={s.marks}
+                        onChange={(e) =>
+                          handleStudentChange(
+                            s.studentId,
+                            "marks",
+                            e.target.value
+                          )
+                        }
                         disabled={!isEditable(s.submissionStatus)}
                         placeholder="Marks"
                         size="sm"
@@ -233,9 +244,16 @@ const SubmissionsPage = () => {
                     <td>
                       <Form.Control
                         type="text"
-                        value={s.remarks}
+                        value={s.feedback}
+                        onChange={(e) =>
+                          handleStudentChange(
+                            s.studentId,
+                            "feedback",
+                            e.target.value
+                          )
+                        }
                         disabled={!isEditable(s.submissionStatus)}
-                        placeholder="Remarks"
+                        placeholder="Feedback"
                         size="sm"
                       />
                     </td>
@@ -251,9 +269,9 @@ const SubmissionsPage = () => {
                         }
                         size="sm"
                       >
-                        <option value="PENDING">PENDING</option>
+                        <option value="NOT_SUBMITTED">NOT_SUBMITTED</option>
                         <option value="SUBMITTED">SUBMITTED</option>
-                        <option value="GRADED">GRADED</option>
+                        <option value="PENDING">PENDING</option>
                         <option value="LATE">LATE</option>
                       </Form.Select>
                     </td>

@@ -72,26 +72,17 @@ const submitAssignment = async (assignmentId, formData) => {
   return response.data;
 };
 
-// Update assignment status (teacher marks student as completed/not completed)
-const updateSubmissionStatus = async (assignmentId, studentId, status) => {
-  const response = await axios.put(
-    `/assignments/${assignmentId}/submissions/${studentId}`,
-    { status },
-    {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    }
-  );
-  return response.data;
-};
-
 const getMyAssignments = async () => {
-  const response = await axios.get(`/assignments/teacher`);
+  const response = await axios.get(`/assignments/teacher`, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
 const getAllAssignmentsAdmin = async () => {
-  const response = await axios.get(`/assignments/admin/all`);
+  const response = await axios.get(`/assignments/admin/all`, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
@@ -100,6 +91,20 @@ const updateAdminRemarks = async (assignmentId, adminRemarks) => {
   const response = await axios.patch(
     `/assignments/${assignmentId}/admin-remarks`,
     { adminRemarks },
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
+
+// ✅ Update student submission (Teacher)
+const updateSubmission = async (assignmentId, studentId, payload) => {
+  // payload should be { marks, feedback, status }
+  const response = await axios.put(
+    `/assignments/${assignmentId}/submissions/${studentId}`,
+    payload,
     {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
@@ -117,8 +122,8 @@ export default {
   deleteAssignment,
   getAssignmentsForStudent,
   submitAssignment,
-  updateSubmissionStatus,
   getMyAssignments,
   getAllAssignmentsAdmin,
   updateAdminRemarks,
+  updateSubmission,
 };
