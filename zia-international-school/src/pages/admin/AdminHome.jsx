@@ -49,9 +49,9 @@ const cardData = [
   },
   {
     title: "Assign Tasks",
-    text: "Allocate duties or assignments to teachers.",
+    text: "Assign tasks to teachers or to students of a specific grade and section.",
     icon: <BsClipboardCheck size={32} />,
-    link: "/admin/dashboard/tasks",
+    link: "/admin/dashboard/assignments/create",
     gradient: "linear-gradient(135deg, #ff416c, #ff4b2b)",
     buttonVariant: "light",
   },

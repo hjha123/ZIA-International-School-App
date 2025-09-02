@@ -96,6 +96,9 @@ const ViewAssignment = () => {
               ? new Date(assignment.updatedAt).toLocaleString()
               : "-"}
           </p>
+          <p>
+            <strong>Last Updated By:</strong> {assignment.lastUpdatedBy || "-"}
+          </p>
 
           {/* Admin Remarks - only for PUBLISHED or CLOSED */}
           {(assignment.status === "PUBLISHED" ||
