@@ -41,6 +41,7 @@ const SubmissionsPage = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       if (!selectedAssignmentId) return;
+
       const assignment = assignments.find(
         (a) => String(a.id) === String(selectedAssignmentId)
       );
@@ -56,21 +57,34 @@ const SubmissionsPage = () => {
       setError("");
 
       try {
+        // 1. Fetch all students of this grade/section
         const studentsList = await studentService.getStudentsByGradeSection(
           assignment.gradeName,
           assignment.sectionName || ""
         );
 
-        const enhancedStudents = studentsList.map((s) => ({
-          ...s,
-          marks: s.marks || "",
-          feedback: s.feedback || "",
-          submissionStatus: s.submissionStatus || "PENDING",
-        }));
+        // 2. Fetch submissions for this assignment from backend
+        const submissions =
+          await assignmentService.getSubmissionsByAssignmentId(
+            selectedAssignmentId
+          );
+
+        // 3. Merge student info with submission data
+        const enhancedStudents = studentsList.map((s) => {
+          const submission = submissions.find(
+            (sub) => sub.studentId === s.studentId
+          );
+          return {
+            ...s,
+            marks: submission?.marks || "",
+            feedback: submission?.feedback || "",
+            submissionStatus: submission?.submissionStatus || "PENDING",
+          };
+        });
 
         setStudents(enhancedStudents);
       } catch (err) {
-        console.error("Error fetching students:", err);
+        console.error("Error fetching students/submissions:", err);
         setError("Failed to fetch students for this assignment.");
       } finally {
         setLoading(false);

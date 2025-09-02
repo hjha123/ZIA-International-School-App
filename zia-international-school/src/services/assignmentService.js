@@ -113,6 +113,13 @@ const updateSubmission = async (assignmentId, studentId, payload) => {
   return response.data;
 };
 
+const getSubmissionsByAssignmentId = async (assignmentId) => {
+  const response = await axios.get(`/assignments/${assignmentId}/submissions`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 export default {
   createAssignmentAsTeacher,
   createAssignmentAsAdmin,
@@ -126,4 +133,5 @@ export default {
   getAllAssignmentsAdmin,
   updateAdminRemarks,
   updateSubmission,
+  getSubmissionsByAssignmentId,
 };
